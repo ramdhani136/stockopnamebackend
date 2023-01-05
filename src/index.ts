@@ -9,7 +9,6 @@ import UserRoutes from "./routes/UserRoutes";
 import DataConnect from "./config/db";
 import http from "http";
 import SocketIO from "./utils/SocketIO";
-import WhatsAppBoot from "./utils/WhatsappBoot";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
