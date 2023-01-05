@@ -1,3 +1,2 @@
-2023/01/05-11:51:22.992 456c Reusing MANIFEST D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/MANIFEST-000001
-2023/01/05-11:51:23.000 456c Recovering log #3
-2023/01/05-11:51:23.001 456c Reusing old log D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/000003.log 
+2023/01/05-11:58:01.554 3470 Creating DB D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb since it was missing.
+2023/01/05-11:58:01.561 3470 Reusing MANIFEST D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/MANIFEST-000001
