@@ -52,7 +52,7 @@ class UserController implements IController {
       const last_id: number | string = parseInt(`${req.query.lastId}`) || 0;
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
 
-      // Fungsi set field yang ditampilkan\
+      // Fungsi set field yang ditampilkan
       let setField: any = {};
       for (const field of fields) {
         if (field != "password") {

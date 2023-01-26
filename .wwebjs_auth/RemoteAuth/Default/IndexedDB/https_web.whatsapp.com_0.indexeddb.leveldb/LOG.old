@@ -1,51 +1,37 @@
-2023/01/26-15:55:27.282 309c Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/01/26-15:55:27.288 309c Recovering log #485
-2023/01/26-15:55:27.403 309c Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000485.log 
-2023/01/26-15:55:38.745 80f4 Level-0 table #502: started
-2023/01/26-15:55:38.783 80f4 Level-0 table #502: 1152158 bytes OK
-2023/01/26-15:55:38.785 80f4 Delete type=0 #485
-2023/01/26-15:55:39.569 309c Compacting 1@0 + 1@1 files
-2023/01/26-15:55:39.629 309c Generated table #503@0: 21901 keys, 638074 bytes
-2023/01/26-15:55:39.635 309c Generated table #504@0: 1282 keys, 27545 bytes
-2023/01/26-15:55:39.635 309c Compacted 1@0 + 1@1 files => 665619 bytes
-2023/01/26-15:55:39.637 309c compacted to: files[ 0 2 16 0 0 0 0 ]
-2023/01/26-15:55:39.637 309c Delete type=2 #488
-2023/01/26-15:55:39.637 309c Delete type=2 #502
-2023/01/26-15:55:40.036 7d18 Compacting 1@1 + 10@2 files
-2023/01/26-15:55:40.179 7d18 Generated table #505@1: 39038 keys, 2225370 bytes
-2023/01/26-15:55:40.221 7d18 Generated table #506@1: 2464 keys, 2152489 bytes
-2023/01/26-15:55:40.275 7d18 Generated table #507@1: 2589 keys, 2158597 bytes
-2023/01/26-15:55:40.333 7d18 Generated table #508@1: 2307 keys, 2156744 bytes
-2023/01/26-15:55:40.370 7d18 Generated table #509@1: 2892 keys, 2155780 bytes
-2023/01/26-15:55:40.440 7d18 Generated table #510@1: 17365 keys, 2185540 bytes
-2023/01/26-15:55:40.561 7d18 Generated table #511@1: 25203 keys, 2276715 bytes
-2023/01/26-15:55:40.666 7d18 Generated table #512@1: 24370 keys, 2237713 bytes
-2023/01/26-15:55:40.717 7d18 Generated table #513@1: 8520 keys, 2135272 bytes
-2023/01/26-15:55:40.851 7d18 Generated table #514@1: 80615 keys, 2224755 bytes
-2023/01/26-15:55:40.876 7d18 Generated table #515@1: 13342 keys, 294475 bytes
-2023/01/26-15:55:40.876 7d18 Compacted 1@1 + 10@2 files => 22203450 bytes
-2023/01/26-15:55:40.877 7d18 compacted to: files[ 0 1 17 0 0 0 0 ]
-2023/01/26-16:04:55.078 8790 Compacting 1@1 + 6@2 files
-2023/01/26-16:04:55.232 8790 Generated table #516@1: 102128 keys, 2251241 bytes
-2023/01/26-16:04:55.394 8790 Generated table #517@1: 101502 keys, 2251687 bytes
-2023/01/26-16:04:55.529 8790 Generated table #518@1: 89962 keys, 1981299 bytes
-2023/01/26-16:04:55.529 8790 Compacted 1@1 + 6@2 files => 6484227 bytes
-2023/01/26-16:04:55.531 8790 compacted to: files[ 0 0 14 0 0 0 0 ]
-2023/01/26-16:04:55.531 8790 Delete type=2 #464
-2023/01/26-16:04:55.531 8790 Delete type=2 #465
-2023/01/26-16:04:55.531 8790 Delete type=2 #466
-2023/01/26-16:04:55.531 8790 Delete type=2 #467
-2023/01/26-16:04:55.531 8790 Delete type=2 #483
-2023/01/26-16:04:55.531 8790 Delete type=2 #489
-2023/01/26-16:04:55.531 8790 Delete type=2 #490
-2023/01/26-16:04:55.531 8790 Delete type=2 #491
-2023/01/26-16:04:55.531 8790 Delete type=2 #492
-2023/01/26-16:04:55.531 8790 Delete type=2 #493
-2023/01/26-16:04:55.531 8790 Delete type=2 #494
-2023/01/26-16:04:55.531 8790 Delete type=2 #495
-2023/01/26-16:04:55.531 8790 Delete type=2 #496
-2023/01/26-16:04:55.531 8790 Delete type=2 #497
-2023/01/26-16:04:55.531 8790 Delete type=2 #498
-2023/01/26-16:04:55.531 8790 Delete type=2 #499
-2023/01/26-16:04:55.531 8790 Delete type=2 #503
-2023/01/26-16:04:55.531 8790 Delete type=2 #504
+2023/01/26-16:17:53.332 64fc Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/01/26-16:17:53.341 64fc Recovering log #501
+2023/01/26-16:17:53.411 64fc Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000501.log 
+2023/01/26-16:18:09.165 64fc Level-0 table #521: started
+2023/01/26-16:18:09.211 64fc Level-0 table #521: 1264539 bytes OK
+2023/01/26-16:18:09.214 64fc Delete type=0 #501
+2023/01/26-16:18:17.600 7b28 Compacting 1@0 + 0@1 files
+2023/01/26-16:18:17.656 7b28 Generated table #522@0: 21164 keys, 572938 bytes
+2023/01/26-16:18:17.658 7b28 Generated table #523@0: 133 keys, 3189 bytes
+2023/01/26-16:18:17.658 7b28 Compacted 1@0 + 0@1 files => 576127 bytes
+2023/01/26-16:18:17.659 7b28 compacted to: files[ 0 2 14 0 0 0 0 ]
+2023/01/26-16:18:17.659 7b28 Delete type=2 #521
+2023/01/26-16:19:06.064 7c98 Compacting 1@1 + 10@2 files
+2023/01/26-16:19:06.181 7c98 Generated table #524@1: 40412 keys, 2233542 bytes
+2023/01/26-16:19:06.211 7c98 Generated table #525@1: 2313 keys, 2148724 bytes
+2023/01/26-16:19:06.247 7c98 Generated table #526@1: 2666 keys, 2160376 bytes
+2023/01/26-16:19:06.284 7c98 Generated table #527@1: 2270 keys, 2158761 bytes
+2023/01/26-16:19:06.321 7c98 Generated table #528@1: 2914 keys, 2155943 bytes
+2023/01/26-16:19:06.379 7c98 Generated table #529@1: 15271 keys, 2181665 bytes
+2023/01/26-16:19:06.484 7c98 Generated table #530@1: 26070 keys, 2275362 bytes
+2023/01/26-16:19:06.586 7c98 Generated table #531@1: 25341 keys, 2245622 bytes
+2023/01/26-16:19:06.631 7c98 Generated table #532@1: 8469 keys, 2130280 bytes
+2023/01/26-16:19:06.727 7c98 Generated table #533@1: 74552 keys, 2217249 bytes
+2023/01/26-16:19:06.737 7c98 Generated table #534@1: 6722 keys, 153954 bytes
+2023/01/26-16:19:06.737 7c98 Compacted 1@1 + 10@2 files => 22061478 bytes
+2023/01/26-16:19:06.738 7c98 compacted to: files[ 0 1 15 0 0 0 0 ]
+2023/01/26-16:19:06.739 7c98 Delete type=2 #505
+2023/01/26-16:19:06.739 7c98 Delete type=2 #506
+2023/01/26-16:19:06.739 7c98 Delete type=2 #507
+2023/01/26-16:19:06.739 7c98 Delete type=2 #508
+2023/01/26-16:19:06.739 7c98 Delete type=2 #509
+2023/01/26-16:19:06.739 7c98 Delete type=2 #510
+2023/01/26-16:19:06.739 7c98 Delete type=2 #511
+2023/01/26-16:19:06.739 7c98 Delete type=2 #512
+2023/01/26-16:19:06.739 7c98 Delete type=2 #513
+2023/01/26-16:19:06.739 7c98 Delete type=2 #514
+2023/01/26-16:19:06.739 7c98 Delete type=2 #522
