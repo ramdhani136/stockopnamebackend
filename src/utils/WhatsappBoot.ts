@@ -1,4 +1,4 @@
-import {io} from "..";
+import { io } from "..";
 const { Client, RemoteAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode");
 
@@ -9,6 +9,19 @@ class WhatsAppBoot {
       authStrategy: new RemoteAuth({
         store: store,
         backupSyncIntervalMs: 300000,
+        puppeteer: {
+          headless: true,
+          args: [
+            "--no-sanbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-accelerated-2d-canvas",
+            "--no-first-run",
+            "--no-zygote",
+            "--single-process",
+            "--disable-gpu",
+          ],
+        },
       }),
     });
 

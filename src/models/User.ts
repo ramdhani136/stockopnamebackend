@@ -6,11 +6,7 @@ const User = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  umur: {
-    type: Number,
-    required: true,
-  },
-  alamat: {
+  username: {
     type: String,
     required: true,
   },
@@ -20,6 +16,11 @@ const User = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  status: {
+    type: Boolean,
+    required: true,
+    default: 1,
   },
 });
 

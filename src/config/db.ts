@@ -16,12 +16,13 @@ class DataConnect {
     mongoose.set("strictQuery", false);
     mongoose
       .connect(
-        `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/expressts?authSource=admin`,
+        // `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin`,
+        `mongodb://127.0.0.1:27017/wabot`,
         options as ConnectOptions
       )
       .then(() => {
         // WhatsappBot service
-        if (process.env.WABOT_ACTIVE==='true') {
+        if (process.env.WABOT_ACTIVE === "true") {
           const store = new MongoStore({ mongoose: mongoose });
           this.wa = new WhatsAppBoot(store);
         }

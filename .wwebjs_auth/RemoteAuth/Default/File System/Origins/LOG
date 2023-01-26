@@ -1,4 +1,2 @@
-2023/01/05-11:58:03.804 668c Creating DB D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\File System\Origins since it was missing.
-2023/01/05-11:58:03.811 668c Reusing MANIFEST D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\File System\Origins/MANIFEST-000001
-2023/01/05-11:58:03.811 668c Recovering log #3
-2023/01/05-11:58:03.811 668c Reusing old log D:\data\dev\typescript\mernts\.wwebjs_auth\RemoteAuth\Default\File System\Origins/000003.log 
+2023/01/26-12:20:12.494 4394 Creating DB D:\data\dev\Project\mernts\.wwebjs_auth\RemoteAuth\Default\File System\Origins since it was missing.
+2023/01/26-12:20:12.500 4394 Reusing MANIFEST D:\data\dev\Project\mernts\.wwebjs_auth\RemoteAuth\Default\File System\Origins/MANIFEST-000001
