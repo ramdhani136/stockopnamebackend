@@ -6,60 +6,88 @@ const bcrypt = require("bcrypt");
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
-    const filters: any = req.query.filters
-      ? JSON.parse(`${req.query.filters}`)
-      : [];
-    const fields: any = req.query.fields
-      ? JSON.parse(`${req.query.fields}`)
-      : ["name"];
-
-    // Fungsi set field yang ditampilkan\
-    let setField: any = {};
-    for (const field of fields) {
-      console.log(field);
-      if (field != "password") {
-        setField[field] = 1;
-      }
-    }
-    // End
-    const order_by: any = req.query.order_by || { updatedAt: -1 };
-    const last_id: number | string = parseInt(`${req.query.lastId}`) || 0;
-    const limit: number | string = parseInt(`${req.query.limit}`) || 10;
+    const stateFilter: any[] = [
+      {
+        name: "name",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "username",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "email",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "status",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "updatedAt",
+        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        targetdata: "users",
+      },
+      {
+        name: "createdAt",
+        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        targetdata: "users",
+      },
+    ];
     try {
+      // Mengambil query
+      const filters: any = req.query.filters
+        ? JSON.parse(`${req.query.filters}`)
+        : [];
+      const fields: any = req.query.fields
+        ? JSON.parse(`${req.query.fields}`)
+        : ["name"];
+      const order_by: any = req.query.order_by
+        ? JSON.parse(`${req.query.order_by}`)
+        : { updatedAt: -1 };
+      const last_id: number | string = parseInt(`${req.query.lastId}`) || 0;
+      const limit: number | string = parseInt(`${req.query.limit}`) || 10;
+
+      // Fungsi set field yang ditampilkan\
+      let setField: any = {};
+      for (const field of fields) {
+        if (field != "password") {
+          setField[field] = 1;
+        }
+      }
+      // End
       const getAll = await User.find({}).count();
-      const users = await User.find({}, setField).limit(limit).sort(order_by);
-      const stateFilter: any[] = [
+      const users = await User.find(
         {
-          name: "name",
-          operator: ["=", "!=", "like", "notlike"],
-          targetdata: "users",
+          $and: [
+            {
+              name: {
+                $in: ["Ryan Hadi Dermawan", "Ilham Ramdhani"],
+                $regex: "",
+              },
+            },
+            {
+              username: {
+                $in: ["ramdhaniit", "ryan"],
+                $regex: "",
+              },
+            },
+            // {
+            //   createdAt: {
+            //     $gte:
+            //   },
+            // },
+          ],
         },
-        {
-          name: "username",
-          operator: ["=", "!=", "like", "notlike"],
-          targetdata: "users",
-        },
-        {
-          name: "email",
-          operator: ["=", "!=", "like", "notlike"],
-          targetdata: "users",
-        },
-        {
-          name: "status",
-          operator: ["=", "!=", "like", "notlike"],
-          targetdata: "users",
-        },
-        {
-          name: "updatedAt",
-          operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-          targetdata: "users",
-        },
-        {
-          name: "createdAt",
-          operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-          targetdata: "users",
-        },
-      ];
+        setField
+      )
+        .limit(limit)
+        .sort(order_by);
+
       return res.status(200).json({
         status: 200,
         limit,
@@ -69,7 +97,7 @@ class UserController implements IController {
         filters: stateFilter,
       });
     } catch (error) {
-      return res.status(400).json({ status: 400, data: error });
+      return res.status(400).json({ status: 400, msg: error });
     }
   };
 
