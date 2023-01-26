@@ -9,6 +9,8 @@ class UserController implements IController {
     // io.emit("coba", "ubah tiga");
     // send.wa.client.destroy();
     // send.wa.client.initialize();
+    const filters = req.query.filters ? JSON.parse(`${req.query.filters}`) : [];
+    console.log(filters);
     try {
       const users = await User.find();
       return res.status(200).json({ status: 200, data: users });
@@ -18,14 +20,14 @@ class UserController implements IController {
   };
 
   create = async (req: Request, res: Response): Promise<Response> => {
-    if(!req.body.password){
-      return  res.status(400).json({ status: 400, msg:"Password Required!" });
+    if (!req.body.password) {
+      return res.status(400).json({ status: 400, msg: "Password Required!" });
     }
-    if(!req.body.name){
-      return  res.status(400).json({ status: 400, msg:"Name Required!" });
+    if (!req.body.name) {
+      return res.status(400).json({ status: 400, msg: "Name Required!" });
     }
-    if(!req.body.username){
-      return  res.status(400).json({ status: 400, msg:"Username Required!" });
+    if (!req.body.username) {
+      return res.status(400).json({ status: 400, msg: "Username Required!" });
     }
 
     const salt = await bcrypt.genSalt();
