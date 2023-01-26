@@ -1,19 +1,50 @@
 import { Request, Response } from "express";
-import { io, send } from "../index";
+// import { io, send } from "../index";
 import User from "../models/User";
 import IController from "./ControllerInterface";
 const bcrypt = require("bcrypt");
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
-    // io.emit("coba", "ubah tiga");
-    // send.wa.client.destroy();
-    // send.wa.client.initialize();
     const filters = req.query.filters ? JSON.parse(`${req.query.filters}`) : [];
     console.log(filters);
     try {
       const users = await User.find();
-      return res.status(200).json({ status: 200, data: users });
+      const stateFilter: any[] = [
+        {
+          name: "name",
+          operator: ["=", "!=", "like", "notlike"],
+          targetdata: "users",
+        },
+        {
+          name: "username",
+          operator: ["=", "!=", "like", "notlike"],
+          targetdata: "users",
+        },
+        {
+          name: "email",
+          operator: ["=", "!=", "like", "notlike"],
+          targetdata: "users",
+        },
+        {
+          name: "status",
+          operator: ["=", "!=", "like", "notlike"],
+          targetdata: "users",
+        },
+        {
+          name: "updatedAt",
+          operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+          targetdata: "users",
+        },
+        {
+          name: "createdAt",
+          operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+          targetdata: "users",
+        },
+      ];
+      return res
+        .status(200)
+        .json({ status: 200, data: users, filters: stateFilter });
     } catch (error) {
       return res.status(400).json({ status: 400, data: error });
     }
@@ -32,8 +63,8 @@ class UserController implements IController {
 
     const salt = await bcrypt.genSalt();
     req.body.password = await bcrypt.hash(req.body.password, salt);
-    const user = new User(req.body);
     try {
+      const user = new User(req.body);
       const users = await user.save();
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
@@ -49,9 +80,16 @@ class UserController implements IController {
       return res.status(404).json({ status: 404, data: error });
     }
   };
-  update(req: Request, res: Response): Response {
-    return res.send("update");
-  }
+
+  update = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const users = await User.updateOne({ _id: req.params.id }, req.body);
+      return res.status(200).json({ status: 200, data: users });
+    } catch (error: any) {
+      return res.status(404).json({ status: 404, data: error });
+    }
+  };
+
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       const users = await User.deleteOne({ _id: req.params.id });

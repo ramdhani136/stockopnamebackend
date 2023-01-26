@@ -9,6 +9,7 @@ import UserRoutes from "./routes/UserRoutes";
 import DataConnect from "./config/db";
 import http from "http";
 import SocketIO from "./utils/SocketIO";
+import ContactRoutes from "./routes/ContactRoutes";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -43,11 +44,7 @@ class App {
 
   protected routes(): void {
     this.app.use("/users", UserRoutes);
-
-    this.app.get("/", (req: Request, res: Response): Response => {
-      this.io.emit("coba", "ubah");
-      return res.send("coba");
-    });
+    this.app.use("/contacts", ContactRoutes);
   }
 }
 

@@ -9,6 +9,7 @@ class UserRoutes extends RouteBase {
     this.router.post("/", UserController.create);
     this.router.get("/:id", UserController.show);
     this.router.delete("/:id", UserController.delete);
+    this.router.put("/:id", UserController.update);
   }
 }
 
