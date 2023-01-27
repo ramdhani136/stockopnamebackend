@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-// import { io, send } from "../index";
 import User from "../models/User";
 import IController from "./ControllerInterface";
+import { IStateFilter } from "./FilterInterface";
 const bcrypt = require("bcrypt");
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
-    const stateFilter: any[] = [
+    const stateFilter: IStateFilter[] = [
       {
         name: "name",
         operator: ["=", "!=", "like", "notlike"],
@@ -59,32 +59,51 @@ class UserController implements IController {
           setField[field] = 1;
         }
       }
-      // End
-      const getAll = await User.find({}).count();
-      const users = await User.find(
-        {
-          $and: [
-            {
-              name: {
-                $in: ["Ryan Hadi Dermawan", "Ilham Ramdhani"],
-                $regex: "",
-              },
-            },
-            {
-              username: {
-                $in: ["ramdhaniit", "ryan"],
-                $regex: "",
-              },
-            },
-            // {
-            //   createdAt: {
-            //     $gte:
-            //   },
-            // },
-          ],
-        },
-        setField
-      )
+
+      // Mengeset semua filter
+      let allFilter: any[] = [];
+      if (filters.length > 0) {
+        for (const filter of filters) {
+          let validFilter = stateFilter.filter((item) => {
+            // Cek apakah operator valid
+            let validOperator: any = item.operator.filter(
+              (i: any) => i == filter[1]
+            );
+            // End
+            return item.name === filter[0] && validOperator.length !== 0;
+          });
+          // Cek validasi filter tersedia
+          if (validFilter.length === 0) {
+            return res
+              .status(400)
+              .json({ status: 400, msg: "Error, invalid filters" });
+          }
+          // End
+          let field: any = {};
+          let child: any = {};
+          field[filter[0]] = {};
+          child.$regex = filter[2];
+          child.$options = "i";
+          field[filter[0]] = child;
+          let isDuplicate = allFilter.filter(
+            (item) => Object.keys(item)[0] == filter[0]
+          );
+          if (isDuplicate.length === 0) {
+            allFilter.push(field);
+          } else {
+            return res
+              .status(400)
+              .json({ status: 400, msg: "Error, filter duplicate" });
+          }
+        }
+      }
+
+      let filterData: any = {
+        $and: allFilter,
+      };
+
+      const getAll = await User.find(filterData).count();
+      const users = await User.find(filterData, setField)
         .limit(limit)
         .sort(order_by);
 
