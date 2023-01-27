@@ -1,3 +1,49 @@
-2023/01/27-16:31:06.853 5744 Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/01/27-16:31:06.863 5744 Recovering log #691
-2023/01/27-16:31:06.877 5744 Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000691.log 
+2023/01/27-16:57:37.032 3e8 Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/01/27-16:57:37.035 3e8 Recovering log #691
+2023/01/27-16:57:37.051 3e8 Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000691.log 
+2023/01/27-16:57:56.735 1824 Compacting 1@1 + 6@2 files
+2023/01/27-16:57:56.870 1824 Generated table #706@1: 99283 keys, 2250084 bytes
+2023/01/27-16:57:57.008 1824 Generated table #707@1: 101551 keys, 2250915 bytes
+2023/01/27-16:57:57.151 1824 Generated table #708@1: 101707 keys, 2252031 bytes
+2023/01/27-16:57:57.272 1824 Generated table #709@1: 86269 keys, 1905569 bytes
+2023/01/27-16:57:57.280 1824 Compacted 1@1 + 6@2 files => 8658599 bytes
+2023/01/27-16:57:57.281 1824 compacted to: files[ 0 0 15 0 0 0 0 ]
+2023/01/27-16:58:27.223 7584 Level-0 table #711: started
+2023/01/27-16:58:27.239 7584 Level-0 table #711: 1330128 bytes OK
+2023/01/27-16:58:27.241 7584 Delete type=2 #667
+2023/01/27-16:58:27.241 7584 Delete type=2 #686
+2023/01/27-16:58:27.241 7584 Delete type=2 #687
+2023/01/27-16:58:27.241 7584 Delete type=2 #688
+2023/01/27-16:58:27.241 7584 Delete type=2 #689
+2023/01/27-16:58:27.241 7584 Delete type=2 #690
+2023/01/27-16:58:27.241 7584 Delete type=0 #691
+2023/01/27-16:58:27.241 7584 Delete type=2 #694
+2023/01/27-16:58:43.609 1824 Compacting 1@0 + 0@1 files
+2023/01/27-16:58:43.639 1824 Generated table #712@0: 19084 keys, 626446 bytes
+2023/01/27-16:58:43.642 1824 Generated table #713@0: 288 keys, 8200 bytes
+2023/01/27-16:58:43.642 1824 Compacted 1@0 + 0@1 files => 634646 bytes
+2023/01/27-16:58:43.643 1824 compacted to: files[ 0 2 15 0 0 0 0 ]
+2023/01/27-16:58:43.643 1824 Delete type=2 #711
+2023/01/27-16:58:55.974 1824 Compacting 1@1 + 9@2 files
+2023/01/27-16:58:56.027 1824 Generated table #714@1: 27802 keys, 2253161 bytes
+2023/01/27-16:58:56.067 1824 Generated table #715@1: 41102 keys, 2253716 bytes
+2023/01/27-16:58:56.083 1824 Generated table #716@1: 2569 keys, 2151348 bytes
+2023/01/27-16:58:56.107 1824 Generated table #717@1: 2510 keys, 2160450 bytes
+2023/01/27-16:58:56.130 1824 Generated table #718@1: 2360 keys, 2158992 bytes
+2023/01/27-16:58:56.155 1824 Generated table #719@1: 2987 keys, 2156999 bytes
+2023/01/27-16:58:56.198 1824 Generated table #720@1: 18701 keys, 2192310 bytes
+2023/01/27-16:58:56.274 1824 Generated table #721@1: 25341 keys, 2275440 bytes
+2023/01/27-16:58:56.327 1824 Generated table #722@1: 23834 keys, 2233999 bytes
+2023/01/27-16:58:56.331 1824 Generated table #723@1: 873 keys, 233185 bytes
+2023/01/27-16:58:56.331 1824 Compacted 1@1 + 9@2 files => 20069600 bytes
+2023/01/27-16:58:56.332 1824 compacted to: files[ 0 1 16 0 0 0 0 ]
+2023/01/27-16:58:56.333 1824 Delete type=2 #695
+2023/01/27-16:58:56.333 1824 Delete type=2 #696
+2023/01/27-16:58:56.333 1824 Delete type=2 #697
+2023/01/27-16:58:56.333 1824 Delete type=2 #698
+2023/01/27-16:58:56.333 1824 Delete type=2 #699
+2023/01/27-16:58:56.333 1824 Delete type=2 #700
+2023/01/27-16:58:56.333 1824 Delete type=2 #701
+2023/01/27-16:58:56.333 1824 Delete type=2 #702
+2023/01/27-16:58:56.333 1824 Delete type=2 #703
+2023/01/27-16:58:56.333 1824 Delete type=2 #712
