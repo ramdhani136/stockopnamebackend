@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User";
-import FilterQuery from "../utils/FIlterQuery";
+import FilterQuery from "../utils/FilterQuery";
 import IController from "./ControllerInterface";
 import { IStateFilter } from "./FilterInterface";
 const bcrypt = require("bcrypt");
