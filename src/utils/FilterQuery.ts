@@ -1,5 +1,8 @@
 import { IStateFilter } from "../controllers/FilterInterface";
 
+// filters=[["nama","=","Ilham Ramdhani"]]
+// fields=["name","username","email"]
+
 interface IFilterQuery {
   status: boolean;
   data: any[];
