@@ -10,6 +10,7 @@ import DataConnect from "./config/db";
 import http from "http";
 import SocketIO from "./utils/SocketIO";
 import ContactRoutes from "./routes/ContactRoutes";
+import Redis from "./config/Redis";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -30,6 +31,7 @@ class App {
     this.plugins();
     this.database = new DataConnect();
     this.routes();
+    Redis.getConnect();
   }
 
   protected plugins(): void {
@@ -48,7 +50,7 @@ class App {
   }
 }
 
-const port: number = 5000;
+const port: number = 6000;
 const app = new App();
 const send = app.database;
 const io = app.io;
@@ -56,6 +58,5 @@ const io = app.io;
 app.server.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
-
 
 export { io, send };

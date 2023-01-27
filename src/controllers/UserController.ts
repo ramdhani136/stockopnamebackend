@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import User from "../models/User";
 import FilterQuery from "../utils/FilterQuery";
@@ -106,6 +107,9 @@ class UserController implements IController {
     try {
       const user = new User(req.body);
       const users = await user.save();
+      await Redis.client.set(`user-${users._id}`, JSON.stringify(users), {
+        EX: 10,
+      });
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
       return res.status(400).json({ status: 400, data: error });
@@ -114,7 +118,15 @@ class UserController implements IController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
+      const cache = await Redis.client.get(`user-${req.params.id}`);
+      if (cache) {
+        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+      }
       const users = await User.findOne({ _id: req.params.id });
+      await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users));
+      // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
+      //   EX: 10,
+      // });
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
@@ -123,8 +135,10 @@ class UserController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const users = await User.updateOne({ _id: req.params.id }, req.body);
-      return res.status(200).json({ status: 200, data: users });
+      const result = await User.updateOne({ _id: req.params.id }, req.body);
+      const users = await User.findOne({ _id: req.params.id });
+      await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users));
+      return res.status(200).json({ status: 200, data: result });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }
@@ -133,6 +147,7 @@ class UserController implements IController {
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       const users = await User.deleteOne({ _id: req.params.id });
+      await Redis.client.del(`user-${req.params.id}`);
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
