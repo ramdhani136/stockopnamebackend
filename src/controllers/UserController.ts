@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
+import { IStateFilter } from "../Interfaces";
 import User from "../models/User";
 import FilterQuery from "../utils/FilterQuery";
 import IController from "./ControllerInterface";
-import { IStateFilter } from "./FilterInterface";
 const bcrypt = require("bcrypt");
 
 class UserController implements IController {

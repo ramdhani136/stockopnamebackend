@@ -1,7 +1,7 @@
-import { IStateFilter } from "../controllers/FilterInterface";
-
 // filters=[["nama","=","Ilham Ramdhani"]]
 // fields=["name","username","email"]
+
+import { IStateFilter } from "../Interfaces";
 
 interface IFilterQuery {
   status: boolean;
