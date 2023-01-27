@@ -79,8 +79,8 @@ class UserController implements IController {
 
       return res.status(200).json({
         status: 200,
-        offset,
-        hasMore:getAll>=offset*limit?true:false,
+        nextLoad:offset + limit,
+        hasMore: getAll >= offset * limit ? true : false,
         limit,
         last_id,
         total: getAll,
