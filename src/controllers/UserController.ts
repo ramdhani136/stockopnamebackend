@@ -53,6 +53,7 @@ class UserController implements IController {
         : { updatedAt: -1 };
       const last_id: number | string = parseInt(`${req.query.lastId}`) || 0;
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
+      const offset: number | string = parseInt(`${req.query.offset}`) || 0;
 
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
@@ -72,11 +73,14 @@ class UserController implements IController {
 
       const getAll = await User.find(isFilter.data).count();
       const users = await User.find(isFilter.data, setField)
+        .skip(offset)
         .limit(limit)
         .sort(order_by);
 
       return res.status(200).json({
         status: 200,
+        offset,
+        hasMore:getAll>=offset*limit?true:false,
         limit,
         last_id,
         total: getAll,
@@ -120,6 +124,7 @@ class UserController implements IController {
     try {
       const cache = await Redis.client.get(`user-${req.params.id}`);
       if (cache) {
+        console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
       const users = await User.findOne({ _id: req.params.id });
