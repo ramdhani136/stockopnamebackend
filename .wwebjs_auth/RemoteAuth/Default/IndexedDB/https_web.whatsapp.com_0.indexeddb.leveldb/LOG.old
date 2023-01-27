@@ -1,27 +1,37 @@
-2023/01/27-09:04:05.604 2898 Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/01/27-09:04:05.611 2898 Recovering log #520
-2023/01/27-09:04:05.668 2898 Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000520.log 
-2023/01/27-09:04:20.718 5870 Level-0 table #537: started
-2023/01/27-09:04:20.737 5870 Level-0 table #537: 1200311 bytes OK
-2023/01/27-09:04:20.739 5870 Delete type=0 #520
-2023/01/27-09:04:31.456 5cc8 Compacting 1@1 + 8@2 files
-2023/01/27-09:04:31.512 5cc8 Generated table #538@1: 43463 keys, 2244297 bytes
-2023/01/27-09:04:31.527 5cc8 Generated table #539@1: 2938 keys, 2149987 bytes
-2023/01/27-09:04:31.543 5cc8 Generated table #540@1: 2803 keys, 2158439 bytes
-2023/01/27-09:04:31.559 5cc8 Generated table #541@1: 2297 keys, 2158178 bytes
-2023/01/27-09:04:31.576 5cc8 Generated table #542@1: 2852 keys, 2155308 bytes
-2023/01/27-09:04:31.599 5cc8 Generated table #543@1: 12818 keys, 2178679 bytes
-2023/01/27-09:04:31.639 5cc8 Generated table #544@1: 27341 keys, 2270780 bytes
-2023/01/27-09:04:31.676 5cc8 Generated table #545@1: 26443 keys, 2255385 bytes
-2023/01/27-09:04:31.690 5cc8 Generated table #546@1: 202 keys, 122726 bytes
-2023/01/27-09:04:31.690 5cc8 Compacted 1@1 + 8@2 files => 17693779 bytes
-2023/01/27-09:04:31.690 5cc8 compacted to: files[ 0 1 16 0 0 0 0 ]
-2023/01/27-09:04:31.690 5cc8 Delete type=2 #524
-2023/01/27-09:04:31.690 5cc8 Delete type=2 #525
-2023/01/27-09:04:31.690 5cc8 Delete type=2 #526
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #527
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #528
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #529
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #530
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #531
-2023/01/27-09:04:31.691 5cc8 Delete type=2 #537
+2023/01/27-14:03:40.746 6b44 Reusing MANIFEST D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/01/27-14:03:40.751 6b44 Recovering log #617
+2023/01/27-14:03:40.848 6b44 Reusing old log D:\data\dev\Project\newwabotbackend\.wwebjs_auth\RemoteAuth\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000617.log 
+2023/01/27-14:03:52.036 ff0 Level-0 table #638: started
+2023/01/27-14:03:52.053 ff0 Level-0 table #638: 1317392 bytes OK
+2023/01/27-14:03:52.054 ff0 Delete type=0 #617
+2023/01/27-14:03:52.593 ff0 Compacting 1@0 + 0@1 files
+2023/01/27-14:03:52.618 ff0 Generated table #639@0: 20369 keys, 681021 bytes
+2023/01/27-14:03:52.620 ff0 Generated table #640@0: 184 keys, 3702 bytes
+2023/01/27-14:03:52.620 ff0 Compacted 1@0 + 0@1 files => 684723 bytes
+2023/01/27-14:03:52.621 ff0 compacted to: files[ 0 2 16 0 0 0 0 ]
+2023/01/27-14:03:52.621 ff0 Delete type=2 #638
+2023/01/27-14:03:53.019 ff0 Compacting 1@1 + 10@2 files
+2023/01/27-14:03:53.067 ff0 Generated table #641@1: 29200 keys, 2251734 bytes
+2023/01/27-14:03:53.103 ff0 Generated table #642@1: 31540 keys, 2207370 bytes
+2023/01/27-14:03:53.133 ff0 Generated table #643@1: 2846 keys, 2155117 bytes
+2023/01/27-14:03:53.154 ff0 Generated table #644@1: 2340 keys, 2158917 bytes
+2023/01/27-14:03:53.174 ff0 Generated table #645@1: 2507 keys, 2154642 bytes
+2023/01/27-14:03:53.195 ff0 Generated table #646@1: 3584 keys, 2160043 bytes
+2023/01/27-14:03:53.235 ff0 Generated table #647@1: 24899 keys, 2228553 bytes
+2023/01/27-14:03:53.283 ff0 Generated table #648@1: 26114 keys, 2272764 bytes
+2023/01/27-14:03:53.316 ff0 Generated table #649@1: 17822 keys, 2191277 bytes
+2023/01/27-14:03:53.346 ff0 Generated table #650@1: 16682 keys, 2141654 bytes
+2023/01/27-14:03:53.359 ff0 Generated table #651@1: 18620 keys, 366505 bytes
+2023/01/27-14:03:53.359 ff0 Compacted 1@1 + 10@2 files => 22288576 bytes
+2023/01/27-14:03:53.360 ff0 compacted to: files[ 0 1 17 0 0 0 0 ]
+2023/01/27-14:03:53.361 ff0 Delete type=2 #621
+2023/01/27-14:03:53.361 ff0 Delete type=2 #622
+2023/01/27-14:03:53.361 ff0 Delete type=2 #623
+2023/01/27-14:03:53.361 ff0 Delete type=2 #624
+2023/01/27-14:03:53.361 ff0 Delete type=2 #625
+2023/01/27-14:03:53.361 ff0 Delete type=2 #626
+2023/01/27-14:03:53.361 ff0 Delete type=2 #627
+2023/01/27-14:03:53.361 ff0 Delete type=2 #628
+2023/01/27-14:03:53.361 ff0 Delete type=2 #629
+2023/01/27-14:03:53.361 ff0 Delete type=2 #630
+2023/01/27-14:03:53.361 ff0 Delete type=2 #639

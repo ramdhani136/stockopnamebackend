@@ -62,6 +62,7 @@ class UserController implements IController {
 
       // Mengeset semua filter
       let allFilter: any[] = [];
+      let unicFilter: any[] = [];
       if (filters.length > 0) {
         for (const filter of filters) {
           let validFilter = stateFilter.filter((item) => {
@@ -88,22 +89,22 @@ class UserController implements IController {
               child.$options = "i";
               break;
             case "=":
-              child.$in = [filter[2]];
+              child.$eq = `${filter[2]}`;
               break;
             case "!=":
-              child.$nin = [filter[2]];
+              child.$ne = `${filter[2]}`;
               break;
             case ">":
-              child.$gt = [filter[2]];
+              child.$gt = filter[2];
               break;
             case ">=":
-              child.$gte = [filter[2]];
+              child.$gte = filter[2];
               break;
             case "<":
-              child.$lt = [filter[2]];
+              child.$lt = filter[2];
               break;
             case "<=":
-              child.$lte = [filter[2]];
+              child.$lte = filter[2];
               break;
           }
 
@@ -113,20 +114,29 @@ class UserController implements IController {
           let isDuplicate = allFilter.filter(
             (item) => Object.keys(item)[0] == filter[0]
           );
+          allFilter.push(field);
           if (isDuplicate.length === 0) {
-            allFilter.push(field);
-          } else {
-            return res
-              .status(400)
-              .json({ status: 400, msg: "Error, filter duplicate" });
+            unicFilter.push(filter[0]);
           }
         }
       }
 
+      let finalFilter: any = [];
+      for (const item of unicFilter) {
+        let ismerge = allFilter.filter((all) => Object.keys(all)[0] === item);
+        let simpan;
+        if (ismerge.length > 1) {
+          simpan = { $or: ismerge };
+        } else {
+          simpan = ismerge[0];
+        }
+        finalFilter.push(simpan);
+      }
+
       let filterData: any =
-        Object.keys(allFilter).length > 0
+        Object.keys(finalFilter).length > 0
           ? {
-              $and: allFilter,
+              $and: finalFilter,
             }
           : {};
 
