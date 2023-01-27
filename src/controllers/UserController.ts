@@ -81,10 +81,20 @@ class UserController implements IController {
           // End
           let field: any = {};
           let child: any = {};
-          field[filter[0]] = {};
-          child.$regex = filter[2];
-          child.$options = "i";
-          field[filter[0]] = child;
+
+          switch (filter[1]) {
+            case "like":
+              child.$regex = filter[2];
+              child.$options = "i";
+              break;
+            case "=":
+              child.$in = [filter[2]];
+              break;
+          }
+
+          if (Object.keys(child).length) {
+            field[filter[0]] = child;
+          }
           let isDuplicate = allFilter.filter(
             (item) => Object.keys(item)[0] == filter[0]
           );
@@ -97,6 +107,8 @@ class UserController implements IController {
           }
         }
       }
+
+      console.log(JSON.stringify(allFilter));
 
       let filterData: any = {
         $and: allFilter,
@@ -115,8 +127,11 @@ class UserController implements IController {
         data: users,
         filters: stateFilter,
       });
-    } catch (error) {
-      return res.status(400).json({ status: 400, msg: error });
+    } catch (error: any) {
+      return res.status(400).json({
+        status: 400,
+        msg: Object.keys(error).length > 0 ? error : "Error,Invalid Request",
+      });
     }
   };
 
