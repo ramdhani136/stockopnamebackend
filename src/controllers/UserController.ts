@@ -90,6 +90,21 @@ class UserController implements IController {
             case "=":
               child.$in = [filter[2]];
               break;
+            case "!=":
+              child.$nin = [filter[2]];
+              break;
+            case ">":
+              child.$gt = [filter[2]];
+              break;
+            case ">=":
+              child.$gte = [filter[2]];
+              break;
+            case "<":
+              child.$lt = [filter[2]];
+              break;
+            case "<=":
+              child.$lte = [filter[2]];
+              break;
           }
 
           if (Object.keys(child).length) {
@@ -108,11 +123,12 @@ class UserController implements IController {
         }
       }
 
-      console.log(JSON.stringify(allFilter));
-
-      let filterData: any = {
-        $and: allFilter,
-      };
+      let filterData: any =
+        Object.keys(allFilter).length > 0
+          ? {
+              $and: allFilter,
+            }
+          : {};
 
       const getAll = await User.find(filterData).count();
       const users = await User.find(filterData, setField)
