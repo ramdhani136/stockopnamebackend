@@ -25,9 +25,9 @@ class FilterQuery {
           return item.name === filter[0] && validOperator.length !== 0;
         });
         // Cek validasi filter tersedia
-        if (validFilter.length === 0) {
-          valid = false;
-        }
+        // if (validFilter.length === 0) {
+        //   valid = false;
+        // }
         // End
         let field: any = {};
         let child: any = {};
@@ -36,6 +36,9 @@ class FilterQuery {
           case "like":
             child.$regex = filter[2];
             child.$options = "i";
+            break;
+          case "notlike":
+            child.$not = { $regex: filter[2], $options: "i" };
             break;
           case "=":
             child.$eq = `${filter[2]}`;
