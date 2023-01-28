@@ -25,9 +25,9 @@ class FilterQuery {
           return item.name === filter[0] && validOperator.length !== 0;
         });
         // Cek validasi filter tersedia
-        // if (validFilter.length === 0) {
-        //   valid = false;
-        // }
+        if (validFilter.length === 0) {
+          valid = false;
+        }
         // End
         let field: any = {};
         let child: any = {};
