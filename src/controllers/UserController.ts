@@ -51,9 +51,8 @@ class UserController implements IController {
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
-      const last_id: number | string = parseInt(`${req.query.lastId}`) || 0;
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
-      const offset: number | string = parseInt(`${req.query.offset}`) || 0;
+      let page: number | string = parseInt(`${req.query.page}`) || 1;
 
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
@@ -73,19 +72,24 @@ class UserController implements IController {
 
       const getAll = await User.find(isFilter.data).count();
       const users = await User.find(isFilter.data, setField)
-        .skip(offset)
+        .skip(page * limit - limit)
         .limit(limit)
         .sort(order_by);
 
-      return res.status(200).json({
-        status: 200,
-        nextLoad:offset + limit,
-        hasMore: getAll >= offset * limit ? true : false,
-        limit,
-        last_id,
-        total: getAll,
-        data: users,
-        filters: stateFilter,
+      if (users.length > 0) {
+        return res.status(200).json({
+          status: 200,
+          total: getAll,
+          limit,
+          nextPage: page + 1,
+          hasMore: getAll >= page * limit ? true : false,
+          data: users,
+          filters: stateFilter,
+        });
+      }
+      return res.status(400).json({
+        status: 404,
+        msg: "Data Not found!",
       });
     } catch (error: any) {
       return res.status(400).json({
