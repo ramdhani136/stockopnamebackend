@@ -38,7 +38,6 @@ class App {
     this.app.use(morgan("dev"));
     this.app.use(helmet());
     this.app.use(cors(corsOptions));
-    // socketio
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
   }
