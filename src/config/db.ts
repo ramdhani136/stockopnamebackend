@@ -1,5 +1,5 @@
 import mongoose, { ConnectOptions } from "mongoose";
-import WhatsAppBoot from "../utils/WhatsappBoot";
+import { WhatsAppBoot } from "../utils";
 const { MongoStore } = require("wwebjs-mongo");
 
 class DataConnect {

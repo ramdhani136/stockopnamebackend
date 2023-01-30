@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import { Contact } from "../models";
-import FilterQuery from "../utils/FilterQuery";
+import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 
 class ContactController implements IController {

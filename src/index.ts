@@ -7,9 +7,9 @@ import cors from "cors";
 import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
-import SocketIO from "./utils/SocketIO";
-import Redis from "./config/Redis";
 import { ContactRoutes, UserRoutes } from "./routes";
+import Redis from "./config/Redis";
+import { SocketIO } from "./utils";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
