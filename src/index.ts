@@ -30,7 +30,6 @@ class App {
     this.plugins();
     this.database = new DataConnect();
     this.routes();
-    Redis.getConnect();
   }
 
   protected plugins(): void {
@@ -41,6 +40,7 @@ class App {
     this.app.use(cors(corsOptions));
     // socketio
     this.io = new SocketIO(this.server).io;
+    Redis.getConnect();
   }
 
   protected routes(): void {
