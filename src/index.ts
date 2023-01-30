@@ -1,16 +1,15 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import { config as dotenv } from "dotenv";
 import cors from "cors";
 import compression from "compression";
-import UserRoutes from "./routes/UserRoutes";
 import DataConnect from "./config/db";
 import http from "http";
 import SocketIO from "./utils/SocketIO";
-import ContactRoutes from "./routes/ContactRoutes";
 import Redis from "./config/Redis";
+import { ContactRoutes, UserRoutes } from "./routes";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],

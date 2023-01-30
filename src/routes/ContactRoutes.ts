@@ -1,5 +1,5 @@
 
-import ContactController from "../controllers/ContactController";
+import { ContactController } from "../controllers";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 import RouteBase from "./RouteBase";
 

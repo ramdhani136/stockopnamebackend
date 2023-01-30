@@ -1,5 +1,5 @@
 
-import UserController from "../controllers/UserController";
+import { UserController } from "../controllers";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 import RouteBase from "./RouteBase";
 
