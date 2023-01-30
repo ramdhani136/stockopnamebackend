@@ -26,13 +26,13 @@ class App {
   constructor() {
     this.app = express();
     this.server = http.createServer(this.app);
-    dotenv();
     this.plugins();
     this.database = new DataConnect();
     this.routes();
   }
 
   protected plugins(): void {
+    dotenv();
     this.app.use(bodyParser.json());
     this.app.use(compression());
     this.app.use(morgan("dev"));
