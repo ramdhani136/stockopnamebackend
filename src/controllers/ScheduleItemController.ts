@@ -23,7 +23,7 @@ const getBinQty = async (bin: string): Promise<any> => {
   }
 };
 
-class ScheduleItemController implements IController {
+class ScheduleItemController  {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
@@ -156,30 +156,30 @@ class ScheduleItemController implements IController {
     }
   };
 
-  create = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.body.password) {
-      return res.status(400).json({ status: 400, msg: "Password Required!" });
-    }
-    if (!req.body.name) {
-      return res.status(400).json({ status: 400, msg: "Name Required!" });
-    }
-    if (!req.body.username) {
-      return res.status(400).json({ status: 400, msg: "Username Required!" });
-    }
+  // create = async (req: Request, res: Response): Promise<Response> => {
+  //   if (!req.body.password) {
+  //     return res.status(400).json({ status: 400, msg: "Password Required!" });
+  //   }
+  //   if (!req.body.name) {
+  //     return res.status(400).json({ status: 400, msg: "Name Required!" });
+  //   }
+  //   if (!req.body.username) {
+  //     return res.status(400).json({ status: 400, msg: "Username Required!" });
+  //   }
 
-    const salt = await bcrypt.genSalt();
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-    try {
-      const data = new Db(req.body);
-      const result = await data.save();
-      // await Redis.client.set(`${redisName}-${result._id}`, JSON.stringify(result), {
-      //   EX: 10,
-      // });
-      return res.status(200).json({ status: 200, data: result });
-    } catch (error) {
-      return res.status(400).json({ status: 400, data: error });
-    }
-  };
+  //   const salt = await bcrypt.genSalt();
+  //   req.body.password = await bcrypt.hash(req.body.password, salt);
+  //   try {
+  //     const data = new Db(req.body);
+  //     const result = await data.save();
+  //     // await Redis.client.set(`${redisName}-${result._id}`, JSON.stringify(result), {
+  //     //   EX: 10,
+  //     // });
+  //     return res.status(200).json({ status: 200, data: result });
+  //   } catch (error) {
+  //     return res.status(400).json({ status: 400, data: error });
+  //   }
+  // };
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
