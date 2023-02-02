@@ -29,22 +29,27 @@ class ScheduleItemController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
-        name: "name",
+        name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "schedule",
       },
       {
-        name: "uom",
+        name: "item_name",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "schedule",
+      },
+      {
+        name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "workflow",
       },
       {
-        name: "qty",
+        name: "actual_qty",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "workflow",
       },
       {
-        name: "real",
+        name: "stock_uom",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "workflow",
       },
@@ -133,17 +138,26 @@ class ScheduleItemController implements IController {
   };
 
   create = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.body.name) {
-      return res.status(400).json({ status: 400, msg: "Name Required!" });
+    if (!req.body.item_code) {
+      return res.status(400).json({ status: 400, msg: "Item_code Required!" });
     }
-    if (!req.body.uom) {
-      return res.status(400).json({ status: 400, msg: "Uom Required!" });
+    if (!req.body.item_name) {
+      return res.status(400).json({ status: 400, msg: "Item_name Required!" });
     }
-    if (!req.body.qty) {
-      return res.status(400).json({ status: 400, msg: "Qty Required!" });
+    if (!req.body.warehouse) {
+      return res.status(400).json({ status: 400, msg: "Warehouse Required!" });
     }
     if (!req.body.scheduleId) {
       return res.status(400).json({ status: 400, msg: "ScheduleId Required!" });
+    }
+    if (!req.body.actual_qty) {
+      return res.status(400).json({ status: 400, msg: "Actual_qty Required!" });
+    }
+    if (!req.body.stock_uom) {
+      return res.status(400).json({ status: 400, msg: "Stock_uom Required!" });
+    }
+    if (!req.body.checkedBy) {
+      return res.status(400).json({ status: 400, msg: "CheckedBy Required!" });
     }
     try {
       const result = new Db(req.body);

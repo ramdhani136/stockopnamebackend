@@ -2,25 +2,28 @@ import mongoose from "mongoose";
 
 const ScheduleItem = new mongoose.Schema(
   {
-    itemCode: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    uom: {
+    item_code: {
       type: String,
       required: true,
     },
-    qty: {
+    item_name: {
+      type: String,
+      required: true,
+    },
+    warehouse: {
+      type: String,
+      required: true,
+    },
+    stock_uom: {
+      type: String,
+      required: true,
+      default:0
+    },
+    actual_qty: {
       type: Number,
-      require:true
+      require: true,
     },
-    real: {
+    real_qty: {
       type: Number,
       default: 0,
     },
@@ -29,7 +32,7 @@ const ScheduleItem = new mongoose.Schema(
     },
     scheduleId: {
       type: String,
-      require:true
+      require: true,
     },
     status: {
       type: Boolean,
