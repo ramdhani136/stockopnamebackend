@@ -167,7 +167,7 @@ class ScheduleController implements IController {
       const scheduleId: any = response._id;
       const warehouse: any = response.warehouse;
       const insertItem = await GetErpBin(warehouse);
-      
+
       if (!insertItem.status) {
         return res.status(400).json({
           status: 400,
@@ -203,9 +203,6 @@ class ScheduleController implements IController {
         `schedule-${req.params.id}`,
         JSON.stringify(result)
       );
-      // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
-      //   EX: 10,
-      // });
       return res.status(200).json({ status: 200, data: result });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
