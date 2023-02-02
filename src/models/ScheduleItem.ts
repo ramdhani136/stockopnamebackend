@@ -35,9 +35,9 @@ const ScheduleItem = new mongoose.Schema(
       require: true,
     },
     status: {
-      type: Boolean,
+      type: String,
       required: true,
-      default: 0,
+      default: 1,
     },
   },
   {
