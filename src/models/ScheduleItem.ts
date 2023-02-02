@@ -7,6 +7,10 @@ const ScheduleItem = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    bin: {
+      type: String,
+      required: true,
+    },
     item_code: {
       type: String,
       required: true,

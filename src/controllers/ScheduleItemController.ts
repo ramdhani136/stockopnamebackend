@@ -1,13 +1,27 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
-import { ScheduleItem } from "../models";
+import { Schedule, ScheduleItem } from "../models";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 const bcrypt = require("bcrypt");
-
+import axios from "axios";
 const Db = ScheduleItem;
 const redisName = "scheduleitem";
+
+const getBinQty = async (bin: string): Promise<any> => {
+  const uri = `${process.env.ERP_HOST}/api/resource/Bin/${bin}`;
+  const headers = {
+    Cookie:
+      "full_name=it; sid=7f5e31cf8a2d49f838ce789f0669f3a852e35c2993c70dafdf024b05; system_user=yes; user_id=it%40etm.com; user_image=",
+  };
+  try {
+    const result = await axios.get(uri, { headers });
+    return { data: result.data, status: true };
+  } catch (error) {
+    return { data: [], status: false, msg: error };
+  }
+};
 
 class ScheduleItemController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
@@ -169,17 +183,17 @@ class ScheduleItemController implements IController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      // const cache = await Redis.client.get(`${redisName}-${req.params.id}`);
-      // if (cache) {
-      //   console.log("Cache");
-      //   return res.status(200).json({ status: 200, data: JSON.parse(cache) });
-      // }
       const result: any = await Db.findOne({ _id: req.params.id });
-      // await Redis.client.set(`${redisName}-${req.params.id}`, JSON.stringify(users));
-      // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
-      //   EX: 10,
-      // });
       if (result) {
+        let qtyStok = result.actual_qty;
+        const schedule: any = await Schedule.findOne({
+          _id: result.scheduleId,
+        });
+        if (result.status == 0 && schedule.status == 1) {
+          const resultErp: any = await getBinQty(result.bin);
+          qtyStok = resultErp.data.data.actual_qty;
+        }
+        result.actual_qty = qtyStok;
         return res.status(200).json({ status: 200, data: result });
       }
       return res.status(404).json({ status: 404, msg: "Data Not Found" });
