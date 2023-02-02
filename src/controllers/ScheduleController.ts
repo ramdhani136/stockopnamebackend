@@ -166,9 +166,8 @@ class ScheduleController implements IController {
       );
       const scheduleId: any = response._id;
       const warehouse: any = response.warehouse;
-
       const insertItem = await GetErpBin(warehouse);
-
+      
       if (!insertItem.status) {
         return res.status(400).json({
           status: 400,
