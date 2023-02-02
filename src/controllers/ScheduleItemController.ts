@@ -6,30 +6,65 @@ import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 const bcrypt = require("bcrypt");
 
-const Db =  ScheduleItem;
-const redisName = "scheduleitem"
+const Db = ScheduleItem;
+const redisName = "scheduleitem";
 
 class ScheduleItemController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
-        name: "name",
+        name: "_id",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "users",
       },
       {
-        name: "username",
+        name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "users",
       },
       {
-        name: "email",
+        name: "item_name",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "kategori_barang",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "warehouse",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "stock_uom",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "checkedBy",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "scheduleId",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "users",
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
+        name: "actual_qty",
+        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        targetdata: "users",
+      },
+      {
+        name: "real_qty",
+        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
         targetdata: "users",
       },
       {
@@ -50,7 +85,7 @@ class ScheduleItemController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["name"];
+        : ["item_code", "item_name"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -129,28 +164,36 @@ class ScheduleItemController implements IController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const cache = await Redis.client.get(`${redisName}-${req.params.id}`);
-      if (cache) {
-        console.log("Cache");
-        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
-      }
-      const users = await Db.findOne({ _id: req.params.id });
+      // const cache = await Redis.client.get(`${redisName}-${req.params.id}`);
+      // if (cache) {
+      //   console.log("Cache");
+      //   return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+      // }
+      const result: any = await Db.findOne({
+        $and: [
+          { scheduleId: req.params.schedule },
+          { item_code: req.params.item },
+        ],
+      });
       // await Redis.client.set(`${redisName}-${req.params.id}`, JSON.stringify(users));
       // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
       //   EX: 10,
       // });
-      return res.status(200).json({ status: 200, data: users });
+      if (result) {
+        return res.status(200).json({ status: 200, data: result });
+      }
+      return res.status(404).json({ status: 404, msg: "Data Not Found" });
     } catch (error) {
-      return res.status(404).json({ status: 404, data: error });
+      return res.status(400).json({ status: 400, data: error });
     }
   };
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const data = await Db.updateOne({ _id: req.params.id }, req.body);
+      await Db.updateOne({ _id: req.params.id }, req.body);
       const result = await Db.findOne({ _id: req.params.id });
       // await Redis.client.set(`${redisName}-${req.params.id}`, JSON.stringify(result));
-      return res.status(200).json({ status: 200, data: data });
+      return res.status(200).json({ status: 200, data: result });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }

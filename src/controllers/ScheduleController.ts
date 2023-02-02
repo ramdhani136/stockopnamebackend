@@ -8,7 +8,7 @@ import IController from "./ControllerInterface";
 import { ScheduleItem } from "../models";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
-  const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
+  const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
   const headers = {
     Cookie:
       "full_name=it; sid=7f5e31cf8a2d49f838ce789f0669f3a852e35c2993c70dafdf024b05; system_user=yes; user_id=it%40etm.com; user_image=",
@@ -156,6 +156,7 @@ class ScheduleController implements IController {
       const warehouse: any = response.warehouse;
 
       const insertItem = await GetErpBin(warehouse);
+
 
       if (!insertItem.status) {
         return res.status(400).json({
