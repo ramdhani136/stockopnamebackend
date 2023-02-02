@@ -18,6 +18,10 @@ const ScheduleItem = new mongoose.Schema(
     kategori_barang: {
       type: String,
     },
+    stocker: {
+      type: String,
+      require: true,
+    },
     warehouse: {
       type: String,
       required: true,
