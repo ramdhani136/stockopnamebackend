@@ -104,7 +104,7 @@ class ScheduleItemController  {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["item_code", "item_name", "scheduleId"];
+        : ["item_code", "item_name", "scheduleId","stocker"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
