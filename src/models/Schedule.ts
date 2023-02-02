@@ -5,7 +5,7 @@ const Schedule = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique:true
+      unique: true,
     },
     startDate: {
       type: Date,
@@ -13,12 +13,19 @@ const Schedule = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
+      require:true
     },
     workflowState: {
       type: String,
+      require:true
+    },
+    warehouse: {
+      type: String,
+      require: true,
     },
     createdBy: {
       type: String,
+      require:true
     },
     status: {
       type: Boolean,
