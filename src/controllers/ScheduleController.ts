@@ -119,7 +119,7 @@ class ScheduleController implements IController {
           total: getAll,
           limit,
           nextPage: page + 1,
-          hasMore: getAll >= page * limit ? true : false,
+          hasMore: getAll > page * limit ? true : false,
           data: result,
           filters: stateFilter,
         });
