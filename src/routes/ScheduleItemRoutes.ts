@@ -7,7 +7,7 @@ class ScheduleItemRoutes extends RouteBase {
   routes(): void {
     this.router.get("/", ScheduleItemController.index);
     this.router.post("/", ScheduleItemController.create);
-    this.router.get("/:schedule/:item", ScheduleItemController.show);
+    this.router.get("/:id", ScheduleItemController.show);
     this.router.delete("/:id", ScheduleItemController.delete);
     this.router.put("/:id", ScheduleItemController.update);
   }

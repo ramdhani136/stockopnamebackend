@@ -85,7 +85,7 @@ class ScheduleItemController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["item_code", "item_name","scheduleId"];
+        : ["item_code", "item_name", "scheduleId"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -169,12 +169,7 @@ class ScheduleItemController implements IController {
       //   console.log("Cache");
       //   return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       // }
-      const result: any = await Db.findOne({
-        $and: [
-          { scheduleId: req.params.schedule },
-          { item_code: req.params.item },
-        ],
-      });
+      const result: any = await Db.findOne({ _id: req.params.id });
       // await Redis.client.set(`${redisName}-${req.params.id}`, JSON.stringify(users));
       // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
       //   EX: 10,
