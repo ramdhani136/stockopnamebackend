@@ -33,6 +33,11 @@ class ScheduleItemController implements IController {
         targetdata: "users",
       },
       {
+        name: "stocker",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "users",
+      },
+      {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "users",
