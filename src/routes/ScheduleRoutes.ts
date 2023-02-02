@@ -3,7 +3,7 @@ import { ScheduleController } from "../controllers";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 import RouteBase from "./RouteBase";
 
-class Scheduleoutes extends RouteBase {
+class ScheduleRoutes extends RouteBase {
   routes(): void {
     this.router.get("/", ScheduleController.index);
     this.router.post("/", ScheduleController.create);
@@ -13,4 +13,4 @@ class Scheduleoutes extends RouteBase {
   }
 }
 
-export default new Scheduleoutes().router;
+export default new ScheduleRoutes().router;

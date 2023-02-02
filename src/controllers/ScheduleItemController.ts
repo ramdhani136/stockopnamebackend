@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
-import Schedule from "../models/Schedule";
+import { ScheduleItem } from "../models";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 
-class ScheduleController implements IController {
+const Db = ScheduleItem;
+const RedisName = "scheduleitem"
+
+class ScheduleItemController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
@@ -14,28 +17,33 @@ class ScheduleController implements IController {
         targetdata: "schedule",
       },
       {
-        name: "workflowState",
+        name: "uom",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "workflow",
       },
       {
-        name: "createdBy",
+        name: "qty",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "workflow",
+      },
+      {
+        name: "real",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "workflow",
+      },
+      {
+        name: "checkedBy",
+        operator: ["=", "!=", "like", "notlike"],
+        targetdata: "user",
+      },
+      {
+        name: "scheduleId",
         operator: ["=", "!=", "like", "notlike"],
         targetdata: "user",
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "schedule",
-      },
-      {
-        name: "startDate",
-        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "schedule",
-      },
-      {
-        name: "dueDate",
-        operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
         targetdata: "schedule",
       },
       {
@@ -79,8 +87,8 @@ class ScheduleController implements IController {
       }
       // End
 
-      const getAll = await Schedule.find(isFilter.data).count();
-      const result = await Schedule.find(isFilter.data, setField)
+      const getAll = await Db.find(isFilter.data).count();
+      const result = await Db.find(isFilter.data, setField)
         .skip(page * limit - limit)
         .limit(limit)
         .sort(order_by);
@@ -112,22 +120,19 @@ class ScheduleController implements IController {
     if (!req.body.name) {
       return res.status(400).json({ status: 400, msg: "Name Required!" });
     }
-    if (!req.body.startDate) {
-      return res.status(400).json({ status: 400, msg: "StartDate Required!" });
+    if (!req.body.uom) {
+      return res.status(400).json({ status: 400, msg: "Uom Required!" });
     }
-    if (!req.body.dueDate) {
-      return res.status(400).json({ status: 400, msg: "DueDate Required!" });
+    if (!req.body.qty) {
+      return res.status(400).json({ status: 400, msg: "Qty Required!" });
     }
-    if (!req.body.workflowState) {
-      return res.status(400).json({ status: 400, msg: "WorkflowState Required!" });
-    }
-    if (!req.body.createdBy) {
-      return res.status(400).json({ status: 400, msg: "CratedBy Required!" });
+    if (!req.body.scheduleId) {
+      return res.status(400).json({ status: 400, msg: "ScheduleId Required!" });
     }
     try {
-      const result = new Schedule(req.body);
+      const result = new Db(req.body);
       const response = await result.save();
-      await Redis.client.set(`schedule-${response._id}`, JSON.stringify(response), {
+      await Redis.client.set(`${RedisName}-${response._id}`, JSON.stringify(response), {
         EX: 10,
       });
       return res.status(200).json({ status: 200, data: response });
@@ -138,13 +143,13 @@ class ScheduleController implements IController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const cache = await Redis.client.get(`schedule-${req.params.id}`);
+      const cache = await Redis.client.get(`${RedisName}-${req.params.id}`);
       if (cache) {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Schedule.findOne({ _id: req.params.id });
-      await Redis.client.set(`schedule-${req.params.id}`, JSON.stringify(result));
+      const result = await Db.findOne({ _id: req.params.id });
+      await Redis.client.set(`${RedisName}-${req.params.id}`, JSON.stringify(result));
       // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
       //   EX: 10,
       // });
@@ -156,9 +161,9 @@ class ScheduleController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await Schedule.updateOne({ _id: req.params.id }, req.body);
-      const getData = await Schedule.findOne({ _id: req.params.id });
-      await Redis.client.set(`schedule-${req.params.id}`, JSON.stringify(getData));
+      const result = await Db.updateOne({ _id: req.params.id }, req.body);
+      const getData = await Db.findOne({ _id: req.params.id });
+      await Redis.client.set(`${RedisName}-${req.params.id}`, JSON.stringify(getData));
       return res.status(200).json({ status: 200, data: result });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
@@ -167,8 +172,8 @@ class ScheduleController implements IController {
 
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await Schedule.deleteOne({ _id: req.params.id });
-      await Redis.client.del(`schedule-${req.params.id}`);
+      const result = await Db.deleteOne({ _id: req.params.id });
+      await Redis.client.del(`${RedisName}-${req.params.id}`);
       return res.status(200).json({ status: 200, data: result });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
@@ -176,4 +181,4 @@ class ScheduleController implements IController {
   };
 }
 
-export default new ScheduleController();
+export default new ScheduleItemController();

@@ -7,7 +7,7 @@ import cors from "cors";
 import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
-import { ContactRoutes, ScheduleRoutes, UserRoutes } from "./routes";
+import { ContactRoutes, ScheduleItemRoutes, ScheduleRoutes, UserRoutes } from "./routes";
 import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
 
@@ -46,6 +46,7 @@ class App {
     this.app.use("/users", UserRoutes);
     this.app.use("/contacts", ContactRoutes);
     this.app.use("/schedule", ScheduleRoutes);
+    this.app.use("/scheduleitem", ScheduleItemRoutes);
   }
 }
 
