@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schedule = new mongoose.Schema(
   {
-    name: {
+    _id: {
       type: String,
       required: true,
       unique: true,
@@ -30,7 +30,7 @@ const Schedule = new mongoose.Schema(
     status: {
       type: Boolean,
       required: true,
-      default: 1,
+      default: 0,
     },
   },
   {

@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const ScheduleItem = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     item_code: {
       type: String,
       required: true,
@@ -17,7 +22,7 @@ const ScheduleItem = new mongoose.Schema(
     stock_uom: {
       type: String,
       required: true,
-      default:0
+      default: 0,
     },
     actual_qty: {
       type: Number,
@@ -37,7 +42,7 @@ const ScheduleItem = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: 1,
+      default: 0,
     },
   },
   {
