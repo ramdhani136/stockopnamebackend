@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
-import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import { Schedule, ScheduleItem } from "../models";
 import { FilterQuery } from "../utils";
-import IController from "./ControllerInterface";
-const bcrypt = require("bcrypt");
 import axios from "axios";
 const Db = ScheduleItem;
-const redisName = "scheduleitem";
 
 const getBinQty = async (bin: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin/${bin}`;
