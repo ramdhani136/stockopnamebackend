@@ -1,7 +1,7 @@
 interface IStateFilter {
   name: string;
   operator: any[];
-  targetdata: string;
+  targetdata?: string;
 }
 
 export { IStateFilter };
