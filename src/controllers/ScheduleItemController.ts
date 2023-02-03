@@ -7,10 +7,11 @@ const Db = ScheduleItem;
 
 const getBinQty = async (bin: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin/${bin}`;
+
   const headers = {
-    Cookie:
-      "full_name=it; sid=7f5e31cf8a2d49f838ce789f0669f3a852e35c2993c70dafdf024b05; system_user=yes; user_id=it%40etm.com; user_image=",
+    Authorization: "token 517ba90cd805072:c4303a3355cbca4",
   };
+
   try {
     const result = await axios.get(uri, { headers });
     return { data: result.data, status: true };
@@ -19,7 +20,7 @@ const getBinQty = async (bin: string): Promise<any> => {
   }
 };
 
-class ScheduleItemController  {
+class ScheduleItemController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
@@ -100,7 +101,7 @@ class ScheduleItemController  {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["item_code", "item_name", "scheduleId","stocker"];
+        : ["item_code", "item_name", "scheduleId", "stocker"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
