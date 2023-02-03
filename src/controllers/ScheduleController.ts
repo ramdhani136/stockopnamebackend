@@ -26,62 +26,51 @@ class ScheduleController implements IController {
       {
         name: "_id",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "schedule",
       },
       {
         name: "name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "schedule",
       },
       {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "schedule",
       },
       {
         name: "workflowState",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "workflow",
+
       },
       {
         name: "bin",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "workflow",
       },
       {
         name: "createdBy",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "user",
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "schedule",
       },
       {
         name: "startDate",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "schedule",
       },
       {
         name: "dueDate",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "schedule",
       },
       {
         name: "user.name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "schedule",
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "schedule",
       },
     ];
     try {
@@ -127,7 +116,7 @@ class ScheduleController implements IController {
         {
           $lookup: {
             from: "users",
-            localField: "userId",
+            localField: "user",
             foreignField: "_id",
             as: "user",
           },
@@ -190,7 +179,7 @@ class ScheduleController implements IController {
         .status(400)
         .json({ status: 400, msg: "WorkflowState Required!" });
     }
-    if (!req.body.userId) {
+    if (!req.body.user) {
       return res.status(400).json({ status: 400, msg: "userId Required!" });
     }
 
@@ -221,8 +210,7 @@ class ScheduleController implements IController {
 
       if (insertItem.data.data.length > 0) {
         const finalData = insertItem.data.data.map((data: any) => {
-          data._id = `${data.item_code}${scheduleId}`;
-          data.scheduleId = scheduleId;
+          data.schedule = scheduleId;
           data.bin = data.name;
           return { ...data };
         });
@@ -245,7 +233,7 @@ class ScheduleController implements IController {
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
       const result = await Schedule.findOne({ _id: req.params.id }).populate(
-        "userId",
+        "user",
         "name"
       );
       await Redis.client.set(
@@ -275,7 +263,7 @@ class ScheduleController implements IController {
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       await ScheduleItem.deleteMany({
-        scheduleId: req.params.id,
+        name: req.params.id,
       });
 
       const result = await Schedule.deleteOne({ _id: req.params.id });

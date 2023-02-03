@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const ScheduleItem = new mongoose.Schema(
   {
-    _id: {
-      type: String,
+    schedule: {
+      type: Schema.Types.ObjectId,
+      ref: "Schedules",
       required: true,
-      unique: true,
     },
     bin: {
       type: String,
@@ -45,10 +45,6 @@ const ScheduleItem = new mongoose.Schema(
     },
     checkedBy: {
       type: String,
-    },
-    scheduleId: {
-      type: String,
-      require: true,
     },
     status: {
       type: String,

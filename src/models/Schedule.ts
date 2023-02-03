@@ -7,7 +7,7 @@ const Schedule = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "Users",
       required: true,

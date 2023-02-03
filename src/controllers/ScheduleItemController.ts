@@ -24,19 +24,16 @@ class ScheduleItemController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
-        name: "_id",
+        name: "schedule.name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "item_name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "kategori_barang",
@@ -46,52 +43,38 @@ class ScheduleItemController {
       {
         name: "stocker",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "stock_uom",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "checkedBy",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
-      },
-      {
-        name: "scheduleId",
-        operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
       },
       {
         name: "actual_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
       },
       {
         name: "real_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
       },
     ];
     try {
@@ -101,7 +84,15 @@ class ScheduleItemController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["item_code", "item_name", "scheduleId", "stocker"];
+        : [
+            "item_code",
+            "item_name",
+            "stocker",
+            "schedule.name",
+            "actual_qty",
+            "real_qty",
+            "updatedAt",
+          ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -125,10 +116,34 @@ class ScheduleItemController {
       // End
 
       const getAll = await Db.find(isFilter.data).count();
-      const result = await Db.find(isFilter.data, setField)
-        .skip(page * limit - limit)
-        .limit(limit)
-        .sort(order_by);
+      const result = await Db.aggregate([
+        {
+          $lookup: {
+            from: "schedules",
+            localField: "schedule",
+            foreignField: "_id",
+            as: "schedule",
+          },
+        },
+        {
+          $unwind: "$schedule",
+        },
+        {
+          $match: isFilter.data,
+        },
+        {
+          $project: setField,
+        },
+        {
+          $sort: order_by,
+        },
+        {
+          $skip: page * limit - limit,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
 
       if (result.length > 0) {
         return res.status(200).json({
@@ -180,11 +195,14 @@ class ScheduleItemController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result: any = await Db.findOne({ _id: req.params.id });
+      const result: any = await Db.findOne({ _id: req.params.id }).populate(
+        "schedule",
+        "name"
+      );
       if (result) {
         let qtyStok = result.actual_qty;
         const schedule: any = await Schedule.findOne({
-          _id: result.scheduleId,
+          _id: result.schedule,
         });
         if (result.status == 0 && schedule.status == 1) {
           const resultErp: any = await getBinQty(result.bin);
