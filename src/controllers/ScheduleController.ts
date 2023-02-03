@@ -240,10 +240,10 @@ class ScheduleController implements IController {
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
       const cache = await Redis.client.get(`schedule-${req.params.id}`);
-      // if (cache) {
-      //   console.log("Cache");
-      //   return res.status(200).json({ status: 200, data: JSON.parse(cache) });
-      // }
+      if (cache) {
+        console.log("Cache");
+        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+      }
       const result = await Schedule.findOne({ _id: req.params.id }).populate(
         "userId",
         "name"
