@@ -110,6 +110,7 @@ class ScheduleController implements IController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
+      console.log(JSON.stringify(isFilter.data))
       const getAll = await Schedule.find(isFilter.data).count();
       const result = await Schedule.aggregate([
         {

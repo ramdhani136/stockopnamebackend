@@ -47,16 +47,20 @@ class FilterQuery {
             child.$ne = `${filter[2]}`;
             break;
           case ">":
-            child.$gt = filter[2];
+            child.$gt =
+              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
             break;
           case ">=":
-            child.$gte = filter[2];
+            child.$gte =
+              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
             break;
           case "<":
-            child.$lt = filter[2];
+            child.$lt =
+              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
             break;
           case "<=":
-            child.$lte = filter[2];
+            child.$lte =
+              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
             break;
         }
 
