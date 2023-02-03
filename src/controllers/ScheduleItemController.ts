@@ -115,8 +115,6 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-
-      // const getAll = await Db.find(isFilter.data).count();
       const getAll = await Db.aggregate([
         {
           $lookup: {
@@ -132,21 +130,8 @@ class ScheduleItemController {
         {
           $match: isFilter.data,
         },
-        {
-          $group: {
-            _id: null,
-            count: {
-              $sum: 1,
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            count: 1,
-          },
-        },
-      ]);
+       
+      ])
 
       const result = await Db.aggregate([
         {
