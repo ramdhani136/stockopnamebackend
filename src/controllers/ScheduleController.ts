@@ -3,7 +3,7 @@ import axios from "axios";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import Schedule from "../models/Schedule";
-import { FilterQuery } from "../utils";
+import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
 import { ScheduleItem, User } from "../models";
 
@@ -38,7 +38,6 @@ class ScheduleController implements IController {
       {
         name: "workflowState",
         operator: ["=", "!=", "like", "notlike"],
-
       },
       {
         name: "bin",
@@ -165,9 +164,6 @@ class ScheduleController implements IController {
   };
 
   create = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.body.name) {
-      return res.status(400).json({ status: 400, msg: "name Required!" });
-    }
     if (!req.body.startDate) {
       return res.status(400).json({ status: 400, msg: "StartDate Required!" });
     }
@@ -184,6 +180,22 @@ class ScheduleController implements IController {
     }
 
     try {
+      const prevData: any = await Schedule.findOne().sort({ createdAt: -1 });
+
+      const date =
+        new Date().getFullYear().toString() +
+        PaddyData(new Date().getMonth() + 1, 2).toString();
+
+      if (!prevData) {
+        req.body.name = "SCH" + date + PaddyData(1, 3).toString();
+      } else {
+        let masterNumber = parseInt(
+          prevData.name.substr(9, prevData.name.length)
+        );
+        req.body.name =
+          "SCH" + date + PaddyData(masterNumber + 1, 3).toString();
+      }
+
       // cek user tersedia
       await User.find({ _id: req.body.userId }).count();
       // End
@@ -214,8 +226,8 @@ class ScheduleController implements IController {
           data.bin = data.name;
           return { ...data };
         });
-        const result = await ScheduleItem.insertMany(finalData);
-        return res.status(200).json({ status: 200, data: result });
+        await ScheduleItem.insertMany(finalData);
+        return res.status(200).json({ status: 200, data: response });
       }
       return res
         .status(400)
@@ -232,7 +244,7 @@ class ScheduleController implements IController {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Schedule.findOne({ _id: req.params.id }).populate(
+      const result = await Schedule.findOne({ name: req.params.id }).populate(
         "user",
         "name"
       );
@@ -248,8 +260,11 @@ class ScheduleController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await Schedule.updateOne({ _id: req.params.id }, req.body);
-      const getData = await Schedule.findOne({ _id: req.params.id });
+      const result = await Schedule.updateOne(
+        { name: req.params.id },
+        req.body
+      );
+      const getData = await Schedule.findOne({ name: req.params.id });
       await Redis.client.set(
         `schedule-${req.params.id}`,
         JSON.stringify(getData)
@@ -262,15 +277,28 @@ class ScheduleController implements IController {
 
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
+      const getData: any = await Schedule.findOne({ name: req.params.id });
+
+      if (!getData) {
+        return res.status(404).json({ status: 404, msg: "Not found!" });
+      }
       await ScheduleItem.deleteMany({
-        schedule: req.params.id,
+        schedule: getData._id,
       });
 
-      const result = await Schedule.deleteOne({ _id: req.params.id });
+      const checkDataItem = await ScheduleItem.findOne({
+        schedule: getData._id,
+      });
+
+      if (checkDataItem) {
+        return res.status(400).json({ status: 400, msg: "Error delete item" });
+      }
+
+      const result = await Schedule.deleteOne({ name: req.params.id });
       await Redis.client.del(`schedule-${req.params.id}`);
       return res.status(200).json({ status: 200, data: result });
     } catch (error) {
-      return res.status(404).json({ status: 404, data: error });
+      return res.status(404).json({ status: 404, msg: error });
     }
   };
 }
