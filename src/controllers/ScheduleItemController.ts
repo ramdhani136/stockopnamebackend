@@ -125,9 +125,6 @@ class ScheduleItemController {
           },
         },
         {
-          $unwind: "$schedule",
-        },
-        {
           $match: isFilter.data,
         },
        
@@ -141,9 +138,6 @@ class ScheduleItemController {
             foreignField: "_id",
             as: "schedule",
           },
-        },
-        {
-          $unwind: "$schedule",
         },
         {
           $match: isFilter.data,
