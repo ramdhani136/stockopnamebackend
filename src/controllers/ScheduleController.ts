@@ -113,6 +113,9 @@ class ScheduleController implements IController {
       const getAll = await Schedule.find(isFilter.data).count();
       const result = await Schedule.aggregate([
         {
+          $skip: page * limit - limit,
+        },
+        {
           $lookup: {
             from: "users",
             localField: "user",
@@ -127,17 +130,16 @@ class ScheduleController implements IController {
           $match: isFilter.data,
         },
         {
+          $limit: limit,
+        },
+        {
           $project: setField,
         },
         {
           $sort: order_by,
         },
-        {
-          $skip: page * limit - limit,
-        },
-        {
-          $limit: limit,
-        },
+        
+       
       ]);
 
       if (result.length > 0) {

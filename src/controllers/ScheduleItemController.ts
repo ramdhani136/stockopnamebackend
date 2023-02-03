@@ -115,7 +115,26 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-      const getAll = await Db.aggregate([
+      // const getAll = await Db.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "schedules",
+      //       localField: "schedule",
+      //       foreignField: "_id",
+      //       as: "schedule",
+      //     },
+      //   },
+      //   {
+      //     $match: isFilter.data,
+      //   },
+
+      // ])
+
+      const result = await Db.aggregate([
+       
+        {
+          $skip: page * limit - limit,
+        },
         {
           $lookup: {
             from: "schedules",
@@ -128,19 +147,8 @@ class ScheduleItemController {
           $match: isFilter.data,
         },
        
-      ])
-
-      const result = await Db.aggregate([
         {
-          $lookup: {
-            from: "schedules",
-            localField: "schedule",
-            foreignField: "_id",
-            as: "schedule",
-          },
-        },
-        {
-          $match: isFilter.data,
+          $limit: limit,
         },
         {
           $project: setField,
@@ -148,21 +156,21 @@ class ScheduleItemController {
         {
           $sort: order_by,
         },
-        {
-          $skip: page * limit - limit,
-        },
-        {
-          $limit: limit,
-        },
       ]);
+
+      const getAll = await Db.find(isFilter.data).count();
+      // const result = await Db.find(isFilter.data, setField)
+      //   .skip(page * limit - limit)
+      //   .limit(limit)
+      //   .sort(order_by);
 
       if (result.length > 0) {
         return res.status(200).json({
           status: 200,
-          total: getAll[0].count,
+          total: getAll,
           limit,
           nextPage: page + 1,
-          hasMore: getAll[0].count > page * limit ? true : false,
+          hasMore: getAll > page * limit ? true : false,
           data: result,
           filters: stateFilter,
         });
