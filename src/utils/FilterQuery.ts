@@ -41,10 +41,10 @@ class FilterQuery {
             child.$not = { $regex: filter[2], $options: "i" };
             break;
           case "=":
-            child.$eq = `${filter[2]}`;
+            child.$eq = filter[2];
             break;
           case "!=":
-            child.$ne = `${filter[2]}`;
+            child.$ne = filter[2];
             break;
           case ">":
             child.$gt =
