@@ -263,7 +263,7 @@ class ScheduleController implements IController {
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       await ScheduleItem.deleteMany({
-        name: req.params.id,
+        schedule: req.params.id,
       });
 
       const result = await Schedule.deleteOne({ _id: req.params.id });
