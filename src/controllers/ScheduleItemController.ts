@@ -92,7 +92,7 @@ class ScheduleItemController {
             "actual_qty",
             "real_qty",
             "updatedAt",
-            "stock_uom"
+            "stock_uom",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -116,7 +116,38 @@ class ScheduleItemController {
       }
       // End
 
-      const getAll = await Db.find(isFilter.data).count();
+      // const getAll = await Db.find(isFilter.data).count();
+      const getAll = await Db.aggregate([
+        {
+          $lookup: {
+            from: "schedules",
+            localField: "schedule",
+            foreignField: "_id",
+            as: "schedule",
+          },
+        },
+        {
+          $unwind: "$schedule",
+        },
+        {
+          $match: isFilter.data,
+        },
+        {
+          $group: {
+            _id: null,
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            count: 1,
+          },
+        },
+      ]);
+
       const result = await Db.aggregate([
         {
           $lookup: {
@@ -149,10 +180,10 @@ class ScheduleItemController {
       if (result.length > 0) {
         return res.status(200).json({
           status: 200,
-          total: getAll,
+          total: getAll[0].count,
           limit,
           nextPage: page + 1,
-          hasMore: getAll > page * limit ? true : false,
+          hasMore: getAll[0].count > page * limit ? true : false,
           data: result,
           filters: stateFilter,
         });
