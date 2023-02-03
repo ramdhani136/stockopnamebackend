@@ -1,11 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const Schedule = new mongoose.Schema(
   {
-    _id: {
+    name: {
       type: String,
       required: true,
       unique: true,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
     },
     startDate: {
       type: Date,
@@ -13,19 +18,15 @@ const Schedule = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
-      require:true
+      require: true,
     },
     workflowState: {
       type: String,
-      require:true
+      require: true,
     },
     warehouse: {
       type: String,
       require: true,
-    },
-    createdBy: {
-      type: String,
-      require:true
     },
     status: {
       type: String,
