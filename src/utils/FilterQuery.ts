@@ -2,7 +2,6 @@
 // fields=["name","username","email"]
 
 import { IStateFilter } from "../Interfaces";
-import { TypeOfState } from "../Interfaces/FilterInterface";
 
 interface IFilterQuery {
   status: boolean;
