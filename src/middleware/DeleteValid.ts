@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Schedule } from "../models";
+import { Schedule, ScheduleItem } from "../models";
 
 export const DeleteValid = async (
   req: Request,
@@ -16,6 +16,15 @@ export const DeleteValid = async (
           return res.status(400).json({
             status: 400,
             msg: `Error, The user is related to ${schedule} schedule documents`,
+          });
+        }
+        const scheduleItem = await ScheduleItem.findOne({
+          checkedBy: path,
+        }).count();
+        if (scheduleItem > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, The user is related to ${scheduleItem} scheduleitem documents`,
           });
         }
         //End
