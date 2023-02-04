@@ -24,6 +24,10 @@ class ScheduleItemController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
+        name: "schedule._id",
+        operator: ["=", "!=", "like", "notlike"],
+      },
+      {
         name: "schedule.name",
         operator: ["=", "!=", "like", "notlike"],
       },
@@ -54,7 +58,7 @@ class ScheduleItemController {
       },
       {
         name: "checkedBy",
-        operator: ["=", "!=", "like", "notlike"],
+        operator: ["=", "!="],
       },
       {
         name: "status",
@@ -89,10 +93,12 @@ class ScheduleItemController {
             "item_name",
             "stocker",
             "schedule.name",
+            "schedule._id",
             "actual_qty",
             "real_qty",
             "updatedAt",
             "stock_uom",
+            "checkedBy",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -115,54 +121,15 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-      // const getAll = await Db.aggregate([
-      //   {
-      //     $lookup: {
-      //       from: "schedules",
-      //       localField: "schedule",
-      //       foreignField: "_id",
-      //       as: "schedule",
-      //     },
-      //   },
-      //   {
-      //     $match: isFilter.data,
-      //   },
 
-      // ])
-
-      const result = await Db.aggregate([
-       
-        {
-          $skip: page * limit - limit,
-        },
-        {
-          $lookup: {
-            from: "schedules",
-            localField: "schedule",
-            foreignField: "_id",
-            as: "schedule",
-          },
-        },
-        {
-          $match: isFilter.data,
-        },
-       
-        {
-          $limit: limit,
-        },
-        {
-          $project: setField,
-        },
-        {
-          $sort: order_by,
-        },
-      ]);
-
-      const getAll = await Db.find(isFilter.data).count();
-      // const result = await Db.find(isFilter.data, setField)
-      //   .skip(page * limit - limit)
-      //   .limit(limit)
-      //   .sort(order_by);
+      const getAll = await Db.find(isFilter.data)
+        .populate("checkedBy", "name")
+        .count();
+      const result = await Db.find(isFilter.data, setField)
+        .populate("checkedBy", "name")
+        .skip(page * limit - limit)
+        .limit(limit)
+        .sort(order_by);
 
       if (result.length > 0) {
         return res.status(200).json({
@@ -189,10 +156,9 @@ class ScheduleItemController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result: any = await Db.findOne({ _id: req.params.id }).populate(
-        "schedule",
-        "name"
-      );
+      const result: any = await Db.findOne({ _id: req.params.id })
+        .populate("schedule", "name")
+        .populate("checkedBy", "name");
       if (result) {
         let qtyStok = result.actual_qty;
         const schedule: any = await Schedule.findOne({

@@ -138,8 +138,6 @@ class ScheduleController implements IController {
         {
           $sort: order_by,
         },
-        
-       
       ]);
 
       if (result.length > 0) {
@@ -211,7 +209,11 @@ class ScheduleController implements IController {
           EX: 10,
         }
       );
-      const scheduleId: any = response._id;
+
+      const dataSchedule = {
+        _id: response._id,
+        name: response.name,
+      };
       const warehouse: any = response.warehouse;
       const insertItem = await GetErpBin(warehouse);
 
@@ -224,7 +226,8 @@ class ScheduleController implements IController {
 
       if (insertItem.data.data.length > 0) {
         const finalData = insertItem.data.data.map((data: any) => {
-          data.schedule = scheduleId;
+          data.schedule = dataSchedule;
+          data.uniqId = `${response.name}${data.item_code}`;
           data.bin = data.name;
           return { ...data };
         });

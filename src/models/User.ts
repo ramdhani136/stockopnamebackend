@@ -7,6 +7,7 @@ const User = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     username: {
       type: String,
@@ -29,5 +30,6 @@ const User = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 
 export default mongoose.model("Users", User);

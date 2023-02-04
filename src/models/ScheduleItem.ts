@@ -3,13 +3,18 @@ import mongoose, { Schema } from "mongoose";
 const ScheduleItem = new mongoose.Schema(
   {
     schedule: {
-      type: Schema.Types.ObjectId,
-      ref: "Schedules",
+      type: Object,
       required: true,
+      index: true,
     },
     bin: {
       type: String,
       required: true,
+    },
+    uniqId: {
+      type: String,
+      required: true,
+      unique: true,
     },
     item_code: {
       type: String,
@@ -44,7 +49,8 @@ const ScheduleItem = new mongoose.Schema(
       default: 0,
     },
     checkedBy: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
     status: {
       type: String,
