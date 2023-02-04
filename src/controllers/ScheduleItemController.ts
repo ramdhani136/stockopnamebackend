@@ -27,72 +27,72 @@ class ScheduleItemController {
       {
         name: "schedule._id",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "schedule.name",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "item_name",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "kategori_barang",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "stocker",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "stock_uom",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "checkedBy",
         operator: ["=", "!="],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        typeOf:TypeOfState.String
+        typeOf: TypeOfState.String,
       },
       {
         name: "actual_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        typeOf:TypeOfState.Number
+        typeOf: TypeOfState.Number,
       },
       {
         name: "real_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        typeOf:TypeOfState.Number
+        typeOf: TypeOfState.Number,
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        typeOf:TypeOfState.Date
+        typeOf: TypeOfState.Date,
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        typeOf:TypeOfState.Date
+        typeOf: TypeOfState.Date,
       },
     ];
     try {
@@ -135,7 +135,6 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-
       const getAll = await Db.find(isFilter.data)
         .populate("checkedBy", "name")
         .count();

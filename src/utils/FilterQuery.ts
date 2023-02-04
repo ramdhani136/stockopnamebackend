@@ -2,6 +2,7 @@
 // fields=["name","username","email"]
 
 import { IStateFilter } from "../Interfaces";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 
 interface IFilterQuery {
   status: boolean;
@@ -24,43 +25,46 @@ class FilterQuery {
           // End
           return item.name === filter[0] && validOperator.length !== 0;
         });
+
         // Cek validasi filter tersedia
         if (validFilter.length === 0) {
           valid = false;
         }
+        let typeOf = validFilter[0].typeOf;
+        let valueFilter =
+          typeOf == "number"
+            ? filter[2]
+            : typeOf == "date"
+            ? new Date(filter[2])
+            : `${filter[2]}`;
         // End
         let field: any = {};
         let child: any = {};
-
         switch (filter[1]) {
           case "like":
-            child.$regex = filter[2];
+            child.$regex = valueFilter;
             child.$options = "i";
             break;
           case "notlike":
-            child.$not = { $regex: filter[2], $options: "i" };
+            child.$not = { $regex: valueFilter, $options: "i" };
             break;
           case "=":
-            child.$eq = filter[2];
+            child.$eq = valueFilter;
             break;
           case "!=":
-            child.$ne = filter[2];
+            child.$ne = valueFilter;
             break;
           case ">":
-            child.$gt =
-              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
+            child.$gt = valueFilter;
             break;
           case ">=":
-            child.$gte =
-              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
+            child.$gte = valueFilter;
             break;
           case "<":
-            child.$lt =
-              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
+            child.$lt = valueFilter;
             break;
           case "<=":
-            child.$lte =
-              typeof filter[2] == "number" ? filter[2] : new Date(filter[2]);
+            child.$lte = valueFilter;
             break;
         }
 
@@ -81,8 +85,15 @@ class FilterQuery {
     for (const item of unicFilter) {
       let ismerge = allFilter.filter((all) => Object.keys(all)[0] === item);
       let simpan;
+
       if (ismerge.length > 1) {
-        simpan = { $or: ismerge };
+        const isDoc: string = Object.keys(ismerge[0])[0];
+        const isTypeOf = stateFilter.find((item) => item.name == isDoc)?.typeOf;
+        let op: {} =
+          isTypeOf == "date" || isTypeOf == "number"
+            ? { $and: ismerge }
+            : { $or: ismerge };
+        simpan = op;
       } else {
         simpan = ismerge[0];
       }
