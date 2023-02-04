@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 import { Contact } from "../models";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
@@ -11,42 +12,42 @@ class ContactController implements IController {
       {
         name: "name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "phone",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "city",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "activeMenu",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "interest",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "contacts",
+        typeOf: TypeOfState.String,
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "contacts",
+        typeOf: TypeOfState.Date,
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "contacts",
+        typeOf: TypeOfState.Date,
       },
     ];
     try {

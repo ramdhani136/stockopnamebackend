@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 import User from "../models/User";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
@@ -12,32 +13,32 @@ class UserController implements IController {
       {
         name: "name",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
+        typeOf: TypeOfState.String,
       },
       {
         name: "username",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
+        typeOf: TypeOfState.String,
       },
       {
         name: "email",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
+        typeOf: TypeOfState.String,
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
+        typeOf: TypeOfState.String,
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
+        typeOf: TypeOfState.Date,
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
-        targetdata: "users",
+        typeOf: TypeOfState.Date,
       },
     ];
     try {

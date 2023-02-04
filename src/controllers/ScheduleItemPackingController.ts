@@ -5,6 +5,7 @@ import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { ScheduleItemPacking } from "../models";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 
 const Db = ScheduleItemPacking;
 const RedisName = "scheduleitempacking";
@@ -28,46 +29,57 @@ class ScheduleItemPackingController implements IController {
       {
         name: "_id",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "id_packing",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "scheduleItemId",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "item",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "item_name",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "conversion",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Number,
       },
       {
         name: "actual_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Number,
       },
       {
         name: "stock_uom",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "owner",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "modified",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
       {
         name: "creation",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
     ];
     try {

@@ -11,7 +11,7 @@ export const DeleteValid = async (
       case "/users":
         //check schedule
         const path = req.path.replace(/\//g, "");
-        const schedule = await Schedule.findOne({ userId: path }).count();
+        const schedule = await Schedule.findOne({ user: path }).count();
         if (schedule > 0) {
           return res.status(400).json({
             status: 400,

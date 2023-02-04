@@ -6,6 +6,7 @@ import Schedule from "../models/Schedule";
 import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
 import { ScheduleItem, User } from "../models";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
@@ -26,50 +27,62 @@ class ScheduleController implements IController {
       {
         name: "_id",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "name",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "workflowState",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "bin",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "createdBy",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.Date,
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "startDate",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
       {
         name: "dueDate",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
       {
         name: "user.name",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf: TypeOfState.Date,
       },
     ];
     try {

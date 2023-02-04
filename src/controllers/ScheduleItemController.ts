@@ -3,6 +3,7 @@ import { IStateFilter } from "../Interfaces";
 import { Schedule, ScheduleItem } from "../models";
 import { FilterQuery } from "../utils";
 import axios from "axios";
+import { TypeOfState } from "../Interfaces/FilterInterface";
 const Db = ScheduleItem;
 
 const getBinQty = async (bin: string): Promise<any> => {
@@ -26,59 +27,72 @@ class ScheduleItemController {
       {
         name: "schedule._id",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "schedule.name",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "item_name",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "kategori_barang",
         operator: ["=", "!=", "like", "notlike"],
-        targetdata: "users",
+        typeOf:TypeOfState.String
       },
       {
         name: "stocker",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "stock_uom",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "checkedBy",
         operator: ["=", "!="],
+        typeOf:TypeOfState.String
       },
       {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
+        typeOf:TypeOfState.String
       },
       {
         name: "actual_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf:TypeOfState.Number
       },
       {
         name: "real_qty",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf:TypeOfState.Number
       },
       {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf:TypeOfState.Date
       },
       {
         name: "createdAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
+        typeOf:TypeOfState.Date
       },
     ];
     try {

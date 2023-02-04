@@ -1,7 +1,13 @@
+export enum TypeOfState {
+  String = "string",
+  Number = "number",
+  Date = "date",
+}
+
 interface IStateFilter {
   name: string;
   operator: any[];
-  targetdata?: string;
+  typeOf: TypeOfState;
 }
 
 export { IStateFilter };
