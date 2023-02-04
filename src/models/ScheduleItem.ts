@@ -10,52 +10,64 @@ const ScheduleItem = new mongoose.Schema(
     bin: {
       type: String,
       required: true,
+      index:true
     },
     uniqId: {
       type: String,
       required: true,
       unique: true,
+      index:true
     },
     item_code: {
       type: String,
       required: true,
+      index:true
     },
     item_name: {
       type: String,
       required: true,
+      index:true
     },
     kategori_barang: {
       type: String,
+      index:true
     },
     stocker: {
       type: String,
       require: true,
+      index:true
     },
     warehouse: {
       type: String,
       required: true,
+      index:true
     },
     stock_uom: {
       type: String,
       required: true,
       default: 0,
+      index:true
     },
     actual_qty: {
       type: Number,
       require: true,
+      index:true
     },
     real_qty: {
       type: Number,
       default: 0,
+      index:true
     },
     checkedBy: {
       type: Schema.Types.ObjectId,
       ref: "Users",
+      index:true
     },
     status: {
       type: String,
       required: true,
       default: 0,
+      index:true
     },
   },
   {
