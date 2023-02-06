@@ -300,17 +300,6 @@ class ScheduleController implements IController {
       if (!getData) {
         return res.status(404).json({ status: 404, msg: "Not found!" });
       }
-      await ScheduleItem.deleteMany({
-        schedule: getData._id,
-      });
-
-      const checkDataItem = await ScheduleItem.findOne({
-        schedule: getData._id,
-      });
-
-      if (checkDataItem) {
-        return res.status(400).json({ status: 400, msg: "Error delete item" });
-      }
 
       const result = await Schedule.deleteOne({ name: req.params.id });
       await Redis.client.del(`schedule-${req.params.id}`);
