@@ -22,7 +22,7 @@ const GetPackingIdErp = async (
     const result = await axios.get(uri, { headers });
     const getScheduleItem = await ScheduleItem.findById(scheduleItem);
     if (getScheduleItem) {
-      if (getScheduleItem.item_code !== result.data.data.item) {
+      if (getScheduleItem.item_code === result.data.data.item) {
         if (result.data.data.is_out !== 0) {
           return {
             status: false,
@@ -235,7 +235,13 @@ class ScheduleItemPackingController implements IController {
             msg: "Actual Qty tidak dapat melebihi conversion!",
           });
         }
+        if (req.body.actual_qty === prevData.conversion) {
+          req.body.status = 1;
+        } else {
+          req.body.status = 0;
+        }
       }
+
       const result = await Db.updateOne({ _id: req.params.id }, req.body);
       const getData = await Db.findOne({ _id: req.params.id });
       await Redis.client.set(
