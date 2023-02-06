@@ -227,7 +227,7 @@ class ScheduleItemPackingController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      if (req.body.actual_qty) {
+      if (req.body.actual_qty>=0) {
         const prevData: any = await Db.findOne({ _id: req.params.id });
         if (req.body.actual_qty > prevData.conversion) {
           return res.status(400).json({
@@ -235,7 +235,7 @@ class ScheduleItemPackingController implements IController {
             msg: "Actual Qty tidak dapat melebihi conversion!",
           });
         }
-        if (req.body.actual_qty === prevData.conversion) {
+        if (req.body.actual_qty == prevData.conversion) {
           req.body.status = 1;
         } else {
           req.body.status = 0;
