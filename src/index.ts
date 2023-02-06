@@ -7,10 +7,17 @@ import cors from "cors";
 import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
-import { ContactRoutes, ScheduleItemPackingRoutes, ScheduleItemRoutes, ScheduleRoutes, UserRoutes } from "./routes";
+import {
+  ContactRoutes,
+  ScheduleItemPackingRoutes,
+  ScheduleItemRoutes,
+  ScheduleRoutes,
+  UserRoutes,
+} from "./routes";
 import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
-const cron = require('node-cron');
+import { Schedule } from "./models";
+const cron = require("node-cron");
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -41,8 +48,11 @@ class App {
     this.app.use(cors(corsOptions));
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
-    cron.schedule('* * * * *', function() {
-      console.log('running a task every minute');
+    cron.schedule("* * * * *", async function () {
+      // Cek & close schedule yang sudah melebihi due date
+      const checkCLoseSchedule = await Schedule.find().count();
+      console.log(checkCLoseSchedule);
+      // End
     });
   }
 
