@@ -17,7 +17,7 @@ import {
 import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
 import { Schedule } from "./models";
-const cron = require("node-cron");
+import cron from "node-cron";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -37,6 +37,7 @@ class App {
     this.plugins();
     this.database = new DataConnect();
     this.routes();
+    this.Cron();
   }
 
   protected plugins(): void {
@@ -48,6 +49,9 @@ class App {
     this.app.use(cors(corsOptions));
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
+  }
+
+  protected Cron(): void {
     cron.schedule("* * * * *", async function () {
       // Cek & close schedule yang sudah melebihi due date
       const checkCLoseSchedule = await Schedule.find().count();
