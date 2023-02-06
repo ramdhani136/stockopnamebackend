@@ -4,22 +4,39 @@ import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
-import { ScheduleItemPacking } from "../models";
+import { ScheduleItem, ScheduleItemPacking } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 
 const Db = ScheduleItemPacking;
 const RedisName = "scheduleitempacking";
 
-const GetPackingIdErp = async (id_packing: string): Promise<any> => {
+const GetPackingIdErp = async (
+  id_packing: string,
+  scheduleItem: string
+): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID/${id_packing}`;
   const headers = {
     Authorization: "token 517ba90cd805072:c4303a3355cbca4",
   };
   try {
     const result = await axios.get(uri, { headers });
-    return { data: result.data, status: true };
+    const getScheduleItem = await ScheduleItem.findById(scheduleItem);
+    if (getScheduleItem) {
+      if (getScheduleItem.item_code !== result.data.data.item) {
+        if (result.data.data.is_out !== 0) {
+          return {
+            status: false,
+            msg: "Error, Item not available in warehouse",
+          };
+        }
+        result.data.data.scheduleItem = getScheduleItem.schedule;
+        return { data: result.data, status: true };
+      }
+      return { status: false, msg: "Error, Incorrect item input" };
+    }
+    return { status: false, msg: "Not found" };
   } catch (error) {
-    return { data: [], status: false, msg: error };
+    return { status: false, msg: "Error Request" };
   }
 };
 
@@ -32,12 +49,17 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.String,
       },
       {
-        name: "id_packing",
+        name: "scheduleItem._id",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
       {
-        name: "scheduleItemId",
+        name: "scheduleItem.schedule",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "id_packing",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
@@ -89,7 +111,15 @@ class ScheduleItemPackingController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["item", "item_name", "conversion", "actual_qty", "stock_uom"];
+        : [
+            "item",
+            "item_name",
+            "conversion",
+            "actual_qty",
+            "stock_uom",
+            "scheduleItem",
+            "id_packing",
+          ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -142,20 +172,23 @@ class ScheduleItemPackingController implements IController {
   };
 
   create = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.body.scheduleItemId) {
+    if (!req.body.scheduleItem) {
       return res
         .status(400)
-        .json({ status: 400, msg: "scheduleItemId Required!" });
+        .json({ status: 400, msg: "scheduleItem Required!" });
     }
     if (!req.body.id_packing) {
       return res.status(400).json({ status: 400, msg: "id_packing Required!" });
     }
+    const getData = await GetPackingIdErp(
+      req.body.id_packing,
+      req.body.scheduleItem
+    );
+
     try {
-      const getData = await GetPackingIdErp(req.body.id_packing);
       if (getData.status) {
         let data = getData.data.data;
-        data._id = `${data.id_packing}${req.body.scheduleItemId}`;
-        data.scheduleItemId = req.body.scheduleItemId;
+        data.uniqId = `${data.id_packing}${req.body.scheduleItem}`;
         const result = new Db(data);
         const response = await result.save();
         await Redis.client.set(
@@ -167,58 +200,11 @@ class ScheduleItemPackingController implements IController {
         );
         return res.status(200).json({ status: 200, data: response });
       } else {
-        return res.status(404).json({ status: 400, msg: "Not found data!" });
+        return res.status(404).json({ status: 400, msg: getData.msg });
       }
     } catch (error) {
       return res.status(400).json({ status: 400, msg: error });
     }
-    // if (!req.body._id) {
-    //   return res.status(400).json({ status: 400, msg: "_id Required!" });
-    // }
-    // if (!req.body.scheduleItemId) {
-    //   return res
-    //     .status(400)
-    //     .json({ status: 400, msg: "scheduleItemId Required!" });
-    // }
-    // if (!req.body.owner) {
-    //   return res.status(400).json({ status: 400, msg: "owner Required!" });
-    // }
-    // if (!req.body.id_packing) {
-    //   return res.status(400).json({ status: 400, msg: "id_packing Required!" });
-    // }
-    // if (!req.body.creation) {
-    //   return res.status(400).json({ status: 400, msg: "creation Required!" });
-    // }
-    // if (!req.body.modified) {
-    //   return res.status(400).json({ status: 400, msg: "modified Required!" });
-    // }
-    // if (!req.body.item) {
-    //   return res.status(400).json({ status: 400, msg: "item Required!" });
-    // }
-    // if (!req.body.item_name) {
-    //   return res.status(400).json({ status: 400, msg: "item_name Required!" });
-    // }
-    // if (!req.body.conversion) {
-    //   return res.status(400).json({ status: 400, msg: "cratedBy Required!" });
-    // }
-    // if (!req.body.stock_uom) {
-    //   return res.status(400).json({ status: 400, msg: "stock_uom Required!" });
-    // }
-    // try {
-    //   const result = new Db(req.body);
-    //   const response = await result.save();
-    //   await Redis.client.set(
-    //     `${RedisName}-${response._id}`,
-    //     JSON.stringify(response),
-    //     {
-    //       EX: 10,
-    //     }
-    //   );
-
-    //   return res.status(200).json({ status: 200, data: response });
-    // } catch (error) {
-    //   return res.status(400).json({ status: 400, data: error });
-    // }
   };
 
   show = async (req: Request, res: Response): Promise<Response> => {
