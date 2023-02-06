@@ -10,6 +10,7 @@ import http from "http";
 import { ContactRoutes, ScheduleItemPackingRoutes, ScheduleItemRoutes, ScheduleRoutes, UserRoutes } from "./routes";
 import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
+const cron = require('node-cron');
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -40,6 +41,9 @@ class App {
     this.app.use(cors(corsOptions));
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
+    cron.schedule('* * * * *', function() {
+      console.log('running a task every minute');
+    });
   }
 
   protected routes(): void {
