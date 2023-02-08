@@ -5,8 +5,8 @@ import { TypeOfState } from "../Interfaces/FilterInterface";
 import User from "../models/User";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
@@ -191,7 +191,7 @@ class UserController implements IController {
           username: result.username,
           status: result.status,
         },
-        process.env.ACCESS_TOKEN_SECRET,
+        `${process.env.ACCESS_TOKEN_SECRET}`,
         {
           expiresIn: "1d",
         }
@@ -203,7 +203,7 @@ class UserController implements IController {
           username: result.username,
           status: result.status,
         },
-        process.env.REFRESH_TOKEN_SECRET,
+        `${process.env.REFRESH_TOKEN_SECRET}`,
         {
           expiresIn: "1d",
         }
@@ -251,7 +251,7 @@ class UserController implements IController {
       }
       jwt.verify(
         refreshToken,
-        process.env.REFRESH_TOKEN_SECRET,
+        `${process.env.REFRESH_TOKEN_SECRET}`,
         async (err: any, decoded: any): Promise<Response> => {
           if (err)
             return res.status(403).json({
@@ -272,7 +272,7 @@ class UserController implements IController {
               username: user.username,
               status: user.status,
             },
-            process.env.ACCESS_TOKEN_SECRET,
+            `${process.env.ACCESS_TOKEN_SECRET}`,
             {
               expiresIn: "15s",
             }
