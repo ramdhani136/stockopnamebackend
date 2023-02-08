@@ -193,7 +193,7 @@ class UserController implements IController {
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-          expiresIn: "30d",
+          expiresIn: "15s",
         }
       );
       const refreshToken = jwt.sign(
@@ -205,13 +205,13 @@ class UserController implements IController {
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-          expiresIn: "30d",
+          expiresIn: "1d",
         }
       );
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        maxAge: 2592000000,
+        maxAge: 20 * 60 * 60 * 1000,
         // secure:true
       });
       return res.status(200).json({ status: 200, token: accessToken });
@@ -226,6 +226,24 @@ class UserController implements IController {
     try {
       res.clearCookie("refreshToken");
       return res.status(200).json({ status: 200, msg: "Logout success!" });
+    } catch (error) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: error ?? "Error, Connection" });
+    }
+  };
+
+  refreshToken = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return res.status(401).json({
+          status: 401,
+          msg: "Unauthorized",
+        });
+      }
+
+      return res.send("dd");
     } catch (error) {
       return res
         .status(400)
