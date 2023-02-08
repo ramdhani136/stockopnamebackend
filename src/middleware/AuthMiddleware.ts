@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 export const AuthMiddleware = (
   req: Request | any,
@@ -15,7 +15,7 @@ export const AuthMiddleware = (
     });
   jwt.verify(
     token,
-    process.env.ACCESS_TOKEN_SECRET,
+    `${process.env.ACCESS_TOKEN_SECRET}`,
     (err: any, decoded: any) => {
       if (err)
         return res.status(403).json({
