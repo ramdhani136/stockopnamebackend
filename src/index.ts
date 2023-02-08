@@ -62,7 +62,6 @@ class App {
 
   protected routes(): void {
     this.app.use("/users", UserRoutes);
-    this.app.use("/contacts", ContactRoutes);
     this.app.use("/schedule", ScheduleRoutes);
     this.app.use("/scheduleitem", ScheduleItemRoutes);
     this.app.use("/schedulepacking", ScheduleItemPackingRoutes);

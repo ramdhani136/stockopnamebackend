@@ -135,6 +135,7 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
+     
       const getAll = await Db.find(isFilter.data)
         .populate("checkedBy", "name")
         .count();

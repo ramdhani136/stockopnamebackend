@@ -48,7 +48,13 @@ class FilterQuery {
             child.$not = { $regex: valueFilter, $options: "i" };
             break;
           case "=":
-            child.$eq = valueFilter;
+            if (typeOf === "date") {
+              (child.$gte = new Date(`${filter[2]}T00:00:00.000Z`)),
+                (child.$lt = new Date(`${filter[2]}T23:59:59.999Z`));
+            } else {
+              child.$eq = valueFilter;
+            }
+
             break;
           case "!=":
             child.$ne = valueFilter;
