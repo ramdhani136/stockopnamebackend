@@ -8,6 +8,7 @@ class UserRoutes extends RouteBase {
     this.router.get("/", AuthMiddleware, UserController.index);
     this.router.post("/", AuthMiddleware, UserController.create);
     this.router.post("/login", UserController.login);
+    this.router.post("/token", UserController.refreshToken);
     this.router.delete("/logout", UserController.logout);
     this.router.get("/:id", AuthMiddleware, UserController.show);
     this.router.delete(
