@@ -18,6 +18,7 @@ import { SocketIO } from "./utils";
 import { Schedule } from "./models";
 import cron from "node-cron";
 import { AuthMiddleware } from "./middleware";
+const cookieParser = require("cookie-parser");
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -47,6 +48,7 @@ class App {
     this.app.use(morgan("dev"));
     this.app.use(helmet());
     this.app.use(cors(corsOptions));
+    this.app.use(cookieParser());
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
   }

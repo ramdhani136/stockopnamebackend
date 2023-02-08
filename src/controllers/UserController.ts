@@ -233,17 +233,54 @@ class UserController implements IController {
     }
   };
 
-  refreshToken = async (req: Request, res: Response): Promise<Response> => {
+  refreshToken = async (req: Request, res: Response): Promise<any> => {
     try {
-      const refreshToken = req.cookies.refreshToken;
+      let refreshToken;
+      if (!req.cookies.refreshToken) {
+        if (req.header("refreshToken")) {
+          refreshToken = req.header("refreshToken");
+        }
+      } else {
+        refreshToken = req.cookies.refreshToken;
+      }
       if (!refreshToken) {
         return res.status(401).json({
           status: 401,
           msg: "Unauthorized",
         });
       }
-
-      return res.send("dd");
+      jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        async (err: any, decoded: any): Promise<Response> => {
+          if (err)
+            return res.status(403).json({
+              status: 403,
+              msg: "Forbiden, you have to login to access the data!",
+            });
+          const user = await User.findOne({ _id: decoded._id });
+          if (!user) {
+            return res.status(404).json({
+              status: 404,
+              msg: "Error, User not found!",
+              token: null,
+            });
+          }
+          const accessToken = jwt.sign(
+            {
+              _id: user.id,
+              name: user.name,
+              username: user.username,
+              status: user.status,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            {
+              expiresIn: "15s",
+            }
+          );
+          return res.status(200).json({ status: 200, token: accessToken });
+        }
+      );
     } catch (error) {
       return res
         .status(400)
