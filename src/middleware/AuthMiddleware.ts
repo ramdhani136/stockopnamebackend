@@ -2,13 +2,17 @@ import { Request, Response, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
 
 export const AuthMiddleware = (
-  req: Request|any,
+  req: Request | any,
   res: Response,
   next: NextFunction
 ): any => {
   const authHeader = req.header("authorization");
   const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.sendStatus(401);
+  if (token == null)
+    return res.status(401).json({
+      status: 401,
+      message: "Unauthorized",
+    });
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET,
