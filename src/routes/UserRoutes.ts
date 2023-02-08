@@ -1,4 +1,3 @@
-
 import { UserController } from "../controllers";
 import { DeleteValid } from "../middleware";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
@@ -9,8 +8,9 @@ class UserRoutes extends RouteBase {
     this.router.get("/", UserController.index);
     this.router.post("/", UserController.create);
     this.router.post("/login", UserController.login);
+    this.router.post("/logout", UserController.logout);
     this.router.get("/:id", UserController.show);
-    this.router.delete("/:id",DeleteValid, UserController.delete);
+    this.router.delete("/:id", DeleteValid, UserController.delete);
     this.router.put("/:id", UserController.update);
   }
 }

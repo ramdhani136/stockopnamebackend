@@ -193,10 +193,39 @@ class UserController implements IController {
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-          expiresIn: "7776000s",
+          expiresIn: "30d",
         }
       );
+      const refreshToken = jwt.sign(
+        {
+          _id: result.id,
+          name: result.name,
+          username: result.username,
+          status: result.status,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: "30d",
+        }
+      );
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 2592000000,
+        // secure:true
+      });
       return res.status(200).json({ status: 200, token: accessToken });
+    } catch (error) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: error ?? "Error, Connection" });
+    }
+  };
+
+  logout = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      res.clearCookie("refreshToken");
+      return res.status(200).json({ status: 200, msg: "Logout success!" });
     } catch (error) {
       return res
         .status(400)
