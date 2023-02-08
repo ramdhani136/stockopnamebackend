@@ -6,6 +6,7 @@ import User from "../models/User";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
@@ -112,6 +113,7 @@ class UserController implements IController {
     }
 
     const salt = await bcrypt.genSalt();
+    req.body.username = req.body.username.toLowerCase();
     req.body.password = await bcrypt.hash(req.body.password, salt);
     try {
       const user = new User(req.body);
@@ -161,6 +163,44 @@ class UserController implements IController {
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
+    }
+  };
+
+  login = async (req: Request, res: Response): Promise<Response> => {
+    if (!req.body.username) {
+      return res.status(400).json({ status: 400, msg: "Username Required!" });
+    }
+    if (!req.body.password) {
+      return res.status(400).json({ status: 400, msg: "Password Required!" });
+    }
+    try {
+      const result: any = await User.findOne({
+        $and: [{ username: req.body.username.toLowerCase() }],
+      });
+      if (!result) {
+        return res.status(400).json({ status: 400, msg: "User not found" });
+      }
+      const match = await bcrypt.compare(req.body.password, result.password);
+      if (!match) {
+        return res.status(400).json({ status: 400, msg: "Wrong password" });
+      }
+      const accessToken = jwt.sign(
+        {
+          _id: result.id,
+          name: result.name,
+          username: result.username,
+          status: result.status,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: "7776000s",
+        }
+      );
+      return res.status(200).json({ status: 200, token: accessToken });
+    } catch (error) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: error ?? "Error, Connection" });
     }
   };
 }

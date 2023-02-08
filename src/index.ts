@@ -8,7 +8,6 @@ import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
 import {
-  ContactRoutes,
   ScheduleItemPackingRoutes,
   ScheduleItemRoutes,
   ScheduleRoutes,
@@ -18,6 +17,7 @@ import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
 import { Schedule } from "./models";
 import cron from "node-cron";
+import { AuthMiddleware } from "./middleware";
 
 const corsOptions = {
   origin: ["*", "http://localhost:3000", "http://localhost"],
@@ -62,9 +62,9 @@ class App {
 
   protected routes(): void {
     this.app.use("/users", UserRoutes);
-    this.app.use("/schedule", ScheduleRoutes);
-    this.app.use("/scheduleitem", ScheduleItemRoutes);
-    this.app.use("/schedulepacking", ScheduleItemPackingRoutes);
+    this.app.use("/schedule", AuthMiddleware, ScheduleRoutes);
+    this.app.use("/scheduleitem", AuthMiddleware, ScheduleItemRoutes);
+    this.app.use("/schedulepacking", AuthMiddleware, ScheduleItemPackingRoutes);
   }
 }
 

@@ -176,7 +176,7 @@ class ScheduleController implements IController {
     }
   };
 
-  create = async (req: Request, res: Response): Promise<Response> => {
+  create = async (req: Request|any, res: Response): Promise<Response> => {
     if (!req.body.startDate) {
       return res.status(400).json({ status: 400, msg: "StartDate Required!" });
     }
@@ -188,9 +188,7 @@ class ScheduleController implements IController {
         .status(400)
         .json({ status: 400, msg: "WorkflowState Required!" });
     }
-    if (!req.body.user) {
-      return res.status(400).json({ status: 400, msg: "userId Required!" });
-    }
+    req.body.user = req.userId;
 
     try {
       const prevData: any = await Schedule.findOne().sort({ createdAt: -1 });
@@ -208,10 +206,6 @@ class ScheduleController implements IController {
         req.body.name =
           "SCH" + date + PaddyData(masterNumber + 1, 3).toString();
       }
-
-      // cek user tersedia
-      await User.find({ _id: req.body.userId }).count();
-      // End
 
       const result = new Schedule(req.body);
       const response = await result.save();
