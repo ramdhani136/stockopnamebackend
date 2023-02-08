@@ -5,7 +5,7 @@ import { IStateFilter } from "../Interfaces";
 import Schedule from "../models/Schedule";
 import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
-import { ScheduleItem, User } from "../models";
+import { ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
