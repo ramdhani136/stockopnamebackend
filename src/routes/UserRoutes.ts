@@ -5,13 +5,18 @@ import RouteBase from "./RouteBase";
 
 class UserRoutes extends RouteBase {
   routes(): void {
-    this.router.get("/", UserController.index);
-    this.router.post("/", UserController.create);
+    this.router.get("/", AuthMiddleware, UserController.index);
+    this.router.post("/", AuthMiddleware, UserController.create);
     this.router.post("/login", UserController.login);
-    this.router.post("/logout", UserController.logout);
-    this.router.get("/:id", UserController.show);
-    this.router.delete("/:id", DeleteValid, UserController.delete);
-    this.router.put("/:id", UserController.update);
+    this.router.delete("/logout", UserController.logout);
+    this.router.get("/:id", AuthMiddleware, UserController.show);
+    this.router.delete(
+      "/:id",
+      AuthMiddleware,
+      DeleteValid,
+      UserController.delete
+    );
+    this.router.put("/:id", AuthMiddleware, UserController.update);
   }
 }
 
