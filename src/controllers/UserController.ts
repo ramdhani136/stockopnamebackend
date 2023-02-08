@@ -263,7 +263,6 @@ class UserController implements IController {
             return res.status(404).json({
               status: 404,
               msg: "Error, User not found!",
-              token: null,
             });
           }
           const accessToken = jwt.sign(
