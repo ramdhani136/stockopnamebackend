@@ -10,6 +10,7 @@ import http from "http";
 import {
   RoleListRoutes,
   RoleProfileRoutes,
+  RoleUserRoutes,
   ScheduleItemPackingRoutes,
   ScheduleItemRoutes,
   ScheduleRoutes,
@@ -90,6 +91,7 @@ class App {
     this.app.use("/schedulepacking", AuthMiddleware, ScheduleItemPackingRoutes);
     this.app.use("/roleprofile", AuthMiddleware, RoleProfileRoutes);
     this.app.use("/rolelist", AuthMiddleware, RoleListRoutes);
+    this.app.use("/roleuser", AuthMiddleware, RoleUserRoutes);
   }
 }
 
