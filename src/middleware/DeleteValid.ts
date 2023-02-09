@@ -7,18 +7,27 @@ import {
   ScheduleItemPacking,
 } from "../models";
 
-// const deleSchedulePackingList = async (doc:string):Promise<void> => {
-//   await ScheduleItemPacking.deleteMany({
-//     "schedule.name": doc,
-//   });
-//   const checkDoc = await ScheduleItem.countDocuments({ "schedule.name": doc });
-//   if (checkDoc === 0) {
-//     return true;
-//   }
-//   return false;
-// }
+const delSchedulePackingList = async (doc: string): Promise<boolean> => {
+  await ScheduleItemPacking.deleteMany({
+    "schedule.name": doc,
+  });
+  const checkDoc = await ScheduleItemPacking.countDocuments({
+    "schedule.name": doc,
+  });
+  if (checkDoc === 0) {
+    return true;
+  }
+  return false;
+};
 
 const deleteScheduleItem = async (doc: string): Promise<boolean> => {
+  const cekSchedulePacking = await delSchedulePackingList(doc);
+  console.log(cekSchedulePacking);
+
+  if (!cekSchedulePacking) {
+    return false;
+  }
+
   await ScheduleItem.deleteMany({
     "schedule.name": doc,
   });
