@@ -1,45 +1,30 @@
 import mongoose, { Schema } from "mongoose";
 
-const Schedule = new mongoose.Schema(
+const RoleProfile = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+      index: true,
       unique: true,
-      index:true
     },
     user: {
       type: Schema.Types.ObjectId,
       ref: "Users",
       required: true,
-      index:true
-    },
-    startDate: {
-      type: Date,
-      required: true,
-      index:true
-    },
-    dueDate: {
-      type: Date,
-      require: true,
-      index:true
+      index: true,
     },
     workflowState: {
       type: String,
       require: true,
-      index:true,
+      index: true,
       default:"Draft"
-    },
-    warehouse: {
-      type: String,
-      require: true,
-      index:true
     },
     status: {
       type: String,
       required: true,
-      index:true,
       default: 0,
+      index: true,
     },
   },
   {
@@ -47,4 +32,4 @@ const Schedule = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Schedules", Schedule);
+export default mongoose.model("RoleProfiles", RoleProfile);

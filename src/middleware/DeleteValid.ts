@@ -68,7 +68,7 @@ export const DeleteValid = async (
         break;
       //
       default:
-      // next();
+      next();
     }
   } catch (error) {
     return res.status(400).json({
