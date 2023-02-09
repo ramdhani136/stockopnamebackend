@@ -28,11 +28,6 @@ class RoleListController implements IController {
         typeOf: TypeOfState.String,
       },
       {
-        name: "uniqId",
-        operator: ["=", "!=", "like", "notlike"],
-        typeOf: TypeOfState.String,
-      },
-      {
         name: "create",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
