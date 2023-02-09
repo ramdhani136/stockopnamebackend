@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { Schedule, ScheduleItem, ScheduleItemPacking } from "../models";
+import {
+  RoleProfile,
+  Schedule,
+  ScheduleItem,
+  ScheduleItemPacking,
+} from "../models";
 
 // const deleSchedulePackingList = async (doc:string):Promise<void> => {
 //   await ScheduleItemPacking.deleteMany({
@@ -33,23 +38,39 @@ export const DeleteValid = async (
     switch (req.baseUrl) {
       case "/users":
         //check schedule
-        const userschedule = await Schedule.findOne({ user: path }).count();
-        if (userschedule > 0) {
-          return res.status(400).json({
-            status: 400,
-            msg: `Error, The user is related to ${userschedule} schedule documents`,
-          });
-        }
-        const userscheduleItem = await ScheduleItem.findOne({
-          checkedBy: path,
-        }).count();
-        if (userscheduleItem > 0) {
-          return res.status(400).json({
-            status: 400,
-            msg: `Error, The user is related to ${userscheduleItem} scheduleitem documents`,
-          });
-        }
+        // const userschedule = await Schedule.findOne({ user: path }).count();
+        // if (userschedule > 0) {
+        //   return res.status(400).json({
+        //     status: 400,
+        //     msg: `Error, The user is related to ${userschedule} schedule documents`,
+        //   });
+        // }
+        // // End
+
+        // // ScheduleItem
+        // const userscheduleItem = await ScheduleItem.findOne({
+        //   checkedBy: path,
+        // }).count();
+        // if (userscheduleItem > 0) {
+        //   return res.status(400).json({
+        //     status: 400,
+        //     msg: `Error, The user is related to ${userscheduleItem} scheduleitem documents`,
+        //   });
+        // }
         //End
+
+        // RoleProfile
+        const userRoleProfile = await RoleProfile.findOne({
+          user: path,
+        }).count();
+
+        if (userRoleProfile > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, The user is related to ${userRoleProfile} role profile documents`,
+          });
+        }
+        // End
         next();
         break;
 
@@ -68,7 +89,7 @@ export const DeleteValid = async (
         break;
       //
       default:
-      next();
+        next();
     }
   } catch (error) {
     return res.status(400).json({
