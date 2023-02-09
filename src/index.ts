@@ -58,16 +58,27 @@ class App {
   protected Cron(): void {
     cron.schedule("* * * * *", async function () {
       // Cek & close schedule yang sudah melebihi due date
-      const checkCLoseSchedule = await Schedule.updateMany(
-        {
-          $and: [
-            { dueDate: { $gte: new Date() } },
-            { dueDate: { $lt: new Date() } },
-          ],
-        },
-        { status: 3, workflowState: "Closed" }
+      const today = new Date();
+      const startOfToday = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        0,
+        0,
+        0,
+        0
       );
-      console.log(checkCLoseSchedule);
+      const update = { $set: { status: "3", workflowState: "Closed" } };
+      try {
+        await Schedule.updateMany(
+          {
+            $and: [{ dueDate: { $lt: startOfToday } }, { status: "0" }],
+          },
+          update
+        );
+      } catch (error) {
+        console.log(error);
+      }
       // End
     });
   }
