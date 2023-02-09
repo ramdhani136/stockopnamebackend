@@ -38,25 +38,25 @@ export const DeleteValid = async (
     switch (req.baseUrl) {
       case "/users":
         //check schedule
-        // const userschedule = await Schedule.findOne({ user: path }).count();
-        // if (userschedule > 0) {
-        //   return res.status(400).json({
-        //     status: 400,
-        //     msg: `Error, The user is related to ${userschedule} schedule documents`,
-        //   });
-        // }
-        // // End
+        const userschedule = await Schedule.findOne({ user: path }).count();
+        if (userschedule > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, The user is related to ${userschedule} schedule documents`,
+          });
+        }
+        // End
 
-        // // ScheduleItem
-        // const userscheduleItem = await ScheduleItem.findOne({
-        //   checkedBy: path,
-        // }).count();
-        // if (userscheduleItem > 0) {
-        //   return res.status(400).json({
-        //     status: 400,
-        //     msg: `Error, The user is related to ${userscheduleItem} scheduleitem documents`,
-        //   });
-        // }
+        // ScheduleItem
+        const userscheduleItem = await ScheduleItem.findOne({
+          checkedBy: path,
+        }).count();
+        if (userscheduleItem > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, The user is related to ${userscheduleItem} scheduleitem documents`,
+          });
+        }
         //End
 
         // RoleProfile
