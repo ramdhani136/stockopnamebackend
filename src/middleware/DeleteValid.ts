@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   RoleList,
   RoleProfile,
+  RoleUser,
   Schedule,
   ScheduleItem,
   ScheduleItemPacking,
@@ -88,7 +89,20 @@ export const DeleteValid = async (
         if (userRoleProfile > 0) {
           return res.status(400).json({
             status: 400,
-            msg: `Error, The user is related to ${userRoleProfile} role profile documents`,
+            msg: `Error, The user is related to ${userRoleProfile} roleprofile documents`,
+          });
+        }
+        // End
+
+         // RoleUser
+         const userRoleUser = await RoleUser.findOne({
+          user: path,
+        }).count();
+
+        if (userRoleUser > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, The user is related to ${userRoleUser} roleuser documents`,
           });
         }
         // End
@@ -108,7 +122,18 @@ export const DeleteValid = async (
         });
 
       case "/roleprofile":
-        //check schedule
+        // cek roleuser
+        const roleprofileroleuser = await RoleUser.countDocuments({
+          roleprofile: path,
+        });
+        if (roleprofileroleuser > 0) {
+          return res.status(400).json({
+            status: 400,
+            msg: `Error, this roleprofile is related to ${roleprofileroleuser} roleuser documents`,
+          });
+        }
+        // End
+
         const roleprofilerolist = await deleteRoleList(path);
         if (roleprofilerolist) {
           next();
