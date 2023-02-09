@@ -8,6 +8,7 @@ import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
 import {
+  RoleListRoutes,
   RoleProfileRoutes,
   ScheduleItemPackingRoutes,
   ScheduleItemRoutes,
@@ -77,6 +78,7 @@ class App {
     this.app.use("/scheduleitem", AuthMiddleware, ScheduleItemRoutes);
     this.app.use("/schedulepacking", AuthMiddleware, ScheduleItemPackingRoutes);
     this.app.use("/roleprofile", AuthMiddleware, RoleProfileRoutes);
+    this.app.use("/rolelist", AuthMiddleware, RoleListRoutes);
   }
 }
 

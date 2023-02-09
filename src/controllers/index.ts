@@ -4,6 +4,7 @@ import ScheduleController from "./ScheduleController";
 import ScheduleItemController from "./ScheduleItemController";
 import ScheduleItemPackingController from "./ScheduleItemPackingController";
 import RoleProfileController from "./RoleProfileController";
+import RoleListController from "./RoleListController";
 
 export {
   ContactController,
@@ -11,5 +12,6 @@ export {
   ScheduleController,
   ScheduleItemController,
   ScheduleItemPackingController,
-  RoleProfileController
+  RoleProfileController,
+  RoleListController,
 };
