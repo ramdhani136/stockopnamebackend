@@ -85,9 +85,6 @@ export const DeleteValid = async (
           status: 400,
           msg: `Error, delete!`,
         });
-
-        break;
-      //
       default:
         next();
     }
