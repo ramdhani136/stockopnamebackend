@@ -49,7 +49,6 @@ class RoleProfileController implements IController {
       },
     ];
     try {
-      // Mengambil query
       const filters: any = req.query.filters
         ? JSON.parse(`${req.query.filters}`)
         : [];
@@ -61,16 +60,9 @@ class RoleProfileController implements IController {
         : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
-
-      // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
-      // End
-
-      // Mengambil hasil filter
       let isFilter = FilterQuery.getFilter(filters, stateFilter);
-      // End
-
-      // Validasi apakah filter valid
+    
       if (!isFilter.status) {
         return res
           .status(400)
