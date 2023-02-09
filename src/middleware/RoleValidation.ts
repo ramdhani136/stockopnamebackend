@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { RoleList, RoleProfile, RoleUser } from "../models";
+import { RoleList, RoleUser } from "../models";
 
 export const RoleValidation = (
   req: Request | any,
