@@ -57,7 +57,15 @@ class App {
   protected Cron(): void {
     cron.schedule("* * * * *", async function () {
       // Cek & close schedule yang sudah melebihi due date
-      const checkCLoseSchedule = await Schedule.find().count();
+      const checkCLoseSchedule = await Schedule.updateMany(
+        {
+          $and: [
+            { dueDate: { $gte: new Date() } },
+            { dueDate: { $lt: new Date() } },
+          ],
+        },
+        { status: 2, workflowState: "Closed" }
+      );
       console.log(checkCLoseSchedule);
       // End
     });
