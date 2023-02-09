@@ -4,7 +4,7 @@ import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import {  RoleProfile, RoleUser, User } from "../models";
+import { RoleProfile, RoleUser, User } from "../models";
 
 const Db = RoleUser;
 const redisName = "roleuser";
@@ -49,7 +49,7 @@ class RoleUserController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["roleprofile.name", "user.name" , "createdBy.name"];
+        : ["roleprofile.name", "user.name", "createdBy.name"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -64,7 +64,35 @@ class RoleUserController implements IController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-      const getAll = await Db.find(isFilter.data).count();
+      const getAll = await Db.aggregate([
+        {
+          $lookup: {
+            from: "roleprofiles",
+            localField: "roleprofile",
+            foreignField: "_id",
+            as: "roleprofile",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "createdBy",
+            foreignField: "_id",
+            as: "createdBy",
+          },
+        },
+        {
+          $match: isFilter.data,
+        },
+      ]);
       const result = await Db.aggregate([
         {
           $skip: page * limit - limit,
@@ -100,6 +128,9 @@ class RoleUserController implements IController {
           $unwind: "$user",
         },
         {
+          $unwind: "$createdBy",
+        },
+        {
           $match: isFilter.data,
         },
         {
@@ -116,10 +147,10 @@ class RoleUserController implements IController {
       if (result.length > 0) {
         return res.status(200).json({
           status: 200,
-          total: getAll,
+          total: getAll.length,
           limit,
           nextPage: page + 1,
-          hasMore: getAll > page * limit ? true : false,
+          hasMore: getAll.length > page * limit ? true : false,
           data: result,
           filters: stateFilter,
         });
