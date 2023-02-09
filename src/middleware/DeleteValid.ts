@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {
+  RoleList,
   RoleProfile,
   Schedule,
   ScheduleItem,
@@ -22,6 +23,17 @@ const deleteScheduleItem = async (doc: string): Promise<boolean> => {
     "schedule.name": doc,
   });
   const checkDoc = await ScheduleItem.countDocuments({ "schedule.name": doc });
+  if (checkDoc === 0) {
+    return true;
+  }
+  return false;
+};
+
+const deleteRoleList = async (doc: string): Promise<boolean> => {
+  await RoleList.deleteMany({
+    _id: doc,
+  });
+  const checkDoc = await RoleList.countDocuments({ _id: doc });
   if (checkDoc === 0) {
     return true;
   }
@@ -78,6 +90,18 @@ export const DeleteValid = async (
         //check schedule
         const deleteRelasi = await deleteScheduleItem(path);
         if (deleteRelasi) {
+          next();
+          return;
+        }
+        return res.status(400).json({
+          status: 400,
+          msg: `Error, delete!`,
+        });
+
+      case "/roleprofile":
+        //check schedule
+        const roleprofilerolist = await deleteRoleList(path);
+        if (roleprofilerolist) {
           next();
           return;
         }
