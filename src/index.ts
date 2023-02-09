@@ -64,7 +64,7 @@ class App {
             { dueDate: { $lt: new Date() } },
           ],
         },
-        { status: 2, workflowState: "Closed" }
+        { status: 3, workflowState: "Closed" }
       );
       console.log(checkCLoseSchedule);
       // End
