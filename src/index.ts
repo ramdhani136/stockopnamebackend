@@ -21,6 +21,7 @@ import { SocketIO } from "./utils";
 import { Schedule } from "./models";
 import cron from "node-cron";
 import { AuthMiddleware } from "./middleware";
+import { RoleValidation } from "./middleware/RoleValidation";
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
@@ -86,7 +87,7 @@ class App {
 
   protected routes(): void {
     this.app.use("/users", UserRoutes);
-    this.app.use("/schedule", AuthMiddleware, ScheduleRoutes);
+    this.app.use("/schedule", AuthMiddleware, RoleValidation, ScheduleRoutes);
     this.app.use("/scheduleitem", AuthMiddleware, ScheduleItemRoutes);
     this.app.use("/schedulepacking", AuthMiddleware, ScheduleItemPackingRoutes);
     this.app.use("/roleprofile", AuthMiddleware, RoleProfileRoutes);
