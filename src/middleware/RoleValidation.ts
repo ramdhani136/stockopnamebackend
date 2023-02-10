@@ -32,7 +32,6 @@ export const RoleValidation = (
             relate.push(data);
           }
         }
-        let valid: boolean = false;
         if (relate.length > 0) {
           let ismethod = "read";
           switch (req.method) {
@@ -59,6 +58,12 @@ export const RoleValidation = (
               msg: "Permission Denied!",
             });
           }
+          next();
+        } else {
+          return res.status(403).json({
+            status: 403,
+            msg: "Permission Denied!",
+          });
         }
       } else {
         return res.status(403).json({
@@ -66,7 +71,6 @@ export const RoleValidation = (
           msg: "Permission Denied!",
         });
       }
-      next();
     }
   );
 };
