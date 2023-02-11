@@ -5,7 +5,7 @@ import { IStateFilter } from "../Interfaces";
 import Schedule from "../models/Schedule";
 import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
-import { ScheduleItem } from "../models";
+import { History, ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
@@ -176,7 +176,7 @@ class ScheduleController implements IController {
     }
   };
 
-  create = async (req: Request|any, res: Response): Promise<Response> => {
+  create = async (req: Request | any, res: Response): Promise<Response> => {
     if (!req.body.startDate) {
       return res.status(400).json({ status: 400, msg: "StartDate Required!" });
     }
@@ -209,6 +209,15 @@ class ScheduleController implements IController {
 
       const result = new Schedule(req.body);
       const response = await result.save();
+      const pushHistory = new History({
+        user: req.userId,
+        document: {
+          _id: response._id,
+          type: "schedule",
+        },
+        message: `${req.user} membuat schedule baru nomor : ${response.name}`,
+      });
+      await pushHistory.save();
       await Redis.client.set(
         `schedule-${response._id}`,
         JSON.stringify(response),
