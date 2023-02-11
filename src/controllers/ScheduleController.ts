@@ -262,18 +262,40 @@ class ScheduleController implements IController {
     try {
       const cache = await Redis.client.get(`schedule-${req.params.id}`);
       if (cache) {
-        console.log("Cache");
-        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+        const isCache = JSON.parse(cache);
+        const getHistory = await History.find(
+          {
+            $and: [
+              { "document._id": "63e7153aa77c13427d7e6485" },
+              { "document.type": "schedule" },
+            ],
+          },
+          ["_id", "user", "message", "createdAt", "updatedAt"]
+        ).populate("user", "name");
+        return res
+          .status(200)
+          .json({ status: 200, data: JSON.parse(cache), history: getHistory });
       }
-      const result = await Schedule.findOne({ name: req.params.id }).populate(
-        "user",
-        "name"
-      );
+      const result: any = await Schedule.findOne({
+        name: req.params.id,
+      }).populate("user", "name");
+      const getHistory = await History.find(
+        {
+          $and: [
+            { "document._id": result._id },
+            { "document.type": "schedule" },
+          ],
+        },
+        ["_id", "user", "message", "createdAt", "updatedAt"]
+      ).populate("user", "name");
+
       await Redis.client.set(
         `schedule-${req.params.id}`,
         JSON.stringify(result)
       );
-      return res.status(200).json({ status: 200, data: result });
+      return res
+        .status(200)
+        .json({ status: 200, data: result, history: getHistory });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }
