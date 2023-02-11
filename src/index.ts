@@ -8,6 +8,7 @@ import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
 import {
+  HistoryRoutes,
   RoleListRoutes,
   RoleProfileRoutes,
   RoleUserRoutes,
@@ -98,6 +99,7 @@ class App {
     );
     this.app.use("/rolelist", AuthMiddleware, RoleValidation, RoleListRoutes);
     this.app.use("/roleuser", AuthMiddleware, RoleValidation, RoleUserRoutes);
+    this.app.use("/history", AuthMiddleware, RoleValidation, HistoryRoutes);
   }
 }
 

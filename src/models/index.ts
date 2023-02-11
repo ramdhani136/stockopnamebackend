@@ -6,6 +6,7 @@ import ScheduleItemPacking from "./ScheduleItemPacking";
 import RoleProfile from "./RoleProfile";
 import RoleList from "./RoleList";
 import RoleUser from "./RoleUser";
+import History from "./History";
 
 export {
   User,
@@ -15,4 +16,5 @@ export {
   RoleProfile,
   RoleList,
   RoleUser,
+  History
 };

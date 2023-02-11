@@ -5,6 +5,7 @@ import ScheduleItemPackingRoutes from "./ScheduleItemPackingRoutes";
 import RoleProfileRoutes from "./RoleProfileRoutes";
 import RoleListRoutes from "./RoleListRoutes";
 import RoleUserRoutes from "./RoleUserRoutes";
+import HistoryRoutes from "./HistoryRoutes";
 
 export {
   UserRoutes,
@@ -14,4 +15,5 @@ export {
   RoleProfileRoutes,
   RoleListRoutes,
   RoleUserRoutes,
+  HistoryRoutes,
 };

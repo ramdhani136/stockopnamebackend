@@ -6,6 +6,7 @@ import ScheduleItemPackingController from "./ScheduleItemPackingController";
 import RoleProfileController from "./RoleProfileController";
 import RoleListController from "./RoleListController";
 import RoleUserController from "./RoleUserController";
+import HistoryController from "./HistoryController";
 
 export {
   UserController,
@@ -14,5 +15,6 @@ export {
   ScheduleItemPackingController,
   RoleProfileController,
   RoleListController,
-  RoleUserController
+  RoleUserController,
+  HistoryController
 };
