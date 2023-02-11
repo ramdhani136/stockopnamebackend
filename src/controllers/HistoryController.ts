@@ -187,9 +187,7 @@ class HistoryController implements IController {
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
       const result = await Db.findOne({ _id: req.params.id })
-        .populate("roleprofile", "name")
         .populate("user", "name")
-        .populate("createdBy", "name");
       await Redis.client.set(
         `${redisName}-${req.params.id}`,
         JSON.stringify(result)
