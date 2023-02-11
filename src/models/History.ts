@@ -8,20 +8,18 @@ const History = new mongoose.Schema(
       required: true,
       index: true,
     },
-    document: [
-      {
-        _id: {
-          type: Schema.Types.ObjectId,
-          required: true,
-          index: true,
-        },
-        type: {
-          type: String,
-          required: true,
-          index: true,
-        },
+    document: {
+      _id: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        index: true,
       },
-    ],
+      type: {
+        type: String,
+        required: true,
+        index: true,
+      },
+    },
     message: {
       type: String,
       require: true,

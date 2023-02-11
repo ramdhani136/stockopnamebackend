@@ -99,7 +99,7 @@ class App {
     );
     this.app.use("/rolelist", AuthMiddleware, RoleValidation, RoleListRoutes);
     this.app.use("/roleuser", AuthMiddleware, RoleValidation, RoleUserRoutes);
-    this.app.use("/history", AuthMiddleware, RoleValidation, HistoryRoutes);
+    this.app.use("/history", AuthMiddleware, HistoryRoutes);
   }
 }
 

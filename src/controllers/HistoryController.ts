@@ -135,17 +135,41 @@ class HistoryController implements IController {
   };
 
   create = async (req: Request | any, res: Response): Promise<Response> => {
-    if (!req.body.roleprofile) {
-      return res
-        .status(400)
-        .json({ status: 400, msg: "roleprofile Required!" });
-    }
     if (!req.body.user) {
       return res.status(400).json({ status: 400, msg: "user Required!" });
     }
+    if (!req.body.document._id) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: "document id Required!" });
+    }
+    if (!req.body.document.type) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: "document type Required!" });
+    }
+    if (!req.body.message) {
+      return res.status(400).json({ status: 400, msg: "message Required!" });
+    }
+
+    const doctype = [
+      "schedule",
+      "scheduleitem",
+      "schedulepacking",
+      "roleuser",
+      "roleprofile",
+      "rolelist",
+    ];
+
+    const cekDocType = doctype.find((item) => item == req.body.document.type);
+    if (!cekDocType) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: "Document type not found!" });
+    }
 
     try {
-      return res.status(200).json({ status: 200, data: "ok" });
+      return res.status(200).json({ status: 200, data: req.body.document });
     } catch (error) {
       return res
         .status(400)
