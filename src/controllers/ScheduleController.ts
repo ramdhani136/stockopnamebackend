@@ -266,7 +266,7 @@ class ScheduleController implements IController {
         const getHistory = await History.find(
           {
             $and: [
-              { "document._id": "63e7153aa77c13427d7e6485" },
+              { "document._id": `${isCache._id}` },
               { "document.type": "schedule" },
             ],
           },
