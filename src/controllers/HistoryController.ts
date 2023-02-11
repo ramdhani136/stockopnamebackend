@@ -169,7 +169,9 @@ class HistoryController implements IController {
     }
 
     try {
-      return res.status(200).json({ status: 200, data: req.body.document });
+      const result = new Db(req.body);
+      const response = await result.save();
+      return res.status(200).json({ status: 200, data: response });
     } catch (error) {
       return res
         .status(400)
