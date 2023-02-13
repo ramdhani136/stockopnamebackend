@@ -9,15 +9,16 @@ import { History } from "../models";
 const Db = History;
 const redisName = "history";
 
-interface pushHistoryI {
+ interface pushHistoryI {
   document: {
-    _id: string;
+    _id: any;
     type: string;
   };
   message: String;
+  user: String;
 }
 
-interface responseHistoryI {
+export interface responseHistoryI {
   status: Boolean;
   msg: any;
 }
@@ -244,6 +245,9 @@ class HistoryController implements IController {
   };
 
   pushHistory = async (data: pushHistoryI): Promise<responseHistoryI> => {
+    if (!data.user) {
+      return { status: false, msg: "Required user" };
+    }
     if (!data.document._id) {
       return { status: false, msg: "Required document id" };
     }
