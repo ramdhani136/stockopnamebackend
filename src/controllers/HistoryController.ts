@@ -19,7 +19,7 @@ interface pushHistoryI {
 
 interface responseHistoryI {
   status: Boolean;
-  msg: String;
+  msg: any;
 }
 
 class HistoryController implements IController {
@@ -243,10 +243,39 @@ class HistoryController implements IController {
     }
   };
 
-  pushHistory = async (data: pushHistoryI): Promise<any> => {
-    if(!data.document._id){
-      return { status: false, msg: "coba" };
-    }   
+  pushHistory = async (data: pushHistoryI): Promise<responseHistoryI> => {
+    if (!data.document._id) {
+      return { status: false, msg: "Required document id" };
+    }
+    if (!data.document.type) {
+      return { status: false, msg: "Required document type" };
+    }
+    if (!data.document.type) {
+      return { status: false, msg: "Required Message" };
+    }
+
+    const doctype = [
+      "schedule",
+      "scheduleitem",
+      "schedulepacking",
+      "roleuser",
+      "roleprofile",
+      "rolelist",
+    ];
+
+    const cekDocType = doctype.find((item) => item == data.document.type);
+
+    if (!cekDocType) {
+      return { status: false, msg: "Document not found!" };
+    }
+
+    try {
+      const result = new Db(data);
+      const response = await result.save();
+      return { status: true, msg: response };
+    } catch (error) {
+      return { status: false, msg: error ?? "Error push history" };
+    }
   };
 }
 

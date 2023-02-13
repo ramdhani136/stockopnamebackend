@@ -31,7 +31,7 @@ class ScheduleController implements IController {
       },
       message: "TES",
     });
-    // console.log(pushHistory);
+    console.log(pushHistory);
     
     const stateFilter: IStateFilter[] = [
       {
