@@ -243,8 +243,10 @@ class HistoryController implements IController {
     }
   };
 
-  pushHistory = async (data: pushHistoryI): Promise<responseHistoryI> => {
-    return { status: true, msg: "coba" };
+  pushHistory = async (data: pushHistoryI): Promise<any> => {
+    if(!data.document._id){
+      return { status: false, msg: "coba" };
+    }   
   };
 }
 
