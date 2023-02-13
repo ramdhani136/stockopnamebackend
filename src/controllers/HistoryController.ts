@@ -9,6 +9,19 @@ import { History } from "../models";
 const Db = History;
 const redisName = "history";
 
+interface pushHistoryI {
+  document: {
+    _id: string;
+    type: string;
+  };
+  message: String;
+}
+
+interface responseHistoryI {
+  status: Boolean;
+  msg: String;
+}
+
 class HistoryController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
@@ -186,8 +199,10 @@ class HistoryController implements IController {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Db.findOne({ _id: req.params.id })
-        .populate("user", "name")
+      const result = await Db.findOne({ _id: req.params.id }).populate(
+        "user",
+        "name"
+      );
       await Redis.client.set(
         `${redisName}-${req.params.id}`,
         JSON.stringify(result)
@@ -226,6 +241,10 @@ class HistoryController implements IController {
     } catch (error) {
       return res.status(404).json({ status: 404, msg: error });
     }
+  };
+
+  pushHistory = async (data: pushHistoryI): Promise<responseHistoryI> => {
+    return { status: true, msg: "coba" };
   };
 }
 

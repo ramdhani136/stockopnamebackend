@@ -7,6 +7,7 @@ import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
 import { History, ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
+import { HistoryController } from "../controllers";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
@@ -23,6 +24,14 @@ const GetErpBin = async (warehouse: string): Promise<any> => {
 
 class ScheduleController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
+    const pushHistory = await HistoryController.pushHistory({
+      document: {
+        _id: "ddd",
+        type: "schedule",
+      },
+      message: "TES",
+    });
+    console.log(pushHistory);
     const stateFilter: IStateFilter[] = [
       {
         name: "_id",
