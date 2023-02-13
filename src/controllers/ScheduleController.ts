@@ -212,6 +212,7 @@ class ScheduleController implements IController {
       const result = new Schedule(req.body);
       const response = await result.save();
 
+      // push history
       await HistoryController.pushHistory({
         document: {
           _id: response._id,
@@ -220,6 +221,7 @@ class ScheduleController implements IController {
         message: `${req.user} membuat schedule baru nomor : ${response.name}`,
         user: req.userId,
       });
+      // End
 
       await Redis.client.set(
         `schedule-${response._id}`,
