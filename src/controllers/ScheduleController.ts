@@ -325,34 +325,14 @@ class ScheduleController implements IController {
           }
         );
 
-        const props = Object.keys(result._doc);
-        let differentProps = [];
-
-        for (const i of props) {
-          if (
-            i !== "_id" &&
-            i !== "createdAt" &&
-            i !== "updatedAt" &&
-            i !== "__v"
-          ) {
-            if (`${result[i]}` !== `${getData[i]}`) {
-              differentProps.push(i);
-            }
-          }
-        }
-        if (differentProps.length > 0) {
-          for (const item of differentProps) {
-            await HistoryController.pushHistory({
-              document: {
-                _id: result._id,
-                name: result.name,
-                type: "schedule",
-              },
-              message: `${req.user} merubah ${item} dari ${result[item]} menjadi ${getData[item]} di dalam dokumen ${result.name}`,
-              user: req.userId,
-            });
-          }
-        }
+        // push history semua field yang di update
+        await HistoryController.pushUpdateMany(
+          result,
+          getData,
+          req.user,
+          req.userId
+        );
+        // End
 
         return res.status(200).json({ status: 200, data: getData });
       }

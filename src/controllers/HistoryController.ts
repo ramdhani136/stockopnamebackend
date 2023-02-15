@@ -9,10 +9,10 @@ import { History } from "../models";
 const Db = History;
 const redisName = "history";
 
- interface pushHistoryI {
+interface pushHistoryI {
   document: {
     _id: any;
-    name:String;
+    name: String;
     type: string;
   };
   message: String;
@@ -283,6 +283,42 @@ class HistoryController implements IController {
       return { status: true, msg: response };
     } catch (error) {
       return { status: false, msg: error ?? "Error push history" };
+    }
+  };
+
+  pushUpdateMany = async (
+    prevData: any,
+    nextData: any,
+    user: any,
+    userId: any
+  ): Promise<any> => {
+    const props = Object.keys(prevData._doc);
+    let differentProps = [];
+
+    for (const i of props) {
+      if (
+        i !== "_id" &&
+        i !== "createdAt" &&
+        i !== "updatedAt" &&
+        i !== "__v"
+      ) {
+        if (`${prevData[i]}` !== `${nextData[i]}`) {
+          differentProps.push(i);
+        }
+      }
+    }
+    if (differentProps.length > 0) {
+      for (const item of differentProps) {
+        await this.pushHistory({
+          document: {
+            _id: prevData._id,
+            name: prevData.name,
+            type: "schedule",
+          },
+          message: `${user} merubah ${item} dari ${prevData[item]} menjadi ${nextData[item]} di dalam dokumen ${prevData.name}`,
+          user: userId,
+        });
+      }
     }
   };
 }
