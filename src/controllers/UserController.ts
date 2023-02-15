@@ -103,7 +103,7 @@ class UserController implements IController {
     }
   };
 
-  create = async (req: Request, res: Response): Promise<Response> => {
+  create = async (req: Request | any, res: Response): Promise<Response> => {
     if (!req.body.password) {
       return res.status(400).json({ status: 400, msg: "Password Required!" });
     }
@@ -123,6 +123,18 @@ class UserController implements IController {
       await Redis.client.set(`user-${users._id}`, JSON.stringify(users), {
         EX: 10,
       });
+      // push history
+      await HistoryController.pushHistory({
+        document: {
+          _id: users._id,
+          name: users.name,
+          type: "user",
+        },
+        message: `${req.user} membuat user baru ${users.name}`,
+        user: req.userId,
+      });
+      // End
+
       return res.status(200).json({ status: 200, data: users });
     } catch (error) {
       return res.status(400).json({ status: 400, data: error });
@@ -196,11 +208,25 @@ class UserController implements IController {
     }
   };
 
-  delete = async (req: Request, res: Response): Promise<Response> => {
+  delete = async (req: Request | any, res: Response): Promise<Response> => {
     try {
-      const users = await User.deleteOne({ _id: req.params.id });
-      await Redis.client.del(`user-${req.params.id}`);
-      return res.status(200).json({ status: 200, data: users });
+      const users = await User.findOneAndDelete({ _id: req.params.id });
+      if (users) {
+        await Redis.client.del(`user-${req.params.id}`);
+        // push history
+        await HistoryController.pushHistory({
+          document: {
+            _id: users._id,
+            name: users.name,
+            type: "user",
+          },
+          message: `${req.user} menghapus user ${users.name}`,
+          user: req.userId,
+        });
+        // End
+        return res.status(200).json({ status: 200, data: users });
+      }
+      return res.status(404).json({ status: 404, msg: "Error Delete!" });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }
