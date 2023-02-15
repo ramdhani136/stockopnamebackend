@@ -1,4 +1,3 @@
-
 import User from "./User";
 import Schedule from "./Schedule";
 import ScheduleItem from "./ScheduleItem";
@@ -7,6 +6,10 @@ import RoleProfile from "./RoleProfile";
 import RoleList from "./RoleList";
 import RoleUser from "./RoleUser";
 import History from "./History";
+import Workflow from "./Workflow";
+import WorkflowAction from "./WorkflowAction";
+import WorkflowState from "./WorkflowState";
+import WorkflowTransition from "./WorkflowTransition";
 
 export {
   User,
@@ -16,5 +19,9 @@ export {
   RoleProfile,
   RoleList,
   RoleUser,
-  History
+  History,
+  Workflow,
+  WorkflowAction,
+  WorkflowState,
+  WorkflowTransition,
 };

@@ -1,4 +1,3 @@
-
 import UserController from "./UserController";
 import ScheduleController from "./ScheduleController";
 import ScheduleItemController from "./ScheduleItemController";
@@ -7,6 +6,7 @@ import RoleProfileController from "./RoleProfileController";
 import RoleListController from "./RoleListController";
 import RoleUserController from "./RoleUserController";
 import HistoryController from "./HistoryController";
+import WorkflowStateController from "./WorkflowStateController";
 
 export {
   UserController,
@@ -16,5 +16,6 @@ export {
   RoleProfileController,
   RoleListController,
   RoleUserController,
-  HistoryController
+  HistoryController,
+  WorkflowStateController,
 };

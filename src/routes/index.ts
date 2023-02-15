@@ -6,6 +6,7 @@ import RoleProfileRoutes from "./RoleProfileRoutes";
 import RoleListRoutes from "./RoleListRoutes";
 import RoleUserRoutes from "./RoleUserRoutes";
 import HistoryRoutes from "./HistoryRoutes";
+import WorkflowStateRoutes from "./WorkflowStateRoutes";
 
 export {
   UserRoutes,
@@ -16,4 +17,5 @@ export {
   RoleListRoutes,
   RoleUserRoutes,
   HistoryRoutes,
+  WorkflowStateRoutes,
 };
