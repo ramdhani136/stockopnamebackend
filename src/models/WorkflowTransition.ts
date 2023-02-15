@@ -8,11 +8,7 @@ const WorkflowTransition = new mongoose.Schema(
       required: true,
       index: true,
     },
-    uniqId: {
-      type: String,
-      require: true,
-      unique: true,
-    },
+  
     stateActive: {
       type: Schema.Types.ObjectId,
       ref: "workflowStates",

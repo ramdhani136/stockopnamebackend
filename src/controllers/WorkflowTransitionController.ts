@@ -6,6 +6,7 @@ import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import {
   RoleProfile,
+  Workflow,
   WorkflowAction,
   WorkflowState,
   WorkflowTransition,
@@ -229,6 +230,7 @@ class WorkflowTransitionController implements IController {
     req.body.user = req.userId;
 
     try {
+      await Workflow.findById(`${req.body.workflow}`);
       await WorkflowAction.findById(`${req.body.action}`);
       await WorkflowState.findById(`${req.body.stateActive}`);
       await WorkflowState.findById(`${req.body.nextState}`);
