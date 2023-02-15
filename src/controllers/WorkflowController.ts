@@ -44,6 +44,11 @@ class workflowStateController implements IController {
       },
     ];
     try {
+
+      const defaultState = [
+
+      ]
+
       const filters: any = req.query.filters
         ? JSON.parse(`${req.query.filters}`)
         : [];
@@ -123,6 +128,9 @@ class workflowStateController implements IController {
     }
     if (!req.body.doc) {
       return res.status(400).json({ status: 400, msg: "doc Required!" });
+    }
+    if (!req.body.status) {
+      return res.status(400).json({ status: 400, msg: "status Required!" });
     }
     req.body.user = req.userId;
     try {
