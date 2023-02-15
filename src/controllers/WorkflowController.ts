@@ -49,7 +49,7 @@ class workflowStateController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["name", "user.name"];
+        : ["name", "user.name","doc"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -134,7 +134,7 @@ class workflowStateController implements IController {
       if (!cekDocType) {
         return res
           .status(400)
-          .json({ status: 400, msg: "Document type not found!" });
+          .json({ status: 400, msg: "Document not found!" });
       }
   
       const result = new Db(req.body);
@@ -168,8 +168,8 @@ class workflowStateController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await Db.updateOne({ name: req.params.id }, req.body);
-      const getData = await Db.findOne({ name: req.params.id });
+      const result = await Db.updateOne({ _id: req.params.id }, req.body);
+      const getData = await Db.findOne({ _id: req.params.id });
       await Redis.client.set(
         `${redisName}-${req.params.id}`,
         JSON.stringify(getData)
