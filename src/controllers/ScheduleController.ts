@@ -276,7 +276,9 @@ class ScheduleController implements IController {
             ],
           },
           ["_id", "user", "message", "createdAt", "updatedAt"]
-        ).populate("user", "name");
+        )
+          .sort({ createdAt: -1 })
+          .populate("user", "name");
         return res
           .status(200)
           .json({ status: 200, data: JSON.parse(cache), history: getHistory });
@@ -292,7 +294,9 @@ class ScheduleController implements IController {
           ],
         },
         ["_id", "user", "message", "createdAt", "updatedAt"]
-      ).populate("user", "name");
+      )
+        .sort({ createdAt: -1 })
+        .populate("user", "name");
 
       await Redis.client.set(
         `schedule-${req.params.id}`,
