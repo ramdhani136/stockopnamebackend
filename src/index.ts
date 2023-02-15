@@ -17,6 +17,7 @@ import {
   ScheduleRoutes,
   UserRoutes,
   workflowActionRoutes,
+  WorkflowCangerRoutes,
   WorkflowRoutes,
   WorkflowStateRoutes,
   WorkflowTransitionRoutes,
@@ -107,7 +108,12 @@ class App {
     this.app.use("/workflowstate", AuthMiddleware, WorkflowStateRoutes);
     this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
     this.app.use("/workflow", AuthMiddleware, WorkflowRoutes);
-    this.app.use("/workflowtransition", AuthMiddleware, WorkflowTransitionRoutes);
+    this.app.use(
+      "/workflowtransition",
+      AuthMiddleware,
+      WorkflowTransitionRoutes
+    );
+    this.app.use("/workflowchanger", AuthMiddleware, WorkflowCangerRoutes);
   }
 }
 

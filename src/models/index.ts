@@ -10,6 +10,7 @@ import Workflow from "./Workflow";
 import WorkflowAction from "./WorkflowAction";
 import WorkflowState from "./WorkflowState";
 import WorkflowTransition from "./WorkflowTransition";
+import WorkflowChanger from "./WorkflowChanger";
 
 export {
   User,
@@ -24,4 +25,5 @@ export {
   WorkflowAction,
   WorkflowState,
   WorkflowTransition,
+  WorkflowChanger,
 };

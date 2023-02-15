@@ -7,14 +7,14 @@ import { TypeOfState } from "../Interfaces/FilterInterface";
 import {
   RoleProfile,
   WorkflowAction,
+  WorkflowChanger,
   WorkflowState,
-  WorkflowTransition,
 } from "../models";
 
-const Db = WorkflowTransition;
-const redisName = "workflowtransition";
+const Db = WorkflowChanger;
+const redisName = "workflowchanger";
 
-class WorkflowTransitionController implements IController {
+class WorkflowChangerController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
@@ -32,21 +32,13 @@ class WorkflowTransitionController implements IController {
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
+
       {
-        name: "action.name",
+        name: "state.name",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
-      {
-        name: "stateActive.name",
-        operator: ["=", "!=", "like", "notlike"],
-        typeOf: TypeOfState.String,
-      },
-      {
-        name: "nextState.name",
-        operator: ["=", "!=", "like", "notlike"],
-        typeOf: TypeOfState.String,
-      },
+
       {
         name: "roleprofile.name",
         operator: ["=", "!=", "like", "notlike"],
@@ -73,14 +65,10 @@ class WorkflowTransitionController implements IController {
             "name",
             "user._id",
             "user.name",
-            "action._id",
-            "action.name",
             "workflow._id",
             "workflow.name",
-            "stateActive._id",
-            "stateActive.name",
-            "nextState.name",
-            "nextState._id",
+            "state._id",
+            "state.name",
             "roleprofile._id",
             "roleprofile.name",
           ];
@@ -113,14 +101,6 @@ class WorkflowTransitionController implements IController {
         },
         {
           $lookup: {
-            from: "workflowactions",
-            localField: "action",
-            foreignField: "_id",
-            as: "action",
-          },
-        },
-        {
-          $lookup: {
             from: "workflows",
             localField: "workflow",
             foreignField: "_id",
@@ -129,18 +109,10 @@ class WorkflowTransitionController implements IController {
         },
         {
           $lookup: {
-            from: "workflowstates",
-            localField: "stateActive",
+            from: "workflowStates",
+            localField: "state",
             foreignField: "_id",
-            as: "stateActive",
-          },
-        },
-        {
-          $lookup: {
-            from: "workflowstates",
-            localField: "nextState",
-            foreignField: "_id",
-            as: "nextState",
+            as: "state",
           },
         },
         {
@@ -152,19 +124,13 @@ class WorkflowTransitionController implements IController {
           },
         },
         {
-          $unwind: "$stateActive",
+          $unwind: "$state",
         },
         {
           $unwind: "$roleprofile",
         },
         {
-          $unwind: "$nextState",
-        },
-        {
           $unwind: "$user",
-        },
-        {
-          $unwind: "$action",
         },
         {
           $unwind: "$workflow",
@@ -298,4 +264,4 @@ class WorkflowTransitionController implements IController {
   };
 }
 
-export default new WorkflowTransitionController();
+export default new WorkflowChangerController();

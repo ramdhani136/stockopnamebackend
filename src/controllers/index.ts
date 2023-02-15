@@ -10,6 +10,7 @@ import WorkflowStateController from "./WorkflowStateController";
 import WorkflowActionController from "./WorkflowActionController";
 import WorkflowController from "./WorkflowController";
 import WorkflowTransitionController from "./WorkflowTransitionController";
+import WorkflowChangerController from "./WorkflowChangerController";
 
 export {
   UserController,
@@ -24,4 +25,5 @@ export {
   WorkflowActionController,
   WorkflowController,
   WorkflowTransitionController,
+  WorkflowChangerController,
 };
