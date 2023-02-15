@@ -263,7 +263,7 @@ class ScheduleController implements IController {
     }
   };
 
-  show = async (req: Request, res: Response): Promise<Response> => {
+  show = async (req: Request|any, res: Response): Promise<Response> => {
     try {
       const cache = await Redis.client.get(`schedule-${req.params.id}`);
       // if (cache) {
@@ -307,7 +307,8 @@ class ScheduleController implements IController {
       );
 
       const buttonActions = await WorkflowController.getButtonAction(
-        "schedule"
+        "schedule",
+        req.userId
       );
 
       return res

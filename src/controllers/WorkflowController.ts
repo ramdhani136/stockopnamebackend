@@ -4,7 +4,8 @@ import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import { Workflow, WorkflowTransition } from "../models";
+import { RoleUser, Workflow, WorkflowTransition } from "../models";
+import mongoose, { ObjectId } from "mongoose";
 
 const Db = Workflow;
 const redisName = "workflow";
@@ -194,7 +195,7 @@ class workflowStateController implements IController {
     }
   };
 
-  getButtonAction = async (doc: String): Promise<any[]> => {
+  getButtonAction = async (doc: String, user: ObjectId): Promise<any[]> => {
     let data: any[] = [];
     const workflow: any = await Workflow.findOne({
       $and: [{ status: 1 }, { doc: doc }],
@@ -202,13 +203,35 @@ class workflowStateController implements IController {
 
     if (workflow) {
       const id_workflow = workflow._id;
-      const transition: any = await WorkflowTransition.find({
+      const transitions: any = await WorkflowTransition.find({
         workflow: id_workflow,
       })
         .populate("workflow", "name")
         .populate("action", "name")
         .populate("nextState", "name");
-      data = transition.map((item: any) => {
+
+      let allData = [];
+      for (const transition of transitions) {
+        if (transition.selfApproval) {
+          if (
+            `${new mongoose.Types.ObjectId(`${user}`)}` === `${transition.user}`
+          ) {
+            allData.push(transition);
+          }
+        } else {
+          const validAccessRole = await RoleUser.findOne({
+            $and: [
+              { user: new mongoose.Types.ObjectId(`${user}`) },
+              { roleprofile: transition.roleprofile },
+            ],
+          });
+          if (validAccessRole) {
+            allData.push(transition);
+          }
+        }
+      }
+
+      data = allData.map((item: any) => {
         return {
           id_workflow: id_workflow,
           name: item.action.name,
