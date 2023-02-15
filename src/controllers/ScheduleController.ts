@@ -7,7 +7,7 @@ import { FilterQuery, PaddyData } from "../utils";
 import IController from "./ControllerInterface";
 import { History, ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import { HistoryController } from "../controllers";
+import { HistoryController, WorkflowController } from "../controllers";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
@@ -266,23 +266,23 @@ class ScheduleController implements IController {
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
       const cache = await Redis.client.get(`schedule-${req.params.id}`);
-      if (cache) {
-        const isCache = JSON.parse(cache);
-        const getHistory = await History.find(
-          {
-            $and: [
-              { "document._id": `${isCache._id}` },
-              { "document.type": "schedule" },
-            ],
-          },
-          ["_id", "user", "message", "createdAt", "updatedAt"]
-        )
-          .sort({ createdAt: -1 })
-          .populate("user", "name");
-        return res
-          .status(200)
-          .json({ status: 200, data: JSON.parse(cache), history: getHistory });
-      }
+      // if (cache) {
+      //   const isCache = JSON.parse(cache);
+      //   const getHistory = await History.find(
+      //     {
+      //       $and: [
+      //         { "document._id": `${isCache._id}` },
+      //         { "document.type": "schedule" },
+      //       ],
+      //     },
+      //     ["_id", "user", "message", "createdAt", "updatedAt"]
+      //   )
+      //     .sort({ createdAt: -1 })
+      //     .populate("user", "name");
+      //   return res
+      //     .status(200)
+      //     .json({ status: 200, data: JSON.parse(cache), history: getHistory });
+      // }
       const result: any = await Schedule.findOne({
         name: req.params.id,
       }).populate("user", "name");
@@ -305,9 +305,19 @@ class ScheduleController implements IController {
           EX: 30,
         }
       );
+
+      const buttonActions = await WorkflowController.getButtonAction(
+        "schedule"
+      );
+
       return res
         .status(200)
-        .json({ status: 200, data: result, history: getHistory });
+        .json({
+          status: 200,
+          data: result,
+          history: getHistory,
+          workflow: buttonActions,
+        });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }

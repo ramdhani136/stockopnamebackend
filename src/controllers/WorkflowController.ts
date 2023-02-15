@@ -4,7 +4,7 @@ import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import { Workflow } from "../models";
+import { Workflow, WorkflowTransition } from "../models";
 
 const Db = Workflow;
 const redisName = "workflow";
@@ -49,7 +49,7 @@ class workflowStateController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["name", "user.name","doc"];
+        : ["name", "user.name", "doc"];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -57,7 +57,7 @@ class workflowStateController implements IController {
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       let setField = FilterQuery.getField(fields);
       let isFilter = FilterQuery.getFilter(filters, stateFilter);
-    
+
       if (!isFilter.status) {
         return res
           .status(400)
@@ -126,9 +126,7 @@ class workflowStateController implements IController {
     }
     req.body.user = req.userId;
     try {
-      const doctype = [
-        "schedule"
-      ];
+      const doctype = ["schedule"];
 
       const cekDocType = doctype.find((item) => item == req.body.doc);
       if (!cekDocType) {
@@ -136,7 +134,7 @@ class workflowStateController implements IController {
           .status(400)
           .json({ status: 400, msg: "Document not found!" });
       }
-  
+
       const result = new Db(req.body);
       const response = await result.save();
       return res.status(200).json({ status: 200, data: response });
@@ -194,6 +192,35 @@ class workflowStateController implements IController {
     } catch (error) {
       return res.status(404).json({ status: 404, msg: error });
     }
+  };
+
+  getButtonAction = async (doc: String): Promise<any[]> => {
+    let data: any[] = [];
+    const workflow: any = await Workflow.findOne({
+      $and: [{ status: 1 }, { doc: doc }],
+    });
+
+    if (workflow) {
+      const id_workflow = workflow._id;
+      const transition: any = await WorkflowTransition.find({
+        workflow: id_workflow,
+      })
+        .populate("workflow", "name")
+        .populate("action", "name")
+        .populate("nextState", "name");
+      data = transition.map((item: any) => {
+        return {
+          id_workflow: id_workflow,
+          name: item.action.name,
+          nextstate: {
+            id: item.nextState._id,
+            name: item.nextState.name,
+          },
+        };
+      });
+      return data;
+    }
+    return data;
   };
 }
 
