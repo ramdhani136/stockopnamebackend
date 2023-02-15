@@ -10,7 +10,6 @@ import {
   WorkflowState,
   WorkflowTransition,
 } from "../models";
-import mongoose from "mongoose";
 
 const Db = WorkflowTransition;
 const redisName = "workflowtransition";
@@ -34,6 +33,31 @@ class WorkflowTransitionController implements IController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "workflow.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "action.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "stateActive.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "nextState.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "roleprofile.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "updatedAt",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
         typeOf: TypeOfState.Date,
@@ -50,7 +74,21 @@ class WorkflowTransitionController implements IController {
         : [];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
-        : ["name", "user.name"];
+        : [
+            "name",
+            "user._id",
+            "user.name",
+            "action._id",
+            "action.name",
+            "workflow._id",
+            "workflow.name",
+            "stateActive._id",
+            "stateActive.name",
+            "nextState.name",
+            "nextState._id",
+            "roleprofile._id",
+            "roleprofile.name",
+          ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
@@ -79,7 +117,62 @@ class WorkflowTransitionController implements IController {
           },
         },
         {
+          $lookup: {
+            from: "workflowactions",
+            localField: "action",
+            foreignField: "_id",
+            as: "action",
+          },
+        },
+        {
+          $lookup: {
+            from: "workflows",
+            localField: "workflow",
+            foreignField: "_id",
+            as: "workflow",
+          },
+        },
+        {
+          $lookup: {
+            from: "workflowstates",
+            localField: "stateActive",
+            foreignField: "_id",
+            as: "stateActive",
+          },
+        },
+        {
+          $lookup: {
+            from: "workflowstates",
+            localField: "nextState",
+            foreignField: "_id",
+            as: "nextState",
+          },
+        },
+        {
+          $lookup: {
+            from: "roleprofiles",
+            localField: "roleprofile",
+            foreignField: "_id",
+            as: "roleprofile",
+          },
+        },
+        {
+          $unwind: "$stateActive",
+        },
+        {
+          $unwind: "$roleprofile",
+        },
+        {
+          $unwind: "$nextState",
+        },
+        {
           $unwind: "$user",
+        },
+        {
+          $unwind: "$action",
+        },
+        {
+          $unwind: "$workflow",
         },
         {
           $match: isFilter.data,
@@ -162,25 +255,13 @@ class WorkflowTransitionController implements IController {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Db.findOne({ _id: req.params.id }).populate(
-        "user",
-        "name"
-      ).populate(
-        "workflow",
-        "name"
-      ).populate(
-        "stateActive",
-        "name"
-      ).populate(
-        "action",
-        "name"
-      ).populate(
-        "nextState",
-        "name"
-      ).populate(
-        "roleprofile",
-        "name"
-      )
+      const result = await Db.findOne({ _id: req.params.id })
+        .populate("user", "name")
+        .populate("workflow", "name")
+        .populate("stateActive", "name")
+        .populate("action", "name")
+        .populate("nextState", "name")
+        .populate("roleprofile", "name");
       await Redis.client.set(
         `${redisName}-${req.params.id}`,
         JSON.stringify(result)
