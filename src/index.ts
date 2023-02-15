@@ -19,6 +19,7 @@ import {
   workflowActionRoutes,
   WorkflowRoutes,
   WorkflowStateRoutes,
+  WorkflowTransitionRoutes,
 } from "./routes";
 import Redis from "./config/Redis";
 import { SocketIO } from "./utils";
@@ -106,6 +107,7 @@ class App {
     this.app.use("/workflowstate", AuthMiddleware, WorkflowStateRoutes);
     this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
     this.app.use("/workflow", AuthMiddleware, WorkflowRoutes);
+    this.app.use("/workflowtransition", AuthMiddleware, WorkflowTransitionRoutes);
   }
 }
 

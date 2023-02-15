@@ -9,6 +9,7 @@ import HistoryController from "./HistoryController";
 import WorkflowStateController from "./WorkflowStateController";
 import WorkflowActionController from "./WorkflowActionController";
 import WorkflowController from "./WorkflowController";
+import WorkflowTransitionController from "./WorkflowTransitionController";
 
 export {
   UserController,
@@ -21,5 +22,6 @@ export {
   HistoryController,
   WorkflowStateController,
   WorkflowActionController,
-  WorkflowController
+  WorkflowController,
+  WorkflowTransitionController,
 };
