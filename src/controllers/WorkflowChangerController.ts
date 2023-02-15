@@ -6,6 +6,7 @@ import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import {
   RoleProfile,
+  Workflow,
   WorkflowAction,
   WorkflowChanger,
   WorkflowState,
@@ -71,6 +72,7 @@ class WorkflowChangerController implements IController {
             "state.name",
             "roleprofile._id",
             "roleprofile.name",
+            "status"
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -109,7 +111,7 @@ class WorkflowChangerController implements IController {
         },
         {
           $lookup: {
-            from: "workflowStates",
+            from: "workflowstates",
             localField: "state",
             foreignField: "_id",
             as: "state",
@@ -176,28 +178,26 @@ class WorkflowChangerController implements IController {
     if (!req.body.workflow) {
       return res.status(400).json({ status: 400, msg: "workflow Required!" });
     }
-    if (!req.body.stateActive) {
+    if (!req.body.state) {
       return res
         .status(400)
-        .json({ status: 400, msg: "stateActive Required!" });
-    }
-    if (!req.body.action) {
-      return res.status(400).json({ status: 400, msg: "action Required!" });
-    }
-    if (!req.body.nextState) {
-      return res.status(400).json({ status: 400, msg: "nextState Required!" });
+        .json({ status: 400, msg: "state Required!" });
     }
     if (!req.body.roleprofile) {
       return res
         .status(400)
         .json({ status: 400, msg: "roleprofile Required!" });
     }
+    if (!req.body.status) {
+      return res
+        .status(400)
+        .json({ status: 400, msg: "status Required!" });
+    }
     req.body.user = req.userId;
 
     try {
-      await WorkflowAction.findById(`${req.body.action}`);
-      await WorkflowState.findById(`${req.body.stateActive}`);
-      await WorkflowState.findById(`${req.body.nextState}`);
+      await Workflow.findById(`${req.body.workflow}`);
+      await WorkflowState.findById(`${req.body.state}`);
       await RoleProfile.findById(`${req.body.roleprofile}`);
       const result = new Db(req.body);
       const response = await result.save();
