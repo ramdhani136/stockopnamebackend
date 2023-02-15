@@ -44,11 +44,6 @@ class workflowStateController implements IController {
       },
     ];
     try {
-
-      const defaultState = [
-
-      ]
-
       const filters: any = req.query.filters
         ? JSON.parse(`${req.query.filters}`)
         : [];
