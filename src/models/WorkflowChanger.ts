@@ -8,6 +8,11 @@ const WorkflowChanger = new mongoose.Schema(
       index: true,
       ref: "workflows",
     },
+    uniqId: {
+      type: String,
+      require: true,
+      unique: true,
+    },
     state: {
       type: Schema.Types.ObjectId,
       required: true,
