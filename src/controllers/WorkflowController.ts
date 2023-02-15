@@ -126,6 +126,17 @@ class workflowStateController implements IController {
     }
     req.body.user = req.userId;
     try {
+      const doctype = [
+        "schedule"
+      ];
+
+      const cekDocType = doctype.find((item) => item == req.body.doc);
+      if (!cekDocType) {
+        return res
+          .status(400)
+          .json({ status: 400, msg: "Document type not found!" });
+      }
+  
       const result = new Db(req.body);
       const response = await result.save();
       return res.status(200).json({ status: 200, data: response });
