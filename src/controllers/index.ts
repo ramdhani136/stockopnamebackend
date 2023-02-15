@@ -7,6 +7,7 @@ import RoleListController from "./RoleListController";
 import RoleUserController from "./RoleUserController";
 import HistoryController from "./HistoryController";
 import WorkflowStateController from "./WorkflowStateController";
+import WorkflowActionController from "./WorkflowActionController";
 
 export {
   UserController,
@@ -18,4 +19,5 @@ export {
   RoleUserController,
   HistoryController,
   WorkflowStateController,
+  WorkflowActionController
 };

@@ -16,6 +16,7 @@ import {
   ScheduleItemRoutes,
   ScheduleRoutes,
   UserRoutes,
+  workflowActionRoutes,
   WorkflowStateRoutes,
 } from "./routes";
 import Redis from "./config/Redis";
@@ -102,6 +103,7 @@ class App {
     this.app.use("/roleuser", AuthMiddleware, RoleValidation, RoleUserRoutes);
     this.app.use("/history", AuthMiddleware, HistoryRoutes);
     this.app.use("/workflowstate", AuthMiddleware, WorkflowStateRoutes);
+    this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
   }
 }
 
