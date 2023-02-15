@@ -12,6 +12,7 @@ const redisName = "history";
  interface pushHistoryI {
   document: {
     _id: any;
+    name:String;
     type: string;
   };
   message: String;
@@ -250,6 +251,9 @@ class HistoryController implements IController {
     }
     if (!data.document._id) {
       return { status: false, msg: "Required document id" };
+    }
+    if (!data.document.name) {
+      return { status: false, msg: "Required document name" };
     }
     if (!data.document.type) {
       return { status: false, msg: "Required document type" };

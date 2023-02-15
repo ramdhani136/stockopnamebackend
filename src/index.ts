@@ -75,7 +75,7 @@ class App {
       try {
         await Schedule.updateMany(
           {
-            $and: [{ dueDate: { $lt: startOfToday } }, { status: "0" }],
+            $and: [{ dueDate: { $lt: startOfToday } }, { status: "1" }],
           },
           update
         );

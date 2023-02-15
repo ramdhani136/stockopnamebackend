@@ -8,7 +8,6 @@ import IController from "./ControllerInterface";
 import { History, ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import { HistoryController } from "../controllers";
-import { responseHistoryI } from "./HistoryController";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
@@ -216,6 +215,7 @@ class ScheduleController implements IController {
       await HistoryController.pushHistory({
         document: {
           _id: response._id,
+          name: response.name,
           type: "schedule",
         },
         message: `${req.user} membuat schedule baru nomor : ${response.name}`,
@@ -227,7 +227,7 @@ class ScheduleController implements IController {
         `schedule-${response._id}`,
         JSON.stringify(response),
         {
-          EX: 10,
+          EX: 30,
         }
       );
 
@@ -296,7 +296,10 @@ class ScheduleController implements IController {
 
       await Redis.client.set(
         `schedule-${req.params.id}`,
-        JSON.stringify(result)
+        JSON.stringify(result),
+        {
+          EX: 30,
+        }
       );
       return res
         .status(200)
@@ -306,34 +309,81 @@ class ScheduleController implements IController {
     }
   };
 
-  update = async (req: Request, res: Response): Promise<Response> => {
+  update = async (req: Request | any, res: Response): Promise<Response> => {
     try {
-      const result = await Schedule.updateOne(
+      const result: any = await Schedule.findOneAndUpdate(
         { name: req.params.id },
         req.body
       );
-      const getData = await Schedule.findOne({ name: req.params.id });
-      await Redis.client.set(
-        `schedule-${req.params.id}`,
-        JSON.stringify(getData)
-      );
-      return res.status(200).json({ status: 200, data: result });
+      if (result) {
+        const getData: any = await Schedule.findOne({ name: req.params.id });
+        await Redis.client.set(
+          `schedule-${req.params.id}`,
+          JSON.stringify(getData),
+          {
+            EX: 30,
+          }
+        );
+
+        const props = Object.keys(result._doc);
+        let differentProps = [];
+
+        for (const i of props) {
+          if (
+            i !== "_id" &&
+            i !== "createdAt" &&
+            i !== "updatedAt" &&
+            i !== "__v"
+          ) {
+            if (`${result[i]}` !== `${getData[i]}`) {
+              differentProps.push(i);
+            }
+          }
+        }
+        if (differentProps.length > 0) {
+          for (const item of differentProps) {
+            await HistoryController.pushHistory({
+              document: {
+                _id: result._id,
+                name: result.name,
+                type: "schedule",
+              },
+              message: `${req.user} merubah ${item} dari ${result[item]} menjadi ${getData[item]} di dalam dokumen ${result.name}`,
+              user: req.userId,
+            });
+          }
+        }
+
+        return res.status(200).json({ status: 200, data: getData });
+      }
+
+      return res
+        .status(400)
+        .json({ status: 404, data: "Error update, data not found" });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }
   };
 
-  delete = async (req: Request, res: Response): Promise<Response> => {
+  delete = async (req: Request | any, res: Response): Promise<Response> => {
     try {
-      const getData: any = await Schedule.findOne({ name: req.params.id });
-
-      if (!getData) {
-        return res.status(404).json({ status: 404, msg: "Not found!" });
+      const result = await Schedule.findOneAndDelete({ name: req.params.id });
+      if (result) {
+        await Redis.client.del(`schedule-${req.params.id}`);
+        // push history
+        await HistoryController.pushHistory({
+          document: {
+            _id: result._id,
+            name: result.name,
+            type: "schedule",
+          },
+          message: `${req.user} menghapus schedule nomor : ${result.name}`,
+          user: req.userId,
+        });
+        // End
+        return res.status(200).json({ status: 200, data: result });
       }
-
-      const result = await Schedule.deleteOne({ name: req.params.id });
-      await Redis.client.del(`schedule-${req.params.id}`);
-      return res.status(200).json({ status: 200, data: result });
+      return res.status(404).json({ status: 404, msg: "Error Delete!" });
     } catch (error) {
       return res.status(404).json({ status: 404, msg: error });
     }

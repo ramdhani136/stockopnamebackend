@@ -49,6 +49,8 @@ export const RoleValidation = (
               break;
             default:
           }
+
+          // console.log(relate)
           const valid = relate.filter(
             (item: any) => item[`${ismethod}`] == "1"
           );

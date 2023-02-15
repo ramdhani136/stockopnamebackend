@@ -14,6 +14,11 @@ const History = new mongoose.Schema(
         required: true,
         index: true,
       },
+      name: {
+        type: String,
+        required: true,
+        index: true,
+      },
       type: {
         type: String,
         required: true,
