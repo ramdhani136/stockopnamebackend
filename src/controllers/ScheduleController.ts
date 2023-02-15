@@ -263,26 +263,33 @@ class ScheduleController implements IController {
     }
   };
 
-  show = async (req: Request|any, res: Response): Promise<Response> => {
+  show = async (req: Request | any, res: Response): Promise<Response> => {
     try {
+      const buttonActions = await WorkflowController.getButtonAction(
+        "schedule",
+        req.userId
+      );
       const cache = await Redis.client.get(`schedule-${req.params.id}`);
-      // if (cache) {
-      //   const isCache = JSON.parse(cache);
-      //   const getHistory = await History.find(
-      //     {
-      //       $and: [
-      //         { "document._id": `${isCache._id}` },
-      //         { "document.type": "schedule" },
-      //       ],
-      //     },
-      //     ["_id", "user", "message", "createdAt", "updatedAt"]
-      //   )
-      //     .sort({ createdAt: -1 })
-      //     .populate("user", "name");
-      //   return res
-      //     .status(200)
-      //     .json({ status: 200, data: JSON.parse(cache), history: getHistory });
-      // }
+      if (cache) {
+        const isCache = JSON.parse(cache);
+        const getHistory = await History.find(
+          {
+            $and: [
+              { "document._id": `${isCache._id}` },
+              { "document.type": "schedule" },
+            ],
+          },
+          ["_id", "user", "message", "createdAt", "updatedAt"]
+        )
+          .sort({ createdAt: -1 })
+          .populate("user", "name");
+        return res.status(200).json({
+          status: 200,
+          data: JSON.parse(cache),
+          history: getHistory,
+          workflow: buttonActions,
+        });
+      }
       const result: any = await Schedule.findOne({
         name: req.params.id,
       }).populate("user", "name");
@@ -306,19 +313,12 @@ class ScheduleController implements IController {
         }
       );
 
-      const buttonActions = await WorkflowController.getButtonAction(
-        "schedule",
-        req.userId
-      );
-
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          data: result,
-          history: getHistory,
-          workflow: buttonActions,
-        });
+      return res.status(200).json({
+        status: 200,
+        data: result,
+        history: getHistory,
+        workflow: buttonActions,
+      });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }
