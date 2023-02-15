@@ -263,6 +263,7 @@ class HistoryController implements IController {
     }
 
     const doctype = [
+      "user",
       "schedule",
       "scheduleitem",
       "schedulepacking",
@@ -290,7 +291,8 @@ class HistoryController implements IController {
     prevData: any,
     nextData: any,
     user: any,
-    userId: any
+    userId: any,
+    doc: String
   ): Promise<any> => {
     const props = Object.keys(prevData._doc);
     let differentProps = [];
@@ -313,9 +315,9 @@ class HistoryController implements IController {
           document: {
             _id: prevData._id,
             name: prevData.name,
-            type: "schedule",
+            type: `${doc}`,
           },
-          message: `${user} merubah ${item} dari ${prevData[item]} menjadi ${nextData[item]} di dalam dokumen ${prevData.name}`,
+          message: `${user} merubah ${item} dari ${prevData[item]} menjadi ${nextData[item]} di dalam data ${prevData.name}`,
           user: userId,
         });
       }

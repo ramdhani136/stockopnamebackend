@@ -334,7 +334,8 @@ class ScheduleController implements IController {
           result,
           getData,
           req.user,
-          req.userId
+          req.userId,
+          "schedule"
         );
         // End
 

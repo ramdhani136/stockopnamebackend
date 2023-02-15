@@ -7,6 +7,8 @@ import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { History } from "../models";
+import HistoryController from "./HistoryController";
 
 class UserController implements IController {
   index = async (req: Request, res: Response): Promise<Response> => {
@@ -131,26 +133,64 @@ class UserController implements IController {
     try {
       const cache = await Redis.client.get(`user-${req.params.id}`);
       if (cache) {
-        console.log("Cache");
-        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+        const isCache = JSON.parse(cache);
+        const getHistory = await History.find(
+          {
+            $and: [
+              { "document._id": `${isCache._id}` },
+              { "document.type": "user" },
+            ],
+          },
+          ["_id", "user", "message", "createdAt", "updatedAt"]
+        )
+          .sort({ createdAt: -1 })
+          .populate("user", "name");
+        return res
+          .status(200)
+          .json({ status: 200, data: JSON.parse(cache), history: getHistory });
       }
-      const users = await User.findOne({ _id: req.params.id });
+      const users: any = await User.findOne({ _id: req.params.id });
+      const getHistory = await History.find(
+        {
+          $and: [{ "document._id": users._id }, { "document.type": "user" }],
+        },
+        ["_id", "user", "message", "createdAt", "updatedAt"]
+      )
+        .sort({ createdAt: -1 })
+        .populate("user", "name");
       await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users));
-      // await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users), {
-      //   EX: 10,
-      // });
-      return res.status(200).json({ status: 200, data: users });
+      return res
+        .status(200)
+        .json({ status: 200, data: users, history: getHistory });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }
   };
 
-  update = async (req: Request, res: Response): Promise<Response> => {
+  update = async (req: Request | any, res: Response): Promise<Response> => {
     try {
-      const result = await User.updateOne({ _id: req.params.id }, req.body);
-      const users = await User.findOne({ _id: req.params.id });
-      await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users));
-      return res.status(200).json({ status: 200, data: result });
+      const result = await User.findOneAndUpdate(
+        { _id: req.params.id },
+        req.body
+      );
+      if (result) {
+        const users = await User.findOne({ _id: req.params.id });
+        await Redis.client.set(`user-${req.params.id}`, JSON.stringify(users));
+        // push history semua field yang di update
+        await HistoryController.pushUpdateMany(
+          result,
+          users,
+          req.user,
+          req.userId,
+          "user"
+        );
+        // End
+
+        return res.status(200).json({ status: 200, data: users });
+      }
+      return res
+        .status(400)
+        .json({ status: 404, data: "Error update, user not found" });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }
