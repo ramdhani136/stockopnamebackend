@@ -31,7 +31,7 @@ import { RoleValidation } from "./middleware/RoleValidation";
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
-  origin: ["*", "http://localhost:3000", "http://localhost"],
+  origin: ["*", "http://localhost:5173", "http://localhost"],
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -52,13 +52,13 @@ class App {
   }
 
   protected plugins(): void {
+    this.app.use(cookieParser());
     dotenv();
     this.app.use(bodyParser.json());
     this.app.use(compression());
     this.app.use(morgan("dev"));
     this.app.use(helmet());
     this.app.use(cors(corsOptions));
-    this.app.use(cookieParser());
     this.io = new SocketIO(this.server).io;
     Redis.getConnect();
   }
@@ -117,7 +117,7 @@ class App {
   }
 }
 
-const port: number = 6000;
+const port: number = 5000;
 const app = new App();
 const send = app.database;
 const io = app.io;
