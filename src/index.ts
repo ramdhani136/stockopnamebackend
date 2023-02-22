@@ -31,7 +31,12 @@ import { RoleValidation } from "./middleware/RoleValidation";
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
-  origin: ["*", "http://localhost:5173", "http://localhost"],
+  origin: [
+    "*",
+    "http://localhost:5173",
+    "http://localhost",
+    "http://172.26.160.1:4173",
+  ],
   credentials: true,
   optionSuccessStatus: 200,
 };
