@@ -127,6 +127,9 @@ class ScheduleController implements IController {
       const getAll = await Schedule.find(isFilter.data).count();
       const result = await Schedule.aggregate([
         {
+          $sort: order_by,
+        },
+        {
           $skip: page * limit - limit,
         },
         {
@@ -148,9 +151,6 @@ class ScheduleController implements IController {
         },
         {
           $project: setField,
-        },
-        {
-          $sort: order_by,
         },
       ]);
 
