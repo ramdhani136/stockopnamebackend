@@ -102,6 +102,7 @@ class ScheduleController implements IController {
             "createdBy",
             "status",
             "user.name",
+            "updatedAt"
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
