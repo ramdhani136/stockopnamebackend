@@ -102,12 +102,12 @@ class ScheduleController implements IController {
             "createdBy",
             "status",
             "user.name",
-            "updatedAt"
+            "updatedAt",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
         : { updatedAt: -1 };
-      const limit: number | string = parseInt(`${req.query.limit}`) || 10;
+      const limit: number | string = parseInt(`${req.query.limit}`) || 0;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
 
       // Mengambil hasil fields
@@ -131,7 +131,7 @@ class ScheduleController implements IController {
           $sort: order_by,
         },
         {
-          $skip: page * limit - limit,
+          $skip: limit > 0 ? page * limit - limit : 0,
         },
         {
           $lookup: {
@@ -148,7 +148,7 @@ class ScheduleController implements IController {
           $match: isFilter.data,
         },
         {
-          $limit: limit,
+          $limit: limit > 0 ? limit : getAll,
         },
         {
           $project: setField,
@@ -160,8 +160,8 @@ class ScheduleController implements IController {
           status: 200,
           total: getAll,
           limit,
-          nextPage: page + 1,
-          hasMore: getAll > page * limit ? true : false,
+          nextPage: getAll > page * limit && limit > 0 ? page + 1 : page,
+          hasMore: getAll > page * limit && limit > 0 ? true : false,
           data: result,
           filters: stateFilter,
         });
