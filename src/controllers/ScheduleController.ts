@@ -131,7 +131,13 @@ class ScheduleController implements IController {
           $sort: order_by,
         },
         {
+          $match: isFilter.data,
+        },
+        {
           $skip: limit > 0 ? page * limit - limit : 0,
+        },
+        {
+          $limit: limit > 0 ? limit : getAll,
         },
         {
           $lookup: {
@@ -144,12 +150,7 @@ class ScheduleController implements IController {
         {
           $unwind: "$user",
         },
-        {
-          $match: isFilter.data,
-        },
-        {
-          $limit: limit > 0 ? limit : getAll,
-        },
+
         {
           $project: setField,
         },
