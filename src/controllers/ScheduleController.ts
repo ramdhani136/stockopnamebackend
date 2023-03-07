@@ -119,8 +119,6 @@ class ScheduleController implements IController {
       let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
       // End
 
-      // console.log(JSON.stringify(isFilter.data));
-
       // Validasi apakah filter valid
       if (!isFilter.status) {
         return res
@@ -170,8 +168,8 @@ class ScheduleController implements IController {
           filters: stateFilter,
         });
       }
-      return res.status(400).json({
-        status: 404,
+      return res.status(200).json({
+        status: 200,
         msg: "Data Not found!",
       });
     } catch (error: any) {

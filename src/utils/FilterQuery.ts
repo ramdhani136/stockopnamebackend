@@ -14,7 +14,7 @@ class FilterQuery {
     stateFilter: IStateFilter[],
     search?: string
   ): IFilterQuery {
-    console.log(search)
+    console.log(search);
     // Mengeset semua filter
     let valid: boolean = true;
     let allFilter: any[] = [];
@@ -112,11 +112,21 @@ class FilterQuery {
 
     let filterData: any =
       Object.keys(finalFilter).length > 0
-        ? {
-            $and: finalFilter,
-          }
+        ? search
+          ? {
+              $and: [
+                { $and: finalFilter },
+                { name: { $regex: search, $options: "i" } },
+              ],
+            }
+          : {
+              $and: finalFilter,
+            }
+        : search
+        ? { name: { $regex: search, $options: "i" } }
         : {};
 
+    console.log(JSON.stringify(filterData));
     if (valid) {
       return {
         status: true,
