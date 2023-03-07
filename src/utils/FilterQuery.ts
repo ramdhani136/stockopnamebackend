@@ -9,7 +9,12 @@ interface IFilterQuery {
 }
 
 class FilterQuery {
-  public getFilter(filters: any, stateFilter: IStateFilter[]): IFilterQuery {
+  public getFilter(
+    filters: any,
+    stateFilter: IStateFilter[],
+    search?: string
+  ): IFilterQuery {
+    console.log(search)
     // Mengeset semua filter
     let valid: boolean = true;
     let allFilter: any[] = [];

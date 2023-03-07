@@ -109,14 +109,17 @@ class ScheduleController implements IController {
         : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 0;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
+      let search: string = req.query.search || "";
 
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
       // End
 
       // Mengambil hasil filter
-      let isFilter = FilterQuery.getFilter(filters, stateFilter);
+      let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
       // End
+
+      console.log(JSON.stringify(isFilter.data));
 
       // Validasi apakah filter valid
       if (!isFilter.status) {
