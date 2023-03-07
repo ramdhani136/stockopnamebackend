@@ -119,7 +119,7 @@ class ScheduleController implements IController {
       let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
       // End
 
-      console.log(JSON.stringify(isFilter.data));
+      // console.log(JSON.stringify(isFilter.data));
 
       // Validasi apakah filter valid
       if (!isFilter.status) {
