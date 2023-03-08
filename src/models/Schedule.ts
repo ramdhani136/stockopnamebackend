@@ -6,39 +6,42 @@ const Schedule = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      index:true
+      index: true,
     },
     user: {
       type: Schema.Types.ObjectId,
       ref: "Users",
       required: true,
-      index:true
+      index: true,
     },
     startDate: {
       type: Date,
       required: true,
-      index:true
+      index: true,
     },
     dueDate: {
       type: Date,
       require: true,
-      index:true
+      index: true,
     },
     workflowState: {
       type: String,
       require: true,
-      index:true,
-      default:"Draft"
+      index: true,
+      default: "Draft",
     },
     warehouse: {
       type: String,
       require: true,
-      index:true
+      index: true,
+    },
+    note: {
+      type: String,
     },
     status: {
       type: String,
       required: true,
-      index:true,
+      index: true,
       default: 0,
     },
   },
