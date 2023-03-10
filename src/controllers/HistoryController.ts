@@ -317,7 +317,7 @@ class HistoryController implements IController {
             name: prevData.name,
             type: `${doc}`,
           },
-          message: `${user} merubah ${item} dari ${prevData[item]} menjadi ${nextData[item]} di dalam data ${prevData.name}`,
+          message: `merubah ${item} dari ${prevData[item]} menjadi ${nextData[item]} di dalam data ${prevData.name}`,
           user: userId,
         });
       }

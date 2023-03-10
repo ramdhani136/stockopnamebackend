@@ -221,7 +221,7 @@ class ScheduleController implements IController {
           name: response.name,
           type: "schedule",
         },
-        message: `${req.user} membuat schedule baru nomor ${response.name}`,
+        message: `membuat schedule baru nomor ${response.name}`,
         user: req.userId,
       });
       // End
@@ -378,7 +378,7 @@ class ScheduleController implements IController {
             name: result.name,
             type: "schedule",
           },
-          message: `${req.user} menghapus schedule nomor ${result.name}`,
+          message: `menghapus schedule nomor ${result.name}`,
           user: req.userId,
         });
         // End
