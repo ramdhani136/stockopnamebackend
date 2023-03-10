@@ -137,7 +137,7 @@ class HistoryController implements IController {
           filters: stateFilter,
         });
       }
-      return res.status(400).json({
+      return res.status(200).json({
         status: 404,
         msg: "Data Not found!",
       });
