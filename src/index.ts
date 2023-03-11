@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -16,6 +16,7 @@ import {
   ScheduleItemRoutes,
   ScheduleRoutes,
   UserRoutes,
+  WarehouseRoutes,
   workflowActionRoutes,
   WorkflowCangerRoutes,
   WorkflowRoutes,
@@ -28,6 +29,7 @@ import { Schedule } from "./models";
 import cron from "node-cron";
 import { AuthMiddleware } from "./middleware";
 import { RoleValidation } from "./middleware/RoleValidation";
+import axios from "axios";
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
@@ -35,7 +37,7 @@ const corsOptions = {
     "*",
     "http://localhost:5173",
     "http://localhost",
-    "http://172.26.160.1:4173",
+    "http://172.28.192.1:5173",
   ],
   credentials: true,
   optionSuccessStatus: 200,
@@ -113,6 +115,8 @@ class App {
     this.app.use("/workflowstate", AuthMiddleware, WorkflowStateRoutes);
     this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
     this.app.use("/workflow", AuthMiddleware, WorkflowRoutes);
+    this.app.use("/warehouse", WarehouseRoutes);
+
     this.app.use(
       "/workflowtransition",
       AuthMiddleware,

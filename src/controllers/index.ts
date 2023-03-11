@@ -11,6 +11,7 @@ import WorkflowActionController from "./WorkflowActionController";
 import WorkflowController from "./WorkflowController";
 import WorkflowTransitionController from "./WorkflowTransitionController";
 import WorkflowChangerController from "./WorkflowChangerController";
+import WarehouseController from "./WarehouseController";
 
 export {
   UserController,
@@ -26,4 +27,5 @@ export {
   WorkflowController,
   WorkflowTransitionController,
   WorkflowChangerController,
+  WarehouseController
 };

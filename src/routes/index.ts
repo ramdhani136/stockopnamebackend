@@ -11,6 +11,7 @@ import workflowActionRoutes from "./workflowActionRoutes";
 import WorkflowRoutes from "./WorkflowRoutes";
 import WorkflowTransitionRoutes from "./WorkflowTransitionRoutes";
 import WorkflowCangerRoutes from "./WorkflowCangerRoutes";
+import WarehouseRoutes from "./WarehouseRoutes";
 
 export {
   UserRoutes,
@@ -25,5 +26,6 @@ export {
   workflowActionRoutes,
   WorkflowRoutes,
   WorkflowTransitionRoutes,
-  WorkflowCangerRoutes
+  WorkflowCangerRoutes,
+  WarehouseRoutes
 };
