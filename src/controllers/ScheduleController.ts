@@ -112,7 +112,7 @@ class ScheduleController implements IController {
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       // let search: string = req.query.search || "";
       let search: ISearch = {
-        filter: ["name", "workflowState"],
+        filter: ["name", "workflowState","warehouse"],
         value: req.query.search || "",
       };
 

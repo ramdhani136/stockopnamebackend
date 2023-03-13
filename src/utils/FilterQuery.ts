@@ -19,11 +19,11 @@ class FilterQuery {
     stateFilter: IStateFilter[],
     search?: ISearch
   ): IFilterQuery {
-    let genFilter: any[] = [];
+    let genSearch: any[] = [];
     if (search) {
       if (search.filter.length > 0) {
         for (let item of search.filter) {
-          genFilter.push({
+          genSearch.push({
             [`${item}`]: { $regex: search.value, $options: "i" },
           });
         }
@@ -126,15 +126,15 @@ class FilterQuery {
 
     let filterData: any =
       Object.keys(finalFilter).length > 0
-        ? genFilter.length > 0
+        ? genSearch.length > 0
           ? {
-              $and: [{ $and: finalFilter }, { $or: genFilter }],
+              $and: [{ $and: finalFilter }, { $or: genSearch }],
             }
           : {
               $and: finalFilter,
             }
-        : genFilter.length > 0
-        ? { $or: genFilter }
+        : genSearch.length > 0
+        ? { $or: genSearch }
         : {};
 
     if (valid) {

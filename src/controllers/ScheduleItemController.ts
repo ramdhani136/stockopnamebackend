@@ -4,6 +4,7 @@ import { Schedule, ScheduleItem } from "../models";
 import { FilterQuery } from "../utils";
 import axios from "axios";
 import { TypeOfState } from "../Interfaces/FilterInterface";
+import { ISearch } from "../utils/FilterQuery";
 const Db = ScheduleItem;
 
 const getBinQty = async (bin: string): Promise<any> => {
@@ -22,7 +23,7 @@ const getBinQty = async (bin: string): Promise<any> => {
 };
 
 class ScheduleItemController {
-  index = async (req: Request, res: Response): Promise<Response> => {
+  index = async (req: Request|any, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
         name: "schedule._id",
@@ -120,6 +121,11 @@ class ScheduleItemController {
       const limit: number | string = parseInt(`${req.query.limit}`) || 0;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
 
+      let search: ISearch = {
+        filter: ["item_code", "item_name"],
+        value: req.query.search || "",
+      };
+
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
       // End
@@ -135,22 +141,24 @@ class ScheduleItemController {
           .json({ status: 400, msg: "Error, Filter Invalid " });
       }
       // End
-     
+
+
       const getAll = await Db.find(isFilter.data)
         .populate("checkedBy", "name")
         .count();
       const result = await Db.find(isFilter.data, setField)
+        .sort(order_by)
         .populate("checkedBy", "name")
-        .skip(page * limit - limit)
-        .limit(limit)
-        .sort(order_by);
+        .skip(limit > 0 ? page * limit - limit : 0)
+        .limit(limit > 0 ? limit : getAll)
+
 
       if (result.length > 0) {
         return res.status(200).json({
           status: 200,
           total: getAll,
           limit,
-          nextPage: page + 1,
+          nextPage: getAll > page * limit && limit > 0 ? page + 1 : page,
           hasMore: getAll > page * limit && limit > 0 ? true : false,
           data: result,
           filters: stateFilter,
