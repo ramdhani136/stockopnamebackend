@@ -116,14 +116,14 @@ class FilterQuery {
           ? {
               $and: [
                 { $and: finalFilter },
-                { name: { $regex: search, $options: "i" } },
+                { $or: [{ name: { $regex: search, $options: "i" } }] },
               ],
             }
           : {
               $and: finalFilter,
             }
         : search
-        ? { name: { $regex: search, $options: "i" } }
+        ? { $or: [{ name: { $regex: search, $options: "i" } }] }
         : {};
 
     console.log(JSON.stringify(filterData));
