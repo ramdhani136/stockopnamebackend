@@ -10,13 +10,11 @@ const ScheduleItem = new mongoose.Schema(
     bin: {
       type: String,
       required: true,
-      index:true
     },
     uniqId: {
       type: String,
       required: true,
       unique: true,
-      index:true
     },
     item_code: {
       type: String,
