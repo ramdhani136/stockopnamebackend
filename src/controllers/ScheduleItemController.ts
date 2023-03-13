@@ -131,7 +131,7 @@ class ScheduleItemController {
       // End
 
       // Mengambil hasil filter
-      let isFilter = FilterQuery.getFilter(filters, stateFilter);
+      let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
       // End
 
       // Validasi apakah filter valid

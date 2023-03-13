@@ -13,7 +13,7 @@ import { ISearch } from "../utils/FilterQuery";
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
   const headers = {
-    Authorization: "token 517ba90cd805072:c4303a3355cbca4",
+    Authorization: "token 517ba90cd805072:46f789a2f080048",
   };
   try {
     const result = await axios.get(uri, { headers });
