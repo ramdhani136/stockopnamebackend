@@ -62,7 +62,7 @@ class WarehouseController implements IController {
       // End
       const uri = `${process.env.ERP_HOST}/api/resource/Warehouse`;
       const headers = {
-        Authorization: "token 517ba90cd805072:46f789a2f080048",
+        Authorization: `${process.env.ERP_TOKEN}`,
       };
       // const getAll = await Db.find(isFilter.data).count();
       const result = await axios.get(uri, { headers });

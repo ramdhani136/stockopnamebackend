@@ -11,7 +11,7 @@ const getBinQty = async (bin: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin/${bin}`;
 
   const headers = {
-    Authorization: "token 517ba90cd805072:c4303a3355cbca4",
+    Authorization: `${process.env.ERP_TOKEN}`,
   };
 
   try {
@@ -23,7 +23,7 @@ const getBinQty = async (bin: string): Promise<any> => {
 };
 
 class ScheduleItemController {
-  index = async (req: Request|any, res: Response): Promise<Response> => {
+  index = async (req: Request | any, res: Response): Promise<Response> => {
     const stateFilter: IStateFilter[] = [
       {
         name: "schedule._id",
@@ -142,7 +142,6 @@ class ScheduleItemController {
       }
       // End
 
-
       const getAll = await Db.find(isFilter.data)
         .populate("checkedBy", "name")
         .count();
@@ -150,8 +149,7 @@ class ScheduleItemController {
         .sort(order_by)
         .populate("checkedBy", "name")
         .skip(limit > 0 ? page * limit - limit : 0)
-        .limit(limit > 0 ? limit : getAll)
-
+        .limit(limit > 0 ? limit : getAll);
 
       if (result.length > 0) {
         return res.status(200).json({
