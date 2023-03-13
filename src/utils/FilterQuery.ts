@@ -8,13 +8,27 @@ interface IFilterQuery {
   data: any[];
 }
 
+export interface ISearch {
+  filter: String[];
+  value: String;
+}
+
 class FilterQuery {
   public getFilter(
     filters: any,
     stateFilter: IStateFilter[],
-    search?: string
+    search?: ISearch
   ): IFilterQuery {
-    console.log(search);
+    let genFilter: any[] = [];
+    if (search) {
+      if (search.filter.length > 0) {
+        for (let item of search.filter) {
+          genFilter.push({
+            [`${item}`]: { $regex: search.value, $options: "i" },
+          });
+        }
+      }
+    }
     // Mengeset semua filter
     let valid: boolean = true;
     let allFilter: any[] = [];
@@ -112,21 +126,17 @@ class FilterQuery {
 
     let filterData: any =
       Object.keys(finalFilter).length > 0
-        ? search
+        ? genFilter.length > 0
           ? {
-              $and: [
-                { $and: finalFilter },
-                { $or: [{ name: { $regex: search, $options: "i" } }] },
-              ],
+              $and: [{ $and: finalFilter }, { $or: genFilter }],
             }
           : {
               $and: finalFilter,
             }
-        : search
-        ? { $or: [{ name: { $regex: search, $options: "i" } }] }
+        : genFilter.length > 0
+        ? { $or: genFilter }
         : {};
 
-    console.log(JSON.stringify(filterData));
     if (valid) {
       return {
         status: true,

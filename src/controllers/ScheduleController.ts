@@ -8,6 +8,7 @@ import IController from "./ControllerInterface";
 import { History, ScheduleItem } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import { HistoryController, WorkflowController } from "../controllers";
+import { ISearch } from "../utils/FilterQuery";
 
 const GetErpBin = async (warehouse: string): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Bin?fields=[%22item_code%22,%22item_name%22,%22warehouse%22,%22actual_qty%22,%22stock_uom%22,%22modified%22,%22kategori_barang%22,%22stocker%22,%22name%22]&&filters=[[%22warehouse%22,%22=%22,%22${warehouse}%22],[%22disabled%22,%22=%22,%220%22]]&&limit=0`;
@@ -109,7 +110,11 @@ class ScheduleController implements IController {
         : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 0;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
-      let search: string = req.query.search || "";
+      // let search: string = req.query.search || "";
+      let search: ISearch = {
+        filter: ["name", "workflowState"],
+        value: req.query.search || "",
+      };
 
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
