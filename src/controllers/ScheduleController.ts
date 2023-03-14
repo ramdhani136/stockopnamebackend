@@ -342,8 +342,26 @@ class ScheduleController implements IController {
     }
   };
 
-  update = async (req: Request | any, res: Response): Promise<Response> => {
+  update = async (req: Request | any, res: Response): Promise<any> => {
     try {
+    
+
+      if (req.body.workflowState) {
+        const checkedWorkflow = await WorkflowController.getPermission(
+          "schedule",
+          req.userId,
+          req.body.workflowState
+        );
+        res.send(checkedWorkflow);
+        return
+      }
+
+      res.send(req.body.workflowState);
+
+      
+
+      return;
+
       const result: any = await Schedule.findOneAndUpdate(
         { name: req.params.id },
         req.body

@@ -257,6 +257,69 @@ class workflowStateController implements IController {
     }
     return data;
   };
+
+  getPermission = async (
+    doc: String,
+    user: ObjectId,
+    stateActive: String
+  ): Promise<any[]> => {
+    let data: any[] = [];
+    const workflow: any = await Workflow.findOne({
+      $and: [{ status: 1 }, { doc: doc }],
+    });
+
+    if (workflow) {
+      const id_workflow = workflow._id;
+      const transitions: any = await WorkflowTransition.find({
+        workflow: id_workflow,
+      })
+        .populate("workflow", "name")
+        .populate("action", "name")
+        .populate("nextState", "name")
+        .populate("stateActive", "name")
+        .populate("roleprofile", "name");
+
+      let allData = [];
+      for (const transition of transitions) {
+        if (transition.selfApproval) {
+          if (
+            `${new mongoose.Types.ObjectId(`${user}`)}` === `${transition.user}`
+          ) {
+            allData.push(transition);
+          }
+        } else {
+          const validAccessRole = await RoleUser.findOne({
+            $and: [
+              { user: new mongoose.Types.ObjectId(`${user}`) },
+              { roleprofile: transition.roleprofile },
+            ],
+          });
+          if (validAccessRole) {
+            allData.push(transition);
+          }
+        }
+      }
+
+      data = allData.map((item: any) => {
+        if (item.stateActive.name == stateActive) {
+          return {
+            id_workflow: id_workflow,
+            name: item.action.name,
+            nextstate: {
+              id: item.nextState._id,
+              name: item.nextState.name,
+            },
+          };
+        }
+      });
+      if (data[0] !== undefined) {
+        return data;
+      } else {
+        return [];
+      }
+    }
+    return data;
+  };
 }
 
 export default new workflowStateController();
