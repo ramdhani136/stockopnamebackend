@@ -192,6 +192,9 @@ class ScheduleController implements IController {
     if (!req.body.dueDate) {
       return res.status(400).json({ status: 400, msg: "DueDate Required!" });
     }
+    if (!req.body.warehouse) {
+      return res.status(400).json({ status: 400, msg: "Warehouse Required!" });
+    }
     if (!req.body.workflowState) {
       return res
         .status(400)
@@ -341,7 +344,9 @@ class ScheduleController implements IController {
         req.body
       );
       if (result) {
-        const getData: any = await Schedule.findOne({ name: req.params.id });
+        const getData: any = await Schedule.findOne({
+          name: req.params.id,
+        }).populate("user", "name");
         await Redis.client.set(
           `schedule-${req.params.id}`,
           JSON.stringify(getData),
