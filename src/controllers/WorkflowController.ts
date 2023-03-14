@@ -267,7 +267,8 @@ class workflowStateController implements IController {
   permissionUpdateAction = async (
     workflow: string,
     user: string,
-    state: string
+    state: string,
+    createdBy: string
   ) => {
     const changer: any = await WorkflowChanger.findOne({
       workflow: workflow,
@@ -279,7 +280,17 @@ class workflowStateController implements IController {
 
     if (changer) {
       if (changer.selfApproval) {
-        return new mongoose.Types.ObjectId(`${user}`);
+        if (`${new mongoose.Types.ObjectId(`${user}`)}` === `${createdBy}`) {
+          return {
+            status: true,
+            data: { status: changer.status, workflowState: changer.state.name },
+          };
+        } else {
+          return {
+            status: false,
+            msg: "Permission Denied",
+          };
+        }
       } else {
         const roleId = changer.roleprofile;
         const validAccessRole = await RoleUser.findOne({

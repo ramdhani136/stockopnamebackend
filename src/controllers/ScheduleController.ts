@@ -344,57 +344,62 @@ class ScheduleController implements IController {
 
   update = async (req: Request | any, res: Response): Promise<any> => {
     try {
-    
-
-      if (req.body.id_workflow && req.body.id_state) {
-        const checkedWorkflow = await WorkflowController.permissionUpdateAction(
-          req.body.id_workflow,
-          req.userId,
-          req.body.id_state,
-        );
-        res.send(checkedWorkflow);
-        return
-      }
-
-      res.send(req.body.id_workflow);
+      const result: any = await Schedule.findOne({
+        name: req.params.id,
+      }).populate("user", "name");
 
 
-      
-
-      return;
-
-      const result: any = await Schedule.findOneAndUpdate(
-        { name: req.params.id },
-        req.body
-      ).populate("user", "name");
       if (result) {
-        const getData: any = await Schedule.findOne({
-          name: req.params.id,
-        }).populate("user", "name");
-        await Redis.client.set(
-          `schedule-${req.params.id}`,
-          JSON.stringify(getData),
-          {
-            EX: 30,
-          }
-        );
-
-        // push history semua field yang di update
-        await HistoryController.pushUpdateMany(
-          result,
-          getData,
-          req.user,
-          req.userId,
-          "schedule"
-        );
-        // End
-
-        return res.status(200).json({ status: 200, data: getData });
+        if (req.body.id_workflow && req.body.id_state) {
+          const checkedWorkflow =
+            await WorkflowController.permissionUpdateAction(
+              req.body.id_workflow,
+              req.userId,
+              req.body.id_state,
+              result.user._id
+            );
+        return  res.send(checkedWorkflow);
+        } else {
+        return  res.send('d');
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ status: 404, data: "Error update, data not found" });
       }
 
-      return res
-        .status(400)
-        .json({ status: 404, data: "Error update, data not found" });
+      // const result: any = await Schedule.findOneAndUpdate(
+      //   { name: req.params.id },
+      //   req.body
+      // ).populate("user", "name");
+      // if (result) {
+      //   const getData: any = await Schedule.findOne({
+      //     name: req.params.id,
+      //   }).populate("user", "name");
+      //   await Redis.client.set(
+      //     `schedule-${req.params.id}`,
+      //     JSON.stringify(getData),
+      //     {
+      //       EX: 30,
+      //     }
+      //   );
+
+      //   // push history semua field yang di update
+      //   await HistoryController.pushUpdateMany(
+      //     result,
+      //     getData,
+      //     req.user,
+      //     req.userId,
+      //     "schedule"
+      //   );
+      //   // End
+
+      //   return res.status(200).json({ status: 200, data: getData });
+      // }
+
+      // return res
+      //   .status(400)
+      //   .json({ status: 404, data: "Error update, data not found" });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }
