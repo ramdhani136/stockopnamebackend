@@ -310,6 +310,8 @@ class ScheduleController implements IController {
         req.userId,
         result.workflowState
       );
+
+      return res.send(buttonActions)
       const getHistory = await History.find(
         {
           $and: [
