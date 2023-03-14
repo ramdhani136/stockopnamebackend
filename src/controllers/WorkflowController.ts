@@ -5,6 +5,7 @@ import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import {
+  RoleProfile,
   RoleUser,
   Workflow,
   WorkflowChanger,
@@ -271,17 +272,39 @@ class workflowStateController implements IController {
     const changer: any = await WorkflowChanger.findOne({
       workflow: workflow,
       state: state,
-    });
+    })
+      .populate("user", "name")
+      .populate("workflow", "name")
+      .populate("state", "name");
 
     if (changer) {
       if (changer.selfApproval) {
-        return changer;
+        return new mongoose.Types.ObjectId(`${user}`);
       } else {
-        const role = changer.roleprofile;
-        return role;
+        const roleId = changer.roleprofile;
+        const validAccessRole = await RoleUser.findOne({
+          $and: [
+            { user: new mongoose.Types.ObjectId(`${user}`) },
+            { roleprofile: roleId },
+          ],
+        });
+        if (validAccessRole) {
+          return {
+            status: true,
+            data: { status: changer.status, workflowState: changer.state.name },
+          };
+        } else {
+          return {
+            status: false,
+            msg: "Permission Denied",
+          };
+        }
       }
     }
-    return [];
+    return {
+      status: false,
+      msg: "WorkState not found!",
+    };
   };
 }
 

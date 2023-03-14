@@ -219,10 +219,7 @@ class WorkflowChangerController implements IController {
       const result = await Db.findOne({ _id: req.params.id })
         .populate("user", "name")
         .populate("workflow", "name")
-        .populate("stateActive", "name")
-        .populate("action", "name")
-        .populate("nextState", "name")
-        .populate("roleprofile", "name");
+        .populate("state", "name")
       await Redis.client.set(
         `${redisName}-${req.params.id}`,
         JSON.stringify(result)

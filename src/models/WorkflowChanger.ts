@@ -13,7 +13,7 @@ const WorkflowChanger = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       required: true,
       index: true,
-      ref: "workflowstates",
+      ref: "workflowStates",
     },
     roleprofile: {
       type: Schema.Types.ObjectId,
