@@ -195,7 +195,11 @@ class workflowStateController implements IController {
     }
   };
 
-  getButtonAction = async (doc: String, user: ObjectId): Promise<any[]> => {
+  getButtonAction = async (
+    doc: String,
+    user: ObjectId,
+    stateActive: String
+  ): Promise<any[]> => {
     let data: any[] = [];
     const workflow: any = await Workflow.findOne({
       $and: [{ status: 1 }, { doc: doc }],
@@ -208,7 +212,9 @@ class workflowStateController implements IController {
       })
         .populate("workflow", "name")
         .populate("action", "name")
-        .populate("nextState", "name");
+        .populate("nextState", "name")
+        .populate("stateActive", "name")
+        .populate("roleprofile", "name");
 
       let allData = [];
       for (const transition of transitions) {
@@ -232,16 +238,22 @@ class workflowStateController implements IController {
       }
 
       data = allData.map((item: any) => {
-        return {
-          id_workflow: id_workflow,
-          name: item.action.name,
-          nextstate: {
-            id: item.nextState._id,
-            name: item.nextState.name,
-          },
-        };
+        if (item.stateActive.name == stateActive) {
+          return {
+            id_workflow: id_workflow,
+            name: item.action.name,
+            nextstate: {
+              id: item.nextState._id,
+              name: item.nextState.name,
+            },
+          };
+        }
       });
-      return data;
+      if (data[0] !== undefined) {
+        return data;
+      } else {
+        return [];
+      }
     }
     return data;
   };

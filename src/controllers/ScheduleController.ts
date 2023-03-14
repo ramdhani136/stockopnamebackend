@@ -271,38 +271,45 @@ class ScheduleController implements IController {
     }
   };
 
-  show = async (req: Request | any, res: Response): Promise<Response> => {
+  show = async (req: Request | any, res: Response): Promise<any> => {
     try {
-      const buttonActions = await WorkflowController.getButtonAction(
-        "schedule",
-        req.userId
-      );
-      const cache = await Redis.client.get(`schedule-${req.params.id}`);
-      if (cache) {
-        const isCache = JSON.parse(cache);
-        const getHistory = await History.find(
-          {
-            $and: [
-              { "document._id": `${isCache._id}` },
-              { "document.type": "schedule" },
-            ],
-          },
+      // const cache = await Redis.client.get(`schedule-${req.params.id}`);
+      // if (cache) {
+      //   const isCache = JSON.parse(cache);
+      //   const getHistory = await History.find(
+      //     {
+      //       $and: [
+      //         { "document._id": `${isCache._id}` },
+      //         { "document.type": "schedule" },
+      //       ],
+      //     },
 
-          ["_id", "message", "createdAt", "updatedAt"]
-        )
-          .populate("user", "name")
-          .sort({ createdAt: -1 });
-        // .populate("user", "name");
-        return res.status(200).json({
-          status: 200,
-          data: JSON.parse(cache),
-          history: getHistory,
-          workflow: buttonActions,
-        });
-      }
+      //     ["_id", "message", "createdAt", "updatedAt"]
+      //   )
+      //     .populate("user", "name")
+      //     .sort({ createdAt: -1 });
+      //   // .populate("user", "name");
+      //   const buttonActions = await WorkflowController.getButtonAction(
+      //     "schedule",
+      //     req.userId,
+      //     isCache.workflowState
+      //   );
+      //   return res.status(200).json({
+      //     status: 200,
+      //     data: JSON.parse(cache),
+      //     history: getHistory,
+      //     workflow: buttonActions,
+      //   });
+      // }
       const result: any = await Schedule.findOne({
         name: req.params.id,
       }).populate("user", "name");
+
+      const buttonActions = await WorkflowController.getButtonAction(
+        "schedule",
+        req.userId,
+        result.workflowState
+      );
       const getHistory = await History.find(
         {
           $and: [
