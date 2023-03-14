@@ -4,7 +4,12 @@ import { IStateFilter } from "../Interfaces";
 import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import { RoleUser, Workflow, WorkflowTransition } from "../models";
+import {
+  RoleUser,
+  Workflow,
+  WorkflowChanger,
+  WorkflowTransition,
+} from "../models";
 import mongoose, { ObjectId } from "mongoose";
 
 const Db = Workflow;
@@ -263,50 +268,20 @@ class workflowStateController implements IController {
     user: string,
     state: string
   ) => {
-    return {
-      workflow,
-      user,
-      state,
-    };
-    // const role = await getRole(req);
-    // const getState = await db.actionstate.findOne({
-    //   where: [{ id_workflow: workflow, id_state: state }],
-    //   include: [
-    //     {
-    //       model: db.workflowstate,
-    //       as: "state",
-    //       attributes: ["name"],
-    //     },
-    //     { model: db.roleprofiles, as: "role", attributes: ["name"] },
-    //   ],
-    // });
-    // if (getState) {
-    //   if (getState.selfApproval) {
-    //     if (`${req.userId}` === `${doc.id_created}`||`${req.userId}` === `${doc.id_user}`) {
-    //       return {
-    //         status: true,
-    //         data: { status: getState.docStatus, workState: getState.state.name },
-    //       };
-    //     }
-    //   }
-    //   if (getState.role.name === "All") {
-    //     return {
-    //       status: true,
-    //       data: { status: getState.docStatus, workState: getState.state.name },
-    //     };
-    //   }
-    //   if (role.length) {
-    //     if (`${role}` === `${getState.id_role}`) {
-    //       return {
-    //         status: true,
-    //         data: { status: getState.docStatus, workState: getState.state.name },
-    //       };
-    //     }
-    //   }
-    //   return { status: false, msg: "Not Permission to change this state!" };
-    // } else {
-    //   return { status: false, msg: "Not found next state!" };
-    // }
+    const changer: any = await WorkflowChanger.findOne({
+      workflow: workflow,
+      state: state,
+    });
+
+    if (changer) {
+      if (changer.selfApproval) {
+        return changer;
+      } else {
+        const role = changer.roleprofile;
+        return role;
+      }
+    }
+    return [];
   };
 }
 
