@@ -258,67 +258,55 @@ class workflowStateController implements IController {
     return data;
   };
 
-  getPermission = async (
-    doc: String,
-    user: ObjectId,
-    stateActive: String
-  ): Promise<any[]> => {
-    let data: any[] = [];
-    const workflow: any = await Workflow.findOne({
-      $and: [{ status: 1 }, { doc: doc }],
-    });
-
-    if (workflow) {
-      const id_workflow = workflow._id;
-      const transitions: any = await WorkflowTransition.find({
-        workflow: id_workflow,
-      })
-        .populate("workflow", "name")
-        .populate("action", "name")
-        .populate("nextState", "name")
-        .populate("stateActive", "name")
-        .populate("roleprofile", "name");
-
-      let allData = [];
-      for (const transition of transitions) {
-        if (transition.selfApproval) {
-          if (
-            `${new mongoose.Types.ObjectId(`${user}`)}` === `${transition.user}`
-          ) {
-            allData.push(transition);
-          }
-        } else {
-          const validAccessRole = await RoleUser.findOne({
-            $and: [
-              { user: new mongoose.Types.ObjectId(`${user}`) },
-              { roleprofile: transition.roleprofile },
-            ],
-          });
-          if (validAccessRole) {
-            allData.push(transition);
-          }
-        }
-      }
-
-      data = allData.map((item: any) => {
-        if (item.stateActive.name == stateActive) {
-          return {
-            id_workflow: id_workflow,
-            name: item.action.name,
-            nextstate: {
-              id: item.nextState._id,
-              name: item.nextState.name,
-            },
-          };
-        }
-      });
-      if (data[0] !== undefined) {
-        return data;
-      } else {
-        return [];
-      }
-    }
-    return data;
+  permissionUpdateAction = async (
+    workflow: string,
+    user: string,
+    state: string
+  ) => {
+    return {
+      workflow,
+      user,
+      state,
+    };
+    // const role = await getRole(req);
+    // const getState = await db.actionstate.findOne({
+    //   where: [{ id_workflow: workflow, id_state: state }],
+    //   include: [
+    //     {
+    //       model: db.workflowstate,
+    //       as: "state",
+    //       attributes: ["name"],
+    //     },
+    //     { model: db.roleprofiles, as: "role", attributes: ["name"] },
+    //   ],
+    // });
+    // if (getState) {
+    //   if (getState.selfApproval) {
+    //     if (`${req.userId}` === `${doc.id_created}`||`${req.userId}` === `${doc.id_user}`) {
+    //       return {
+    //         status: true,
+    //         data: { status: getState.docStatus, workState: getState.state.name },
+    //       };
+    //     }
+    //   }
+    //   if (getState.role.name === "All") {
+    //     return {
+    //       status: true,
+    //       data: { status: getState.docStatus, workState: getState.state.name },
+    //     };
+    //   }
+    //   if (role.length) {
+    //     if (`${role}` === `${getState.id_role}`) {
+    //       return {
+    //         status: true,
+    //         data: { status: getState.docStatus, workState: getState.state.name },
+    //       };
+    //     }
+    //   }
+    //   return { status: false, msg: "Not Permission to change this state!" };
+    // } else {
+    //   return { status: false, msg: "Not found next state!" };
+    // }
   };
 }
 

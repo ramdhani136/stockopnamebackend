@@ -346,17 +346,18 @@ class ScheduleController implements IController {
     try {
     
 
-      if (req.body.workflowState) {
-        const checkedWorkflow = await WorkflowController.getPermission(
-          "schedule",
+      if (req.body.id_workflow && req.body.state) {
+        const checkedWorkflow = await WorkflowController.permissionUpdateAction(
+          req.body.id_workflow,
           req.userId,
-          req.body.workflowState
+          req.body.state,
         );
         res.send(checkedWorkflow);
         return
       }
 
-      res.send(req.body.workflowState);
+      res.send(req.body.id_workflow);
+
 
       
 
