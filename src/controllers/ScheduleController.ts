@@ -264,11 +264,8 @@ class ScheduleController implements IController {
           return { ...data };
         });
         await ScheduleItem.insertMany(finalData);
-        return res.status(200).json({ status: 200, data: response });
       }
-      return res
-        .status(400)
-        .json({ status: 404, msg: "Error, failed to delete data" });
+      return res.status(200).json({ status: 200, data: response });
     } catch (error) {
       return res.status(400).json({ status: 400, data: error });
     }
@@ -342,7 +339,7 @@ class ScheduleController implements IController {
       const result: any = await Schedule.findOneAndUpdate(
         { name: req.params.id },
         req.body
-      );
+      ).populate("user", "name");
       if (result) {
         const getData: any = await Schedule.findOne({
           name: req.params.id,
