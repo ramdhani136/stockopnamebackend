@@ -229,7 +229,7 @@ class ScheduleController implements IController {
           name: response.name,
           type: "schedule",
         },
-        message: `membuat schedule baru nomor ${response.name}`,
+        message: `membuat schedule baru`,
         user: req.userId,
       });
       // End
@@ -387,9 +387,6 @@ class ScheduleController implements IController {
         );
 
         // push history semua field yang di update
-        console.log('HHHHHHHHHHHHHH')
-        console.log(result);
-        console.log(getData);
         await HistoryController.pushUpdateMany(
           result,
           getData,
@@ -405,39 +402,6 @@ class ScheduleController implements IController {
           .status(400)
           .json({ status: 404, msg: "Error update, data not found" });
       }
-
-      // const result: any = await Schedule.findOneAndUpdate(
-      //   { name: req.params.id },
-      //   req.body
-      // ).populate("user", "name");
-      // if (result) {
-      //   const getData: any = await Schedule.findOne({
-      //     name: req.params.id,
-      //   }).populate("user", "name");
-      //   await Redis.client.set(
-      //     `schedule-${req.params.id}`,
-      //     JSON.stringify(getData),
-      //     {
-      //       EX: 30,
-      //     }
-      //   );
-
-      //   // push history semua field yang di update
-      //   await HistoryController.pushUpdateMany(
-      //     result,
-      //     getData,
-      //     req.user,
-      //     req.userId,
-      //     "schedule"
-      //   );
-      //   // End
-
-      //   return res.status(200).json({ status: 200, data: getData });
-      // }
-
-      // return res
-      //   .status(400)
-      //   .json({ status: 404, data: "Error update, data not found" });
     } catch (error: any) {
       return res.status(404).json({ status: 404, data: error });
     }
