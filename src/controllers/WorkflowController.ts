@@ -255,11 +255,9 @@ class workflowStateController implements IController {
           };
         }
       });
-      if (data[0] !== undefined) {
-        return data;
-      } else {
-        return [];
-      }
+      const genData = data.filter((item) => item !== undefined);
+
+      return genData;
     }
     return data;
   };
