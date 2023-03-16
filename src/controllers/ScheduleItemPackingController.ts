@@ -49,12 +49,17 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.String,
       },
       {
-        name: "scheduleItem._id",
+        name: "schedule._id",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
       {
-        name: "scheduleItem.schedule",
+        name: "schedule.schedule",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "schedule.scheduleItem",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
       },
@@ -117,7 +122,7 @@ class ScheduleItemPackingController implements IController {
             "conversion",
             "actual_qty",
             "stock_uom",
-            "scheduleItem",
+            "schedule",
             "id_packing",
           ];
       const order_by: any = req.query.order_by
