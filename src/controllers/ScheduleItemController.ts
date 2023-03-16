@@ -36,6 +36,11 @@ class ScheduleItemController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "schedule.status",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "item_code",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
@@ -109,12 +114,13 @@ class ScheduleItemController {
             "stocker",
             "schedule.name",
             "schedule._id",
+            "schedule.status",
             "actual_qty",
             "real_qty",
             "updatedAt",
             "stock_uom",
             "checkedBy",
-            "status"
+            "status",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -184,8 +190,8 @@ class ScheduleItemController {
         const schedule: any = await Schedule.findOne({
           _id: result.schedule,
         });
-        console.log(result.status);
-        if (result.status == 0 && schedule.status == 1 ) {
+        result.schedule.status = schedule.status;
+        if (result.status == 0 && schedule.status == 1) {
           const resultErp: any = await getBinQty(result.bin);
           const qtyStok = resultErp.data.data.actual_qty;
           if (result.actual_qty !== qtyStok) {
