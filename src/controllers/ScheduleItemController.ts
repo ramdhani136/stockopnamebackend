@@ -180,15 +180,21 @@ class ScheduleItemController {
         .populate("schedule", "name")
         .populate("checkedBy", "name");
       if (result) {
-        let qtyStok = result.actual_qty;
         const schedule: any = await Schedule.findOne({
           _id: result.schedule,
         });
-        if (result.status == 0 && schedule.status == 1) {
+        if (result.status == 0 || schedule.status == 1) {
           const resultErp: any = await getBinQty(result.bin);
-          qtyStok = resultErp.data.data.actual_qty;
+          const qtyStok = resultErp.data.data.actual_qty;
+          if (result.actual_qty !== qtyStok) {
+            await Db.findOneAndUpdate(
+              { _id: req.params.id },
+              { actual_qty: qtyStok }
+            );
+          }
+          result.actual_qty = qtyStok;
         }
-        result.actual_qty = qtyStok;
+
         return res.status(200).json({ status: 200, data: result });
       }
       return res.status(404).json({ status: 404, msg: "Data Not Found" });
