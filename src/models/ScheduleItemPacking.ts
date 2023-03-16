@@ -56,7 +56,7 @@ const ScheduleItemPacking = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: 1,
+      default: 0,
       index: true,
     },
   },

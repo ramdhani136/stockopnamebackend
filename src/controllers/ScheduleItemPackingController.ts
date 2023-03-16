@@ -194,6 +194,9 @@ class ScheduleItemPackingController implements IController {
         .status(400)
         .json({ status: 400, msg: "scheduleItemId Required!" });
     }
+    if (!req.body.actual_qty) {
+      return res.status(400).json({ status: 400, msg: "actual_qty Required!" });
+    }
     if (!req.body.id_packing) {
       return res.status(400).json({ status: 400, msg: "id_packing Required!" });
     }
@@ -205,9 +208,16 @@ class ScheduleItemPackingController implements IController {
     try {
       if (getData.status) {
         let data = getData.data.data;
+        if (req.body.actual_qty > data.conversion) {
+          return res.status(400).json({
+            status: 400,
+            msg: "Actual Qty tidak dapat melebihi conversion!",
+          });
+        }
         data.uniqId = `${FilterKata({ filter: ["-"], kata: data.id_packing })}${
           req.body.scheduleItemId
         }`;
+        data.actual_qty = req.body.actual_qty;
         const result = new Db(data);
         const response = await result.save();
         await Redis.client.set(
@@ -221,7 +231,8 @@ class ScheduleItemPackingController implements IController {
           _id: req.body.scheduleItemId,
         });
 
-        const realqty = getRealStock.real_qty + getData.data.data.conversion;
+        const realqty =
+          parseInt(getRealStock.real_qty) + parseInt(req.body.actual_qty);
         await ScheduleItem.updateOne(
           { _id: req.body.scheduleItemId },
           { real_qty: realqty }
