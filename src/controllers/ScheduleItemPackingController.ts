@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
-import { FilterQuery } from "../utils";
+import { FilterKata, FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { ScheduleItem, ScheduleItemPacking } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
@@ -30,7 +30,10 @@ const GetPackingIdErp = async (
             msg: "Error, Item not available in warehouse",
           };
         }
-        result.data.data.schedule = {...getScheduleItem.schedule,scheduleItem:scheduleItem};
+        result.data.data.schedule = {
+          ...getScheduleItem.schedule,
+          scheduleItem: scheduleItem,
+        };
         return { data: result.data, status: true };
       }
       return { status: false, msg: "Error, Incorrect item input" };
@@ -110,10 +113,10 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.Date,
       },
     ];
-    
+
     try {
       // Mengambil query
-      
+
       const filters: any = req.query.filters
         ? JSON.parse(`${req.query.filters}`)
         : [];
@@ -128,7 +131,7 @@ class ScheduleItemPackingController implements IController {
             "schedule",
             "id_packing",
             "createdAt",
-            "updatedAt"
+            "updatedAt",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -136,7 +139,7 @@ class ScheduleItemPackingController implements IController {
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       let search: ISearch = {
-        filter: ["item", "item_name","id_packing"],
+        filter: ["item", "item_name", "id_packing"],
         value: req.query.search || "",
       };
 
@@ -144,9 +147,8 @@ class ScheduleItemPackingController implements IController {
       let setField = FilterQuery.getField(fields);
       // End
 
-    
       // Mengambil hasil filter
-      let isFilter = FilterQuery.getFilter(filters, stateFilter,search);
+      let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
       // End
 
       // Validasi apakah filter valid
@@ -200,12 +202,12 @@ class ScheduleItemPackingController implements IController {
       req.body.scheduleItemId
     );
 
-  
-
     try {
       if (getData.status) {
         let data = getData.data.data;
-        data.uniqId = `${data.id_packing}${req.body.scheduleItem}`;
+        data.uniqId = `${FilterKata({ filter: ["-"], kata: data.id_packing })}${
+          req.body.scheduleItemId
+        }`;
         const result = new Db(data);
         const response = await result.save();
         await Redis.client.set(
@@ -215,6 +217,16 @@ class ScheduleItemPackingController implements IController {
             EX: 10,
           }
         );
+        const getRealStock: any = await ScheduleItem.findOne({
+          _id: req.body.scheduleItemId,
+        });
+
+        const realqty = getRealStock.real_qty + getData.data.data.conversion;
+        await ScheduleItem.updateOne(
+          { _id: req.body.scheduleItemId },
+          { real_qty: realqty }
+        );
+
         return res.status(200).json({ status: 200, data: response });
       } else {
         return res.status(404).json({ status: 400, msg: getData.msg });
@@ -244,7 +256,7 @@ class ScheduleItemPackingController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      if (req.body.actual_qty>=0) {
+      if (req.body.actual_qty >= 0) {
         const prevData: any = await Db.findOne({ _id: req.params.id });
         if (req.body.actual_qty > prevData.conversion) {
           return res.status(400).json({
