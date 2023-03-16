@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ScheduleItemPacking = new mongoose.Schema(
   {
-    scheduleItem: {
+    schedule: {
       type: Object,
       required: true,
       index: true,

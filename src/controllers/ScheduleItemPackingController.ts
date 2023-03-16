@@ -29,7 +29,7 @@ const GetPackingIdErp = async (
             msg: "Error, Item not available in warehouse",
           };
         }
-        result.data.data.scheduleItem = getScheduleItem.schedule;
+        result.data.data.schedule = {...getScheduleItem.schedule,scheduleItem:scheduleItem};
         return { data: result.data, status: true };
       }
       return { status: false, msg: "Error, Incorrect item input" };
