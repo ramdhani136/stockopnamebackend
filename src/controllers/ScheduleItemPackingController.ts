@@ -6,6 +6,7 @@ import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { ScheduleItem, ScheduleItemPacking } from "../models";
 import { TypeOfState } from "../Interfaces/FilterInterface";
+import { ISearch } from "../utils/FilterQuery";
 
 const Db = ScheduleItemPacking;
 const RedisName = "scheduleitempacking";
@@ -109,8 +110,10 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.Date,
       },
     ];
+    
     try {
       // Mengambil query
+      
       const filters: any = req.query.filters
         ? JSON.parse(`${req.query.filters}`)
         : [];
@@ -132,13 +135,18 @@ class ScheduleItemPackingController implements IController {
         : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
+      let search: ISearch = {
+        filter: ["item", "item_name","id_packing"],
+        value: req.query.search || "",
+      };
 
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
       // End
 
+    
       // Mengambil hasil filter
-      let isFilter = FilterQuery.getFilter(filters, stateFilter);
+      let isFilter = FilterQuery.getFilter(filters, stateFilter,search);
       // End
 
       // Validasi apakah filter valid

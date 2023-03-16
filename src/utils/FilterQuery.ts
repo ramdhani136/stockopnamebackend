@@ -10,7 +10,7 @@ interface IFilterQuery {
 
 export interface ISearch {
   filter: String[];
-  value: String;
+  value: any;
 }
 
 class FilterQuery {
