@@ -114,6 +114,7 @@ class ScheduleItemController {
             "updatedAt",
             "stock_uom",
             "checkedBy",
+            "status"
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
