@@ -16,7 +16,7 @@ const GetPackingIdErp = async (
 ): Promise<any> => {
   const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID/${id_packing}`;
   const headers = {
-    Authorization: "token 517ba90cd805072:c4303a3355cbca4",
+    Authorization: `${process.env.ERP_TOKEN}`,
   };
   try {
     const result = await axios.get(uri, { headers });
@@ -36,7 +36,7 @@ const GetPackingIdErp = async (
     }
     return { status: false, msg: "Not found" };
   } catch (error) {
-    return { status: false, msg: "Error Request" };
+    return { status: false, msg: error };
   }
 };
 
@@ -172,18 +172,20 @@ class ScheduleItemPackingController implements IController {
   };
 
   create = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.body.scheduleItem) {
+    if (!req.body.scheduleItemId) {
       return res
         .status(400)
-        .json({ status: 400, msg: "scheduleItem Required!" });
+        .json({ status: 400, msg: "scheduleItemId Required!" });
     }
     if (!req.body.id_packing) {
       return res.status(400).json({ status: 400, msg: "id_packing Required!" });
     }
     const getData = await GetPackingIdErp(
       req.body.id_packing,
-      req.body.scheduleItem
+      req.body.scheduleItemId
     );
+
+  
 
     try {
       if (getData.status) {
