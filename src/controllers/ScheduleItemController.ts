@@ -183,7 +183,8 @@ class ScheduleItemController {
         const schedule: any = await Schedule.findOne({
           _id: result.schedule,
         });
-        if (result.status == 0 || schedule.status == 1) {
+        console.log(result.status);
+        if (result.status == 0 && schedule.status == 1 ) {
           const resultErp: any = await getBinQty(result.bin);
           const qtyStok = resultErp.data.data.actual_qty;
           if (result.actual_qty !== qtyStok) {
