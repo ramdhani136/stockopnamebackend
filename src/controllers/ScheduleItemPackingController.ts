@@ -83,6 +83,11 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "status",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "conversion",
         operator: ["=", "!=", "like", "notlike", ">", "<", ">=", "<="],
         typeOf: TypeOfState.Number,
@@ -132,6 +137,7 @@ class ScheduleItemPackingController implements IController {
             "id_packing",
             "createdAt",
             "updatedAt",
+            "status",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -213,6 +219,9 @@ class ScheduleItemPackingController implements IController {
             status: 400,
             msg: "Actual Qty tidak dapat melebihi conversion!",
           });
+        }
+        if (req.body.actual_qty == data.conversion) {
+          data.status = "1";
         }
         data.uniqId = `${FilterKata({ filter: ["-"], kata: data.id_packing })}${
           req.body.scheduleItemId
