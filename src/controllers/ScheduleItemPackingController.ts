@@ -124,6 +124,8 @@ class ScheduleItemPackingController implements IController {
             "stock_uom",
             "schedule",
             "id_packing",
+            "createdAt",
+            "updatedAt"
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
