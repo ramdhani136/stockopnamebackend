@@ -286,8 +286,10 @@ class ScheduleItemPackingController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      if (req.body.actual_qty >= 0) {
+      let prevQty = 0;
+      if (req.body.actual_qty) {
         const prevData: any = await Db.findOne({ _id: req.params.id });
+        prevQty = prevData.actual_qty;
         if (req.body.actual_qty > prevData.conversion) {
           return res.status(400).json({
             status: 400,
@@ -302,11 +304,27 @@ class ScheduleItemPackingController implements IController {
       }
 
       const result = await Db.updateOne({ _id: req.params.id }, req.body);
-      const getData = await Db.findOne({ _id: req.params.id });
+      const getData: any = await Db.findOne({ _id: req.params.id });
       await Redis.client.set(
         `${RedisName}-${req.params.id}`,
         JSON.stringify(getData)
       );
+
+      if (req.body.actual_qty) {
+        const getRealStock: any = await ScheduleItem.findOne({
+          _id: getData.schedule.scheduleItem,
+        });
+
+        const realqty =
+          parseInt(getRealStock.real_qty) -
+          parseInt(`${prevQty}`) +
+          parseInt(req.body.actual_qty);
+        await ScheduleItem.updateOne(
+          { _id: getData.schedule.scheduleItem },
+          { real_qty: realqty }
+        );
+      }
+
       return res.status(200).json({ status: 200, data: result });
     } catch (error: any) {
       return res.status(404).json({ status: 404, msg: error });
