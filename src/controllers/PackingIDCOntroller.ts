@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
-import { FilterKata, FilterQuery } from "../utils";
-import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import { WorkflowAction } from "../models";
 import axios from "axios";
-import { filter } from "compression";
+
 
 const Db = WorkflowAction;
 const redisName = "workflowaction";
