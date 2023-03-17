@@ -63,19 +63,11 @@ class PackingIdController {
             "stock_uom",
             "id_packing",
           ];
-      //   const order_by: any = req.query.order_by
-      //     ? JSON.parse(`${req.query.order_by}`)
-      //     : { updatedAt: -1 };
+        const order_by: any = req.query.order_by
+          ? JSON.parse(`${req.query.order_by}`)
+          : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
-      //   let isFilter = FilterQuery.getFilter(filters, stateFilter);
-
-      //   if (!isFilter.status) {
-      //     return res
-      //       .status(400)
-      //       .json({ status: 400, msg: "Error, Filter Invalid " });
-      //   }
-      // End
       const uri = `${
         process.env.ERP_HOST
       }/api/resource/Registration%20Packing%20ID?limit_start=${
