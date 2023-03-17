@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
-import { FilterQuery } from "../utils";
+import { FilterKata, FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import { WorkflowAction } from "../models";
 import axios from "axios";
+import { filter } from "compression";
 
 const Db = WorkflowAction;
 const redisName = "workflowaction";
@@ -50,18 +51,26 @@ class PackingIdController {
       },
     ];
     try {
-      //   const filters: any = req.query.filters
-      //     ? JSON.parse(`${req.query.filters}`)
-      //     : [];
-      //   const fields: any = req.query.fields
-      //     ? JSON.parse(`${req.query.fields}`)
-      //     : ["name", "user.name"];
+      let filters: any = req.query.filters
+        ? JSON.parse(`${req.query.filters}`)
+        : [];
+
+      filters = [ ["is_out", "=", "0"],...filters,];
+      const fields: any = req.query.fields
+        ? JSON.parse(`${req.query.fields}`)
+        : [
+            "item_name",
+            "qr_code",
+            "item",
+            "conversion",
+            "stock_uom",
+            "id_packing",
+          ];
       //   const order_by: any = req.query.order_by
       //     ? JSON.parse(`${req.query.order_by}`)
       //     : { updatedAt: -1 };
-        const limit: number | string = parseInt(`${req.query.limit}`) || 10;
-      //   let page: number | string = parseInt(`${req.query.page}`) || 1;
-      //   let setField = FilterQuery.getField(fields);
+      const limit: number | string = parseInt(`${req.query.limit}`) || 10;
+      let page: number | string = parseInt(`${req.query.page}`) || 1;
       //   let isFilter = FilterQuery.getFilter(filters, stateFilter);
 
       //   if (!isFilter.status) {
@@ -70,7 +79,13 @@ class PackingIdController {
       //       .json({ status: 400, msg: "Error, Filter Invalid " });
       //   }
       // End
-      const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID?fields=["item_name","qr_code","purchase_receipt","item","conversion","stock_uom","is_out_name","id_packing"]&&filters=[["is_out","=","0"]]`;
+      const uri = `${
+        process.env.ERP_HOST
+      }/api/resource/Registration%20Packing%20ID?limit_start=${
+        page == 1 ? 0 : page * limit
+      }&limit_page_length=${limit}&&fields=${JSON.stringify(
+        fields
+      )}&&filters=${JSON.stringify(filters)}`;
       const headers = {
         Authorization: `${process.env.ERP_TOKEN}`,
       };
@@ -78,7 +93,7 @@ class PackingIdController {
       const result = await axios.get(uri, { headers });
 
       return res.status(200).json({
-        // status: 200,
+        status: 200,
         // total: getAll,
         limit,
         // nextPage: page + 1,
