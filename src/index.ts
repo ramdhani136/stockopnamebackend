@@ -9,6 +9,7 @@ import DataConnect from "./config/db";
 import http from "http";
 import {
   HistoryRoutes,
+  PackingIdRoutes,
   RoleListRoutes,
   RoleProfileRoutes,
   RoleUserRoutes,
@@ -116,6 +117,7 @@ class App {
     this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
     this.app.use("/workflow", AuthMiddleware, WorkflowRoutes);
     this.app.use("/warehouse", WarehouseRoutes);
+    this.app.use("/packingid", PackingIdRoutes);
 
     this.app.use(
       "/workflowtransition",
