@@ -5,7 +5,6 @@ import { TypeOfState } from "../Interfaces/FilterInterface";
 import { WorkflowAction } from "../models";
 import axios from "axios";
 
-
 const Db = WorkflowAction;
 const redisName = "workflowaction";
 
@@ -53,7 +52,7 @@ class PackingIdController {
         ? JSON.parse(`${req.query.filters}`)
         : [];
 
-      filters = [ ["is_out", "=", "0"],...filters,];
+      filters = [["is_out", "=", "0"], ...filters];
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
         : [
@@ -87,7 +86,6 @@ class PackingIdController {
       const headers = {
         Authorization: `${process.env.ERP_TOKEN}`,
       };
-      // const getAll = await Db.find(isFilter.data).count();
       const result = await axios.get(uri, { headers });
 
       return res.status(200).json({
