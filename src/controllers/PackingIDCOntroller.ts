@@ -80,14 +80,21 @@ class PackingIdController {
       };
       const result = await axios.get(uri, { headers });
 
-      return res.status(200).json({
-        status: 200,
-        // total: getAll,
-        limit,
-        nextPage: page + 1,
-        // hasMore: getAll > page * limit ? true : false,
-        data: result.data.data,
-        filters: stateFilter,
+      console.log(result.data.data.length);
+      if (result.data.data.length > 0) {
+        return res.status(200).json({
+          status: 200,
+          limit,
+          nextPage: page + 1,
+          hasMore: true,
+          data: result.data.data,
+          filters: stateFilter,
+        });
+      }
+      return res.status(400).json({
+        status: 400,
+        msg: "Data not found!",
+        hasMore: false,
       });
     } catch (error: any) {
       return res.status(400).json({
