@@ -63,9 +63,9 @@ class PackingIdController {
             "stock_uom",
             "id_packing",
           ];
-        const order_by: any = req.query.order_by
-          ? JSON.parse(`${req.query.order_by}`)
-          : { updatedAt: -1 };
+      const order_by: any = req.query.order_by
+        ? JSON.parse(`${req.query.order_by}`)
+        : { updatedAt: -1 };
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       const uri = `${
@@ -84,7 +84,7 @@ class PackingIdController {
         status: 200,
         // total: getAll,
         limit,
-        // nextPage: page + 1,
+        nextPage: page + 1,
         // hasMore: getAll > page * limit ? true : false,
         data: result.data.data,
         filters: stateFilter,
