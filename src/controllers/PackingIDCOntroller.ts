@@ -4,8 +4,7 @@ import { IStateFilter } from "../Interfaces";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import axios from "axios";
 
-
-const redisName = "workflowaction";
+const redisName = "packingid";
 
 class PackingIdController {
   index = async (req: Request, res: Response): Promise<any> => {
@@ -64,7 +63,8 @@ class PackingIdController {
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
-        : { updatedAt: -1 };
+        : { modified: -1 };
+
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       const uri = `${
@@ -73,7 +73,9 @@ class PackingIdController {
         page == 1 ? 0 : page * limit
       }&limit_page_length=${limit}&&fields=${JSON.stringify(
         fields
-      )}&&filters=${JSON.stringify(filters)}`;
+      )}&&filters=${JSON.stringify(filters)}&&order_by=${
+        Object.keys(order_by)[0]
+      }%20${order_by[Object.keys(order_by)[0]] == -1 ? "desc" : "asc"}`;
       const headers = {
         Authorization: `${process.env.ERP_TOKEN}`,
       };
@@ -97,28 +99,33 @@ class PackingIdController {
     } catch (error: any) {
       return res.status(400).json({
         status: 400,
-        msg: error,
+        msg: `${error}`,
       });
     }
   };
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const cache = await Redis.client.get(`${redisName}-${req.params.id}`);
-      if (cache) {
-        console.log("Cache");
-        return res.status(200).json({ status: 200, data: JSON.parse(cache) });
-      }
-      const result ='1'
-    //   const result = await Db.findOne({ _id: req.params.id }).populate(
-    //     "user",
-    //     "name"
-    //   );
-    //   await Redis.client.set(
-    //     `${redisName}-${req.params.id}`,
-    //     JSON.stringify(result)
-    //   );
-      return res.status(200).json({ status: 200, data: result });
+        const cache = await Redis.client.get(`${redisName}-${req.params.id}`);
+        if (cache) {
+          console.log("Cache");
+          return res.status(200).json({ status: 200, data: JSON.parse(cache) });
+        }
+      const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID/RPI-2023-03-0009973`;
+      const headers = {
+        Authorization: `${process.env.ERP_TOKEN}`,
+      };
+      const result = await axios.get(uri, { headers });
+      const data = result.data.data;
+      console.log(data);
+      await Redis.client.set(
+        `${redisName}-${req.params.id}`,
+        JSON.stringify(data),
+        {
+          EX: 5,
+        }
+      );
+      return res.status(200).json({ status: 200, data: data });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
     }
