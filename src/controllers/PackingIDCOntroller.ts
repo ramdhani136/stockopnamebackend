@@ -2,10 +2,9 @@ import { Request, Response } from "express";
 import Redis from "../config/Redis";
 import { IStateFilter } from "../Interfaces";
 import { TypeOfState } from "../Interfaces/FilterInterface";
-import { WorkflowAction } from "../models";
 import axios from "axios";
 
-const Db = WorkflowAction;
+
 const redisName = "workflowaction";
 
 class PackingIdController {
@@ -80,7 +79,6 @@ class PackingIdController {
       };
       const result = await axios.get(uri, { headers });
 
-      console.log(result.data.data.length);
       if (result.data.data.length > 0) {
         return res.status(200).json({
           status: 200,
@@ -111,14 +109,15 @@ class PackingIdController {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Db.findOne({ _id: req.params.id }).populate(
-        "user",
-        "name"
-      );
-      await Redis.client.set(
-        `${redisName}-${req.params.id}`,
-        JSON.stringify(result)
-      );
+      const result ='1'
+    //   const result = await Db.findOne({ _id: req.params.id }).populate(
+    //     "user",
+    //     "name"
+    //   );
+    //   await Redis.client.set(
+    //     `${redisName}-${req.params.id}`,
+    //     JSON.stringify(result)
+    //   );
       return res.status(200).json({ status: 200, data: result });
     } catch (error) {
       return res.status(404).json({ status: 404, data: error });
