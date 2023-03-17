@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const ScheduleItemPacking = new mongoose.Schema(
   {
@@ -52,6 +52,12 @@ const ScheduleItemPacking = new mongoose.Schema(
     stock_uom: {
       type: String,
       require,
+    },
+    checkedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
+      index: true,
     },
     status: {
       type: String,

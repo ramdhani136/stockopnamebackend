@@ -103,6 +103,11 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "user.name",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "owner",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
@@ -167,6 +172,7 @@ class ScheduleItemPackingController implements IController {
 
       const getAll = await Db.find(isFilter.data).count();
       const result = await Db.find(isFilter.data, setField)
+        .populate("checkedBy", "name")
         .skip(page * limit - limit)
         .limit(limit)
         .sort(order_by);
@@ -194,7 +200,7 @@ class ScheduleItemPackingController implements IController {
     }
   };
 
-  create = async (req: Request, res: Response): Promise<Response> => {
+  create = async (req: Request | any, res: Response): Promise<Response> => {
     if (!req.body.scheduleItemId) {
       return res
         .status(400)
@@ -223,6 +229,7 @@ class ScheduleItemPackingController implements IController {
         if (req.body.actual_qty == data.conversion) {
           data.status = "1";
         }
+        data.checkedBy = req.userId;
         data.uniqId = `${FilterKata({ filter: ["-"], kata: data.id_packing })}${
           req.body.scheduleItemId
         }`;
@@ -263,7 +270,10 @@ class ScheduleItemPackingController implements IController {
         console.log("Cache");
         return res.status(200).json({ status: 200, data: JSON.parse(cache) });
       }
-      const result = await Db.findOne({ _id: req.params.id });
+      const result = await Db.findOne({ _id: req.params.id }).populate(
+        "checkedBy",
+        "name"
+      );
       await Redis.client.set(
         `${RedisName}-${req.params.id}`,
         JSON.stringify(result)

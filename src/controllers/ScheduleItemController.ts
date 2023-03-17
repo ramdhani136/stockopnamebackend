@@ -71,11 +71,6 @@ class ScheduleItemController {
         typeOf: TypeOfState.String,
       },
       {
-        name: "checkedBy",
-        operator: ["=", "!="],
-        typeOf: TypeOfState.String,
-      },
-      {
         name: "status",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
@@ -119,7 +114,6 @@ class ScheduleItemController {
             "real_qty",
             "updatedAt",
             "stock_uom",
-            "checkedBy",
             "status",
           ];
       const order_by: any = req.query.order_by
@@ -150,11 +144,9 @@ class ScheduleItemController {
       // End
 
       const getAll = await Db.find(isFilter.data)
-        .populate("checkedBy", "name")
         .count();
       const result = await Db.find(isFilter.data, setField)
         .sort(order_by)
-        .populate("checkedBy", "name")
         .skip(limit > 0 ? page * limit - limit : 0)
         .limit(limit > 0 ? limit : getAll);
 
@@ -185,7 +177,6 @@ class ScheduleItemController {
     try {
       const result: any = await Db.findOne({ _id: req.params.id })
         .populate("schedule", "name")
-        .populate("checkedBy", "name");
       if (result) {
         const schedule: any = await Schedule.findOne({
           _id: result.schedule,

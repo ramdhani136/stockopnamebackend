@@ -56,11 +56,7 @@ const ScheduleItem = new mongoose.Schema(
       default: 0,
       index:true
     },
-    checkedBy: {
-      type: Schema.Types.ObjectId,
-      ref: "Users",
-      index:true
-    },
+
     status: {
       type: String,
       required: true,
