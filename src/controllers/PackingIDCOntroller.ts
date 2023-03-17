@@ -111,7 +111,7 @@ class PackingIdController {
           console.log("Cache");
           return res.status(200).json({ status: 200, data: JSON.parse(cache) });
         }
-      const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID/RPI-2023-03-0009973`;
+      const uri = `${process.env.ERP_HOST}/api/resource/Registration%20Packing%20ID/${req.params.id}`;
       const headers = {
         Authorization: `${process.env.ERP_TOKEN}`,
       };
