@@ -248,7 +248,7 @@ class ScheduleItemPackingController implements IController {
         });
 
         const realqty =
-          parseInt(getRealStock.real_qty) + parseInt(req.body.actual_qty);
+        parseFloat(getRealStock.real_qty) + parseFloat(req.body.actual_qty);
         await ScheduleItem.updateOne(
           { _id: req.body.scheduleItemId },
           { real_qty: realqty }
@@ -316,9 +316,9 @@ class ScheduleItemPackingController implements IController {
         });
 
         const realqty =
-          parseInt(getRealStock.real_qty) -
-          parseInt(`${prevQty}`) +
-          parseInt(req.body.actual_qty);
+        parseFloat(getRealStock.real_qty) -
+        parseFloat(`${prevQty}`) +
+        parseFloat(req.body.actual_qty);
         await ScheduleItem.updateOne(
           { _id: getData.schedule.scheduleItem },
           { real_qty: realqty }
@@ -339,7 +339,7 @@ class ScheduleItemPackingController implements IController {
       });
 
       const realqty =
-        parseInt(getRealStock.real_qty) - parseInt(result.actual_qty);
+        parseFloat(getRealStock.real_qty) - parseFloat(result.actual_qty);
       await ScheduleItem.updateOne(
         { _id: result.schedule.scheduleItem },
         { real_qty: realqty }
