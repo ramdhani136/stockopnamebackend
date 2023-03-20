@@ -333,11 +333,17 @@ class ScheduleItemPackingController implements IController {
 
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
-      await Db.deleteMany({
-        scheduleId: req.params.id,
+      const result: any = await Db.findOneAndDelete({ _id: req.params.id });
+      const getRealStock: any = await ScheduleItem.findOne({
+        _id: result.schedule.scheduleItem,
       });
 
-      const result = await Db.deleteOne({ _id: req.params.id });
+      const realqty =
+        parseInt(getRealStock.real_qty) - parseInt(result.actual_qty);
+      await ScheduleItem.updateOne(
+        { _id: result.schedule.scheduleItem },
+        { real_qty: realqty }
+      );
       await Redis.client.del(`${RedisName}-${req.params.id}`);
       return res.status(200).json({ status: 200, data: result });
     } catch (error) {
