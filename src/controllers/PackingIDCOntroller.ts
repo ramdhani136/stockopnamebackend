@@ -51,7 +51,7 @@ class PackingIdController {
         : [];
 
       if (req.query.search) {
-        filters = [...filters, ["id_packing", "like", `%${req.query.search}%`]];
+        filters = [...filters, ["id_packing", "like", `%_${req.query.search}%`]];
       }
       const fields: any = req.query.fields
         ? JSON.parse(`${req.query.fields}`)
