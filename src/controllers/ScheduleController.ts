@@ -430,6 +430,57 @@ class ScheduleController implements IController {
       return res.status(404).json({ status: 404, msg: error });
     }
   };
+
+  onRefreshItem = async (
+    req: Request | any,
+    res: Response
+  ): Promise<Response> => {
+    try {
+      const schedule: any = await Schedule.findOne(
+        {
+          name: req.params.schedule,
+        },
+        ["name", "warehouse"]
+      );
+      const scheduleItem = await ScheduleItem.find(
+        {
+          "schedule.name": schedule.name,
+        },
+        ["item_code"]
+      );
+
+      const erpData = await GetErpBin(schedule.warehouse);
+
+      let upData: any[] = [];
+
+      for (const item of erpData.data.data) {
+        const duplicate = scheduleItem.find(
+          (i) => i.item_code == item.item_code
+        );
+        if (!duplicate) {
+          item.schedule = {
+            _id: schedule._id,
+            name: schedule.name,
+          };
+          item.uniqId = `${schedule.name}${item.item_code}`;
+          item.bin = item.name;
+          upData = [...upData, item];
+        }
+      }
+
+      if (upData.length > 0) {
+        await ScheduleItem.insertMany(upData);
+      }
+
+      return res
+        .status(200)
+        .json({ status: 200, msg: "Success get data from erp!" });
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ status: 404, msg: error ?? "Network Error" });
+    }
+  };
 }
 
 export default new ScheduleController();
