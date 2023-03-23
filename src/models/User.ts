@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Schedule from "./Schedule";
 
 const User = new mongoose.Schema(
   {
