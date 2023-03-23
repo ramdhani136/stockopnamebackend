@@ -30,16 +30,10 @@ import { Schedule } from "./models";
 import cron from "node-cron";
 import { AuthMiddleware } from "./middleware";
 import { RoleValidation } from "./middleware/RoleValidation";
-import axios from "axios";
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
-  origin: [
-    "*",
-    "http://localhost:5173",
-    "http://localhost",
-    "http://172.28.192.1:5173",
-  ],
+  origin: ["*", "http://localhost:5173", "http://localhost"],
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -68,6 +62,9 @@ class App {
     this.app.use(helmet());
     this.app.use(cors(corsOptions));
     this.io = new SocketIO(this.server).io;
+    this.io.on("connection", (socket: any) => {
+      console.log("user connect");
+    });
     Redis.getConnect();
   }
 
