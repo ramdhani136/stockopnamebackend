@@ -61,11 +61,8 @@ class App {
     this.app.use(morgan("dev"));
     this.app.use(helmet());
     this.app.use(cors(corsOptions));
-    this.io = new SocketIO(this.server).io;
-    this.io.on("connection", (socket: any) => {
-      console.log("user connect");
-    });
     Redis.getConnect();
+    this.getSocket();
   }
 
   protected Cron(): void {
@@ -93,6 +90,46 @@ class App {
         console.log(error);
       }
       // End
+    });
+  }
+
+  protected getSocket(): void {
+    this.io = new SocketIO(this.server).io;
+    this.io.on("connection", (socket: any) => {
+      console.log("Connected to socket.io");
+
+      socket.on("setup", (userData: any) => {
+        socket.join(userData._id);
+        socket.emit("connected");
+      });
+
+      socket.on("join chat", (room: String) => {
+        socket.join(room);
+        console.log("User Joined Room: " + room);
+      });
+
+      socket.on("typing", (room: String) => socket.in(room).emit("typing"));
+
+      socket.on("stop typing", (room: String) =>
+        socket.in(room).emit("stop typing")
+      );
+
+      socket.on("new message", (newMessageRecieved: any) => {
+        var chat = newMessageRecieved.chat;
+
+        if (!chat.users) return console.log("chat.users not defined");
+
+        chat.users.forEach((user: any) => {
+          if (user._id == newMessageRecieved.sender._id) return;
+
+          socket.in(user._id).emit("message recieved", newMessageRecieved);
+        });
+      });
+
+      socket.off("setup", (userData: any) => {
+        console.log("USER DISCONNECTED");
+        socket.leave(userData._id);
+      });
     });
   }
 
