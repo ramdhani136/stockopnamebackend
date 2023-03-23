@@ -15,6 +15,9 @@ const User = new mongoose.Schema(
     email: {
       type: String,
     },
+    pic: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
@@ -29,6 +32,5 @@ const User = new mongoose.Schema(
     timestamps: true,
   }
 );
-
 
 export default mongoose.model("Users", User);
