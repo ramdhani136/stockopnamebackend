@@ -8,7 +8,9 @@ import compression from "compression";
 import DataConnect from "./config/db";
 import http from "http";
 import {
+  ChatRoutes,
   HistoryRoutes,
+  MessageRoutes,
   PackingIdRoutes,
   RoleListRoutes,
   RoleProfileRoutes,
@@ -150,6 +152,8 @@ class App {
     this.app.use("/workflowstate", AuthMiddleware, WorkflowStateRoutes);
     this.app.use("/workflowaction", AuthMiddleware, workflowActionRoutes);
     this.app.use("/workflow", AuthMiddleware, WorkflowRoutes);
+    this.app.use("/chat", AuthMiddleware, ChatRoutes);
+    this.app.use("/message", AuthMiddleware, MessageRoutes);
     this.app.use("/warehouse", WarehouseRoutes);
     this.app.use("/packingid", PackingIdRoutes);
 

@@ -12,7 +12,9 @@ import WorkflowController from "./WorkflowController";
 import WorkflowTransitionController from "./WorkflowTransitionController";
 import WorkflowChangerController from "./WorkflowChangerController";
 import WarehouseController from "./WarehouseController";
-import PackingIDCOntroller from "./PackingIDCOntroller";
+import PackingIDCOntroller from "./PackingIDController";
+import ChatController from "./ChatController";
+import MessageController from "./MessageController";
 
 export {
   UserController,
@@ -29,5 +31,7 @@ export {
   WorkflowTransitionController,
   WorkflowChangerController,
   WarehouseController,
-  PackingIDCOntroller
+  PackingIDCOntroller,
+  ChatController,
+  MessageController,
 };

@@ -13,6 +13,8 @@ import WorkflowTransitionRoutes from "./WorkflowTransitionRoutes";
 import WorkflowCangerRoutes from "./WorkflowCangerRoutes";
 import WarehouseRoutes from "./WarehouseRoutes";
 import PackingIdRoutes from "./PackingIdRoutes";
+import MessageRoutes from "./MessageRoutes";
+import ChatRoutes from "./ChatRoutes";
 
 export {
   UserRoutes,
@@ -30,4 +32,6 @@ export {
   WorkflowCangerRoutes,
   WarehouseRoutes,
   PackingIdRoutes,
+  MessageRoutes,
+  ChatRoutes,
 };

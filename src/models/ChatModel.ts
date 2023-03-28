@@ -11,15 +11,13 @@ const ChatModel = new mongoose.Schema(
         required: true,
       },
     ],
-    latesMessage: {
+    latestMessage: {
       type: Schema.Types.ObjectId,
       ref: "Message",
-      required: true,
     },
     groupAdmin: {
       type: Schema.Types.ObjectId,
       ref: "Users",
-      required: true,
     },
   },
   {

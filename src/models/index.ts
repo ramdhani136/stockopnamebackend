@@ -11,6 +11,8 @@ import WorkflowAction from "./WorkflowAction";
 import WorkflowState from "./WorkflowState";
 import WorkflowTransition from "./WorkflowTransition";
 import WorkflowChanger from "./WorkflowChanger";
+import ChatModel from "./ChatModel";
+import MessageModel from "./MessageModel";
 
 export {
   User,
@@ -26,4 +28,6 @@ export {
   WorkflowState,
   WorkflowTransition,
   WorkflowChanger,
+  ChatModel,
+  MessageModel,
 };
