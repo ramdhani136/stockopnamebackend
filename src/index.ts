@@ -97,13 +97,24 @@ class App {
 
   protected getSocket(): void {
     this.io = new SocketIO(this.server).io;
+    let activeUsers: any[] = [];
     this.io.on("connection", (socket: any) => {
-      console.log("Connected to socket.io");
-
-      socket.on("setup", (userData: any) => {
-        socket.join(userData._id);
+      socket.on("setup", (userData: String) => {
+        socket.join(userData);
         socket.emit("connected");
+        console.log(`User ${userData} Connected`);
       });
+
+      socket.on("activeUsers", (user: any) => {
+        if (user) {
+          const isDUp = activeUsers.find((item: any) => item === user);
+          if (!isDUp) {
+            activeUsers = [...activeUsers, user];
+          }
+        }
+      });
+
+      socket.broadcast.emit("getUserActive", activeUsers);
 
       socket.on("join chat", (room: String) => {
         socket.join(room);
@@ -123,14 +134,22 @@ class App {
 
         chat.users.forEach((user: any) => {
           if (user._id == newMessageRecieved.sender._id) return;
-
           socket.in(user._id).emit("message recieved", newMessageRecieved);
         });
       });
 
-      socket.off("setup", (userData: any) => {
-        console.log("USER DISCONNECTED");
-        socket.leave(userData._id);
+      socket.off("setup", (userData: String) => {
+        console.log(` USER ${userData} DISCONNECTED`);
+        socket.leave(userData);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Disconnect");
+        // Hapus pengguna dari daftar pengguna aktif
+        delete activeUsers[socket.id];
+
+        // Kirim daftar pengguna aktif yang telah diupdate ke pengguna lain
+        socket.broadcast.emit("activeUsers", activeUsers);
       });
     });
   }
