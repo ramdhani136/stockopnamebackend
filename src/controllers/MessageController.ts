@@ -7,7 +7,7 @@ class MessageController {
     try {
       const messages = await MessageModel.find({ chat: req.params.chatId })
         .populate("sender", "name pic email")
-        .populate("chat");
+        .populate("chat","users");
       return res.status(200).json({ status: 200, data: messages });
     } catch (error: any) {
       res.status(400);
@@ -35,7 +35,7 @@ class MessageController {
     try {
       var message: any = await MessageModel.create(newMessage);
       message = await message.populate("sender", "name pic");
-      message = await message.populate("chat");
+      message = await message.populate("chat", "users");
       message = await User.populate(message, {
         path: "chat.users",
         select: "name pic email",
