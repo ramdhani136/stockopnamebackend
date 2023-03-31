@@ -63,7 +63,6 @@ class MessageController {
           $and: [{ content: { $regex: search, $options: "i" } }],
         };
       }
-      console.log(JSON.stringify(isFilter));
       // Mengambil hasil fields
       let setField = FilterQuery.getField(fields);
       // End
@@ -71,7 +70,13 @@ class MessageController {
       const getAll = await MessageModel.find(isFilter).count();
       const messages = await MessageModel.find(isFilter, setField)
         .sort(order_by)
-        .skip(limit > 0 ? page * limit - limit : 0)
+        .skip(
+          limit > 0
+            ? getAll - page * limit < 0
+              ? 0
+              : getAll - page * limit
+            : 0
+        )
         .limit(limit > 0 ? limit : getAll)
         .populate("sender", "name pic email")
         .populate("chat", "users");
