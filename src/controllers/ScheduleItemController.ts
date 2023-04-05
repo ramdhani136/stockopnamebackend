@@ -143,8 +143,7 @@ class ScheduleItemController {
       }
       // End
 
-      const getAll = await Db.find(isFilter.data)
-        .count();
+      const getAll = await Db.find(isFilter.data).count();
       const result = await Db.find(isFilter.data, setField)
         .sort(order_by)
         .skip(limit > 0 ? page * limit - limit : 0)
@@ -175,11 +174,18 @@ class ScheduleItemController {
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result: any = await Db.findOne({ _id: req.params.id })
-        .populate("schedule", "name")
+      const result: any = await Db.findOne({ _id: req.params.id }).populate(
+        "schedule",
+        "name"
+      );
       if (result) {
         const schedule: any = await Schedule.findOne({
-          _id: result.schedule,
+          $and: [
+            { _id: result.schedule },
+            {
+              "allow.barcode": true,
+            },
+          ],
         });
         result.schedule.status = schedule.status;
         if (result.status == 0 && schedule.status == 1) {
