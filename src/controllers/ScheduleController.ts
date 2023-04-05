@@ -37,6 +37,16 @@ class ScheduleController implements IController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "allow.barcode",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "allow.manual",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "warehouse",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
@@ -104,6 +114,7 @@ class ScheduleController implements IController {
             "status",
             "user.name",
             "updatedAt",
+            "allow"
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)

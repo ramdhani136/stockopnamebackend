@@ -1,5 +1,18 @@
 import mongoose, { Schema } from "mongoose";
 
+const allowModel = {
+  barcode: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  manual: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+};
+
 const Schedule = new mongoose.Schema(
   {
     name: {
@@ -38,13 +51,13 @@ const Schedule = new mongoose.Schema(
     note: {
       type: String,
     },
+    allow: allowModel,
     status: {
       type: String,
       required: true,
       index: true,
       default: 0,
     },
-    
   },
   {
     timestamps: true,
