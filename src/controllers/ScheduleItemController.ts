@@ -182,9 +182,9 @@ class ScheduleItemController {
         const schedule: any = await Schedule.findOne({
           $and: [
             { _id: result.schedule },
-            {
-              "allow.barcode": true,
-            },
+            // {
+            //   "allow.barcode": true,
+            // },
           ],
         });
         result.schedule.status = schedule.status;
