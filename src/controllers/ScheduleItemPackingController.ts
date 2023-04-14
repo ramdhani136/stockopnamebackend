@@ -209,9 +209,18 @@ class ScheduleItemPackingController implements IController {
     if (!req.body.actual_qty) {
       return res.status(400).json({ status: 400, msg: "actual_qty Required!" });
     }
-    if (!req.body.id_packing) {
-      return res.status(400).json({ status: 400, msg: "id_packing Required!" });
+    if (!req.body.barcode) {
+      return res.status(400).json({ status: 400, msg: "barcode Required!" });
     }
+
+    if (req.body.barcode == true) {
+      if (!req.body.id_packing) {
+        return res
+          .status(400)
+          .json({ status: 400, msg: "id_packing Required!" });
+      }
+    }
+
     const getData = await GetPackingIdErp(
       req.body.id_packing,
       req.body.scheduleItemId
@@ -248,7 +257,7 @@ class ScheduleItemPackingController implements IController {
         });
 
         const realqty =
-        parseFloat(getRealStock.real_qty) + parseFloat(req.body.actual_qty);
+          parseFloat(getRealStock.real_qty) + parseFloat(req.body.actual_qty);
         await ScheduleItem.updateOne(
           { _id: req.body.scheduleItemId },
           { real_qty: realqty }
@@ -316,9 +325,9 @@ class ScheduleItemPackingController implements IController {
         });
 
         const realqty =
-        parseFloat(getRealStock.real_qty) -
-        parseFloat(`${prevQty}`) +
-        parseFloat(req.body.actual_qty);
+          parseFloat(getRealStock.real_qty) -
+          parseFloat(`${prevQty}`) +
+          parseFloat(req.body.actual_qty);
         await ScheduleItem.updateOne(
           { _id: getData.schedule.scheduleItem },
           { real_qty: realqty }

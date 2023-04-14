@@ -7,10 +7,13 @@ const ScheduleItemPacking = new mongoose.Schema(
       required: true,
       index: true,
     },
-    id_packing: {
-      type: String,
+    barcode: {
+      type: Boolean,
       required: true,
       index: true,
+    },
+    id_packing: {
+      type: String,
     },
     uniqId: {
       type: String,
