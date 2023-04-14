@@ -182,9 +182,6 @@ class ScheduleItemController {
         const schedule: any = await Schedule.findOne({
           $and: [
             { _id: result.schedule },
-            // {
-            //   "allow.barcode": true,
-            // },
           ],
         });
         result.schedule.status = schedule.status;
@@ -199,6 +196,7 @@ class ScheduleItemController {
           }
           result.actual_qty = qtyStok;
         }
+        result.schedule.allow = schedule.allow;
 
         return res.status(200).json({ status: 200, data: result });
       }
