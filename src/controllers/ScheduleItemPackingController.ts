@@ -53,6 +53,11 @@ class ScheduleItemPackingController implements IController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "barcode",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "schedule._id",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
@@ -143,6 +148,7 @@ class ScheduleItemPackingController implements IController {
             "createdAt",
             "updatedAt",
             "status",
+            "barcode",
           ];
       const order_by: any = req.query.order_by
         ? JSON.parse(`${req.query.order_by}`)
@@ -209,41 +215,77 @@ class ScheduleItemPackingController implements IController {
     if (!req.body.actual_qty) {
       return res.status(400).json({ status: 400, msg: "actual_qty Required!" });
     }
-    if (!req.body.barcode) {
-      return res.status(400).json({ status: 400, msg: "barcode Required!" });
-    }
-
-    if (req.body.barcode == true) {
-      if (!req.body.id_packing) {
-        return res
-          .status(400)
-          .json({ status: 400, msg: "id_packing Required!" });
-      }
-    }
-
-    const getData = await GetPackingIdErp(
-      req.body.id_packing,
-      req.body.scheduleItemId
-    );
 
     try {
-      if (getData.status) {
-        let data = getData.data.data;
-        if (req.body.actual_qty > data.conversion) {
-          return res.status(400).json({
-            status: 400,
-            msg: "Actual Qty tidak dapat melebihi conversion!",
-          });
+      if (req.body.barcode == true) {
+        if (!req.body.id_packing) {
+          return res
+            .status(400)
+            .json({ status: 400, msg: "id_packing Required!" });
         }
-        if (req.body.actual_qty == data.conversion) {
-          data.status = "1";
-        }
-        data.checkedBy = req.userId;
-        data.uniqId = `${FilterKata({ filter: ["-"], kata: data.id_packing })}${
+        const getData = await GetPackingIdErp(
+          req.body.id_packing,
           req.body.scheduleItemId
-        }`;
-        data.actual_qty = req.body.actual_qty;
-        const result = new Db(data);
+        );
+
+        if (getData.status) {
+          let data = getData.data.data;
+          if (req.body.actual_qty > data.conversion) {
+            return res.status(400).json({
+              status: 400,
+              msg: "Actual Qty tidak dapat melebihi conversion!",
+            });
+          }
+          if (req.body.actual_qty == data.conversion) {
+            data.status = "1";
+          }
+          data.checkedBy = req.userId;
+          data.barcode = req.body.barcode;
+          data.uniqId = `${FilterKata({
+            filter: ["-"],
+            kata: data.id_packing,
+          })}${req.body.scheduleItemId}`;
+          data.actual_qty = req.body.actual_qty;
+          const result = new Db(data);
+          const response = await result.save();
+          await Redis.client.set(
+            `${RedisName}-${response._id}`,
+            JSON.stringify(response),
+            {
+              EX: 10,
+            }
+          );
+          const getRealStock: any = await ScheduleItem.findOne({
+            _id: req.body.scheduleItemId,
+          });
+
+          const realqty =
+            parseFloat(getRealStock.real_qty) + parseFloat(req.body.actual_qty);
+          await ScheduleItem.updateOne(
+            { _id: req.body.scheduleItemId },
+            { real_qty: realqty }
+          );
+
+          return res.status(200).json({ status: 200, data: response });
+        } else {
+          return res.status(404).json({ status: 400, msg: getData.msg });
+        }
+      } else {
+        let date = new Date();
+        let timestamp = date.getTime();
+        req.body.uniqId = `Mnl${timestamp}${req.body.scheduleItemId}`;
+        req.body.checkedBy = req.userId;
+        req.body.conversion = 0;
+        req.body.status = 2;
+        req.body.id_packing = "";
+
+        const schedule: any = await ScheduleItem.findOne({
+          _id: req.body.scheduleItemId,
+        });
+        req.body.schedule = schedule.schedule;
+        req.body.stock_uom = schedule.stock_uom;
+        req.body.schedule.scheduleItem = req.body.scheduleItemId;
+        const result = new Db(req.body);
         const response = await result.save();
         await Redis.client.set(
           `${RedisName}-${response._id}`,
@@ -262,10 +304,7 @@ class ScheduleItemPackingController implements IController {
           { _id: req.body.scheduleItemId },
           { real_qty: realqty }
         );
-
         return res.status(200).json({ status: 200, data: response });
-      } else {
-        return res.status(404).json({ status: 400, msg: getData.msg });
       }
     } catch (error) {
       return res.status(400).json({ status: 400, msg: error });

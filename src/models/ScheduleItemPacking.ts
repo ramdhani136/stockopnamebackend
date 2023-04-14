@@ -22,16 +22,16 @@ const ScheduleItemPacking = new mongoose.Schema(
     },
     owner: {
       type: String,
-      required: true,
+      // required: true,
     },
     creation: {
       type: Date,
-      required: true,
+      // required: true,
       index: true,
     },
     modified: {
       type: Date,
-      required: true,
+      // required: true,
       index: true,
     },
     item: {
