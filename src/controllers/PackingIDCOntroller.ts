@@ -20,6 +20,21 @@ class PackingIdController {
         typeOf: TypeOfState.String,
       },
       {
+        name: "is_in",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "is_out",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
+        name: "docstatus",
+        operator: ["=", "!=", "like", "notlike"],
+        typeOf: TypeOfState.String,
+      },
+      {
         name: "item",
         operator: ["=", "!=", "like", "notlike"],
         typeOf: TypeOfState.String,
