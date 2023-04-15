@@ -5,6 +5,7 @@ import { FilterQuery } from "../utils";
 import IController from "./ControllerInterface";
 import { TypeOfState } from "../Interfaces/FilterInterface";
 import { RoleProfile } from "../models";
+import { ISearch } from "../utils/FilterQuery";
 
 const Db = RoleProfile;
 const redisName = "roleprofile";
@@ -61,8 +62,13 @@ class RoleProfileController implements IController {
       const limit: number | string = parseInt(`${req.query.limit}`) || 10;
       let page: number | string = parseInt(`${req.query.page}`) || 1;
       let setField = FilterQuery.getField(fields);
-      let isFilter = FilterQuery.getFilter(filters, stateFilter);
-    
+      let search: ISearch = {
+        filter: ["name"],
+        value: req.query.search || "",
+      };
+
+      let isFilter = FilterQuery.getFilter(filters, stateFilter, search);
+
       if (!isFilter.status) {
         return res
           .status(400)
